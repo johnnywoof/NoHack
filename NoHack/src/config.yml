@@ -1,0 +1,18 @@
+#------------------------------------------------------------------
+# true means check for it, false means do not check for it.
+#------------------------------------------------------------------
+
+#Prevents players from sending a chat message while blocking, sneaking, or sprinting.
+illegal-chat: true
+
+#Checks for spam
+check-spam: true
+
+#The delay between messages in milliseconds before kicking
+spam-delay-kick: 100 
+
+#The delay between messages in milliseconds before warning
+spam-delay-warning: 400
+
+#Checks for godmode exploits
+check-godmode: true
