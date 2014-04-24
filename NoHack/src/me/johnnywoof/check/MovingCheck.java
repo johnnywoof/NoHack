@@ -10,6 +10,7 @@ import me.johnnywoof.util.XYZ;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
+import org.bukkit.craftbukkit.v1_7_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -18,12 +19,15 @@ public class MovingCheck {
 
 	private final HashMap<String, MovePacketData> movepackets = new HashMap<String, MovePacketData>();
 	public final HashMap<String, XYZ> lastGround = new HashMap<String, XYZ>();
+	public final HashMap<String, Double> yData = new HashMap<String, Double>();
 	
 	public int checkMove(NoHack nh, Player p, Location from, Location to){
 		
 		double yd = Math.abs((from.getY() - to.getY()));//Vertical speed
 		boolean up = ((to.getY() - from.getY()) > 0);//Moving up?
 		double md = this.getXZDistance(from.getX(), to.getX(), from.getZ(), to.getZ());//Horizontal speed
+		boolean inwater = ((CraftPlayer) p).getHandle().inWater;
+		
 		@SuppressWarnings("deprecation")
 		boolean onground = p.isOnGround();//Yeah...I'm aware how clients can send "always true" booleans.
 		XYZ lg = this.lastGround.get(p.getName());
@@ -57,7 +61,7 @@ public class MovingCheck {
 						
 						if(id != 0){
 							
-							Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed Vertical Speed! Speed was " + yd + ". VL " + id);
+							Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed Vertical Speed! Speed was " + yd + " and max is " + this.getMaxVertical(p) + ". VL " + id);
 							
 						}
 						return 1;
@@ -99,7 +103,7 @@ public class MovingCheck {
 						
 				}
 				
-				return 4;
+				return 4;//More expensive to put the player back than to check it
 				
 			}
 			
@@ -109,12 +113,17 @@ public class MovingCheck {
 				
 			}else{
 				
-				//TODO Add fly check when ground = true
-				if(!p.isFlying()){//Ignore users that are allowed to fly. Doesn't count for the hack fly!
+				if(!p.getAllowFlight() && !inwater){//Ignore users that are allowed to fly. Doesn't count for the hack fly!
+					
+					if(up && yd != 0 && onground){//Possible fly with nofall
+						
+						
+						
+					}
 					
 					if(up){
 						
-						if(ydis > 1.35){
+						if(ydis > this.getMaxHight(p)){
 							
 							int id = nh.raiseViolationLevel(p.getName(), CheckType.FLY);
 							
@@ -141,6 +150,66 @@ public class MovingCheck {
 		}
 		
 		return 0;
+		
+	}
+	
+	private double getMaxHight(Player p){
+		
+		double d = 1.35;
+		
+		if(p.hasPotionEffect(PotionEffectType.JUMP)){
+			
+			int level = this.getPotionEffectLevel(p, PotionEffectType.JUMP);
+			
+			if(level == 1){
+				
+				d = 1.9;
+				
+			}else if(level == 2){
+				
+				d = 2.7;
+				
+			}else if(level == 3){
+				
+				d = 3.36;
+				
+			}else if(level == 4){
+				
+				d = 4.22;
+				
+			}else if(level == 5){
+				
+				d = 5.16;
+				
+			}else if(level == 6){
+				
+				d = 6.19;
+				
+			}else if(level == 7){
+				
+				d = 7.31;
+				
+			}else if(level == 8){
+				
+				d = 8.5;
+				
+			}else if(level == 9){
+				
+				d = 9.76;
+				
+			}else if(level == 10){
+				
+				d = 11.1;
+				
+			}else{
+				
+				d = (level) + 1;
+				
+			}
+			
+		}
+		
+		return d;
 		
 	}
 	
@@ -266,20 +335,18 @@ public class MovingCheck {
 	
 	private double getMaxVertical(Player p){
 		
-		double d = 0;
+		double d = 0.5;
 		
 		if(p.hasPotionEffect(PotionEffectType.JUMP)){
 			
-			d = ((this.getPotionEffectLevel(p, PotionEffectType.JUMP)) * 0.17) + 0.25;
+			d = d + ((this.getPotionEffectLevel(p, PotionEffectType.JUMP)) * 0.11);
 			
-		}else if(p.getVelocity().getY() > 0){
-			
-			d = p.getVelocity().getY() + 0.5;
-			
-		}else{
+		}
 		
-			d = 0.5;
-		
+		if(p.getVelocity().getY() > 0){
+			
+			d = d + (p.getVelocity().getY());
+			
 		}
 		
 		return d;
