@@ -140,6 +140,7 @@ public class NoHack extends JavaPlugin{
 		
 	}
 	
+	@SuppressWarnings("deprecation")
 	public boolean onCommand(final CommandSender sender, Command cmd, String commandLabel, String[] args) {
 		
 		if(sender instanceof Player){

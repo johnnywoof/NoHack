@@ -3,7 +3,10 @@ package me.johnnywoof;
 import me.johnnywoof.util.Utils;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -241,7 +244,52 @@ public class NoHackListener implements Listener {
 			
 		}else if(id == 3){
 			
+			event.setTo(nh.mc.lastGround.get(event.getPlayer().getName()).toLocation(event.getTo().getPitch(), event.getTo().getYaw()));
 			
+		}else if(id == 4){
+			
+			Location loc = nh.mc.lastGround.get(event.getPlayer().getName()).toLocation(event.getTo().getPitch(), event.getTo().getYaw());
+			
+			double md = Double.MAX_VALUE;
+			
+			for(int x = loc.getBlockX() - 5; x < loc.getBlockX() + 5; x++){
+				
+				for(int y = loc.getBlockY() - 5; y < loc.getBlockY() + 5; y++){
+				
+					for(int z = loc.getBlockZ() - 5; z < loc.getBlockZ() + 5; z++){
+						
+						Block b = loc.getWorld().getBlockAt(x, y, z);
+						
+						if(b.getType().isSolid()){
+							
+							if(!b.getRelative(BlockFace.UP).getType().isSolid()){
+								
+								double d = b.getLocation().distanceSquared(event.getFrom());
+								
+								if(d < md){
+								
+									loc = b.getLocation();
+									loc.setY(loc.getBlockY() + 1);
+									loc.setX(loc.getBlockX() + 0.5);
+									loc.setZ(loc.getBlockZ() + 0.5);
+									loc.setPitch(event.getFrom().getPitch());
+									loc.setYaw(event.getFrom().getYaw());
+									
+									event.setTo(loc);
+									
+									md = d;
+								
+								}
+								
+							}
+							
+						}
+						
+					}
+				
+				}
+				
+			}
 			
 		}
 		
