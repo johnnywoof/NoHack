@@ -36,10 +36,28 @@ public class MovingCheck {
 		}
 		//double dis = lg.toLocation().distanceSquared(to);
 
-		//Minor preformance increase
-		if(to.getBlockX() != from.getBlockX() || to.getBlockY() != from.getBlockY() || to.getBlockZ() != from.getBlockZ()){
+		if(to.getBlockY() != from.getBlockY()){
 			
-			//TODO Add crap here
+			if(up && onground && !inwater){
+				
+				if(!to.getBlock().getRelative(BlockFace.DOWN).getType().isSolid()){
+					
+					if(to.getY() % 1 != 0){
+						
+						int id = nh.raiseViolationLevel(p.getName(), CheckType.FLY);
+						
+						if(id != 0){
+							
+							Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed Fly! Tried to fly with nofall enabled. VL " + id);
+							
+						}
+						return 4;
+						
+					}
+					
+				}
+				
+			}
 			
 		}
 		

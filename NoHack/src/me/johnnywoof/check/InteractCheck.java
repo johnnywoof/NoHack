@@ -9,11 +9,14 @@ import me.johnnywoof.util.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerInteractEvent;
 
 public class InteractCheck {
 
 	final HashMap<String, Long> lastlaunch = new HashMap<String, Long>();
 	final HashMap<String, Long> lastclick = new HashMap<String, Long>();
+	final HashMap<String, Long> lastinteract = new HashMap<String, Long>();
 	
 	public boolean checkInventoryClick(Player p, NoHack nh){
 		
@@ -66,6 +69,38 @@ public class InteractCheck {
 		}
 		
 		this.lastclick.put(p.getName(), System.currentTimeMillis());
+		
+		return false;
+		
+	}
+	
+	public boolean checkInteract(NoHack nh, PlayerInteractEvent event, Player p){
+		
+		if(event.hasBlock() && event.getAction() == Action.RIGHT_CLICK_BLOCK){
+		
+			long diff = 0;
+			
+			if(this.lastinteract.containsKey(p.getName())){
+				diff = (System.currentTimeMillis() - this.lastinteract.get(p.getName()));
+				if(diff <= 180){
+					
+					this.lastinteract.put(p.getName(), System.currentTimeMillis());
+					
+					int id = nh.raiseViolationLevel(p.getName(), CheckType.FAST_INTERACT);
+					
+					if(id != 0){
+						
+						Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed Fast Interact! Diff " + diff + ". VL " + id);
+						
+					}
+					return true;
+					
+				}
+			}
+			
+			this.lastinteract.put(p.getName(), System.currentTimeMillis());
+		
+		}
 		
 		return false;
 		

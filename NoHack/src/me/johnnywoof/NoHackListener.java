@@ -1,8 +1,11 @@
 package me.johnnywoof;
 
+import java.util.HashMap;
+
 import me.johnnywoof.util.Utils;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -13,9 +16,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityRegainHealthEvent;
+import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -31,6 +37,8 @@ import org.bukkit.event.player.PlayerMoveEvent;
 public class NoHackListener implements Listener {
 
 	private NoHack nh;
+	
+	private final HashMap<String, Long> lastHealhed = new HashMap<String, Long>();
 	
 	public NoHackListener(NoHack nh){
 		
@@ -58,16 +66,53 @@ public class NoHackListener implements Listener {
 	}
 	
 	@EventHandler(ignoreCancelled = true)
+	public void onEntityRegainHealthEvent(EntityRegainHealthEvent event){
+		
+		if(event.getRegainReason() != RegainReason.CUSTOM){
+			
+			if(event.getEntity() instanceof Player){
+			
+				Player p = (Player) event.getEntity();
+				
+				long diff = 1000;
+				if(this.lastHealhed.containsKey(p.getName())){
+					diff = (System.currentTimeMillis() - this.lastHealhed.get(p.getName()));
+				}
+				
+				this.lastHealhed.put(p.getName(), System.currentTimeMillis());
+				
+				if(diff <= 3800){
+					
+					int id = nh.raiseViolationLevel(p.getName(), CheckType.GOD_MODE);
+					
+					if(id != 0){
+						
+						Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed GodMode! Tried to regain health too fast. VL " + id);
+						
+					}
+					event.setCancelled(true);
+					
+				}
+				
+				p = null;
+				
+			}
+			
+		}
+		
+	}
+	
+	@EventHandler(ignoreCancelled = true)
 	public void onInteract(PlayerInteractEvent event){
 		
-		if(event.hasBlock()){
-			
-			if(nh.bc.checkInteract(nh, event.getClickedBlock(), event.getBlockFace(), event.getPlayer())){
+		if(event.getAction() != Action.PHYSICAL){
+		
+			if(nh.ic.checkInteract(nh, event, event.getPlayer())){
 				
 				event.setCancelled(true);
 				
 			}
-			
+		
 		}
 		
 	}

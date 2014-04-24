@@ -9,7 +9,6 @@ import me.johnnywoof.util.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 
 public class BlockCheck {
@@ -49,12 +48,6 @@ public class BlockCheck {
 		}
 		
 		this.lastplaced.put(p.getName(), System.currentTimeMillis());
-		return false;
-		
-	}
-	
-	public boolean checkInteract(NoHack nh, Block b, BlockFace bf, Player p){
-		
 		return false;
 		
 	}
