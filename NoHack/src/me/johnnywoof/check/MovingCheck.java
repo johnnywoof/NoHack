@@ -107,7 +107,7 @@ public class MovingCheck {
 				
 			}
 			
-			if(onground){
+			if(onground || inwater){
 				
 				this.lastGround.put(p.getName(), new XYZ(from));
 				

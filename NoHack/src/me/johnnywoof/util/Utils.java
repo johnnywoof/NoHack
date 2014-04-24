@@ -23,7 +23,7 @@ public class Utils {
 	
 	public static String getIP(Player p){
 		
-		return p.getUniqueId().toString();
+		return ((CraftPlayer) p).getHandle().getName();
 		
 	}
 	

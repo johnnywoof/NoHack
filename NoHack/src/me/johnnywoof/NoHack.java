@@ -7,7 +7,6 @@ import me.johnnywoof.check.ChatCheck;
 import me.johnnywoof.check.FightCheck;
 import me.johnnywoof.check.InteractCheck;
 import me.johnnywoof.check.MovingCheck;
-import me.johnnywoof.util.Utils;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -173,8 +172,34 @@ public class NoHack extends JavaPlugin{
 						
 						if(t != null){
 						
-							sender.sendMessage(ChatColor.GREEN + t.getName() + "" + ChatColor.GOLD + "'s ping is " + Utils.getPing(t) + " milliseconds.");
-							sender.sendMessage(ChatColor.GREEN + t.getName() + "" + ChatColor.GOLD + "'s ip is " + Utils.getIP(t) + ".");
+							//sender.sendMessage(ChatColor.GREEN + t.getName() + "" + ChatColor.GOLD + "'s ping is " + Utils.getPing(t) + " milliseconds.");
+							//sender.sendMessage(ChatColor.GREEN + t.getName() + "" + ChatColor.GOLD + "'s ip is " + Utils.getIP(t) + ".");
+							sender.sendMessage(ChatColor.AQUA + "" + ChatColor.STRIKETHROUGH + "------------------------------------------");
+							Violation vio = null;
+							
+							if(this.viodata.containsKey(t.getName())){
+								
+								vio = this.viodata.get(t.getName());
+								
+							}else{
+								
+								vio = new Violation();
+								
+							}
+							
+							for(CheckType ct : CheckType.values()){
+								
+								int level = vio.getLevel(ct);
+								
+								if(level > 0){
+									
+									sender.sendMessage(ChatColor.GREEN + "" + ct.toString().toLowerCase() + "" + ChatColor.RED + ": " + ChatColor.YELLOW + "" + level);
+									
+								}
+								
+							}
+							
+							sender.sendMessage(ChatColor.AQUA + "" + ChatColor.STRIKETHROUGH + "------------------------------------------");
 						
 						}else{
 							

@@ -7,6 +7,7 @@ import me.johnnywoof.NoHack;
 import me.johnnywoof.util.Utils;
 
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
@@ -75,7 +76,7 @@ public class BlockCheck {
 		
 		long diff = (System.currentTimeMillis() - this.getLastBreak(p.getName()));
 		
-		if(diff <= 40){
+		if(diff <= 40 && p.getGameMode() == GameMode.CREATIVE){
 			
 			int id = nh.raiseViolationLevel(p.getName(), CheckType.SPEED_BREAK);
 			
