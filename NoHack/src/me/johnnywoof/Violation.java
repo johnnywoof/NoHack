@@ -2,7 +2,7 @@ package me.johnnywoof;
 
 public class Violation {
 
-	private int fly, vs, hs, impossible, sb, ns, gm, crit, fr, fspeed, abl, fp, timer, spam, fc, as, v, nf, is;
+	private int fly, vs, hs, impossible, sb, ns, gm, crit, fr, fspeed, abl, fp, timer, spam, fc, as, v, nf, is, gl;
 	private long lastnotification = 0;
 	
 	public int getLevel(CheckType ct){
@@ -48,6 +48,8 @@ public class Violation {
 				return this.nf;
 			case FAST_INTERACT:
 				return this.is;
+			case GLIDE:
+				return this.gl;
 			default:
 				break;
 		}
@@ -118,6 +120,9 @@ public class Violation {
 				break;
 			case FAST_INTERACT:
 				this.is++;
+				break;
+			case GLIDE:
+				this.gl++;
 				break;
 			default:
 				break;

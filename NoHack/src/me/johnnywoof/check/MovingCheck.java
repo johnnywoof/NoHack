@@ -71,6 +71,12 @@ public class MovingCheck {
 			
 			if(yd != 0){//Actually move on the y axis
 				
+				if(!up && !onground){
+					
+					//TODO Add glide check back...
+					
+				}
+				
 				if(up){
 					
 					if(yd > this.getMaxVertical(p)){//Moving up only
@@ -109,8 +115,6 @@ public class MovingCheck {
 			
 			double ydis = Math.abs(lg.y - to.getY());
 			
-			//Bukkit.broadcastMessage((to.getY() - lg.y) + ":" + p.getFallDistance());
-			
 			if(!up && yd > 0.25 && onground){ //Falling while onground? I DON'T THINK SO
 				
 				int id = nh.raiseViolationLevel(p.getName(), CheckType.NOFALL);
@@ -125,7 +129,7 @@ public class MovingCheck {
 				
 			}
 			
-			if(onground || inwater){
+			if(onground || inwater || p.isFlying()){
 				
 				this.lastGround.put(p.getName(), new XYZ(from));
 				
@@ -133,9 +137,22 @@ public class MovingCheck {
 				
 				if(!p.getAllowFlight() && !inwater){//Ignore users that are allowed to fly. Doesn't count for the hack fly!
 					
-					if(up && yd != 0 && onground){//Possible fly with nofall
+					if(md != 0 && !onground && !inwater){
 						
-						
+						double mdis = this.getXZDistance(to.getX(), lg.x, to.getZ(), lg.z);
+						//Bukkit.broadcastMessage("FAILED @ " + mdis + ":" + ydis);
+						if(mdis > (p.isSprinting() ? (18.3 + (8 * ydis)) : 5.6 + (3 * ydis))){
+							
+							int id = nh.raiseViolationLevel(p.getName(), CheckType.FLY);
+							
+							if(id != 0){
+								
+								Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed Fly! MDIS was " + mdis + ". VL " + id);
+								
+							}
+							return 1;
+							
+						}
 						
 					}
 					
