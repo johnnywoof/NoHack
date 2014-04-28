@@ -341,11 +341,17 @@ public class MovingCheck {
 			
 		}
 		
+		if(mpd.lastloc == null){
+			
+			mpd.lastloc = new XYZ(p.getLocation());
+			
+		}
+		
 		mpd.setAmount(mpd.getAmount() + 1);
 		
-		if((System.currentTimeMillis() - mpd.getTimeStart()) >= 1000){
+		if((System.currentTimeMillis() - mpd.getTimeStart()) >= 500){
 			
-			if(mpd.getAmount() >= (23 + Math.round(Utils.getPing(p) / 100))){
+			if(mpd.getAmount() >= (12 + Math.round(Utils.getPing(p) / 100))){
 					
 				int id = nh.raiseViolationLevel(p.getName(), CheckType.TIMER);
 					

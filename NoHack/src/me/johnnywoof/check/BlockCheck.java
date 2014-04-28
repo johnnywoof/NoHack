@@ -88,14 +88,14 @@ public class BlockCheck {
 		
 	}
 	
-	/**
+	/*/**
 	 * @param b = airblock
-	 * */
+	 * 
 	private boolean checkFullbright(Block b){
 		
 		return (b.getLightLevel() <= 0);
 		
-	}
+	}*/
 	
 	private long getLastBreak(String v){
 		
