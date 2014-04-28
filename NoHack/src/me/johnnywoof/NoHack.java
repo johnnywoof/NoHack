@@ -8,6 +8,7 @@ import me.johnnywoof.check.FightCheck;
 import me.johnnywoof.check.InteractCheck;
 import me.johnnywoof.check.MovingCheck;
 import me.johnnywoof.util.MoveData;
+import me.johnnywoof.util.XYZ;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -27,6 +28,7 @@ public class NoHack extends JavaPlugin{
 	final private HashMap<String, Long> lastswong = new HashMap<String, Long>();
 	final public HashMap<String, Long> deniedlogin = new HashMap<String, Long>();
 	final private HashMap<String, MoveData> movedata = new HashMap<String, MoveData>();
+	private final HashMap<String, XYZ> currentInteracting = new HashMap<String, XYZ>();
 	
 	public int tps = 0;
 	private long second = 0;
@@ -80,6 +82,22 @@ public class NoHack extends JavaPlugin{
 		
 		
 		
+	}
+	
+	public XYZ getCurrentBlock(String n){
+		if(this.currentInteracting.containsKey(n)){
+			
+			return this.currentInteracting.get(n);
+			
+		}else{
+			
+			return null;
+			
+		}
+	}
+	
+	public void setCurrentBlock(String n, XYZ v){
+		this.currentInteracting.put(n, v);
 	}
 	
 	public MoveData getMoveData(String n){

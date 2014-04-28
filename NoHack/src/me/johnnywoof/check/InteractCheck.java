@@ -6,6 +6,7 @@ import me.johnnywoof.CheckType;
 import me.johnnywoof.NoHack;
 import me.johnnywoof.Violation;
 import me.johnnywoof.util.Utils;
+import me.johnnywoof.util.XYZ;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -104,6 +105,8 @@ public class InteractCheck {
 			this.lastinteractright.put(p.getName(), System.currentTimeMillis());
 		
 		}else if(event.hasBlock() && event.getAction() == Action.LEFT_CLICK_BLOCK){
+			
+			nh.setCurrentBlock(p.getName(), new XYZ(event.getClickedBlock().getLocation()));
 			
 			long diff = 0;
 			

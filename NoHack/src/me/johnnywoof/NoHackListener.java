@@ -35,6 +35,7 @@ import org.bukkit.event.player.PlayerLoginEvent.Result;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.event.player.PlayerToggleSprintEvent;
+import org.bukkit.event.player.PlayerVelocityEvent;
 
 public class NoHackListener implements Listener {
 
@@ -300,6 +301,35 @@ public class NoHackListener implements Listener {
 			nh.updateLastSwong(event.getPlayer().getName());
 		
 		}
+		
+	}
+	
+	@EventHandler(priority=EventPriority.MONITOR, ignoreCancelled = true)//need to confirm no plugin canceled this.
+	public void onPlayerVelocityEvent(final PlayerVelocityEvent event){
+
+		final int before = (int) event.getVelocity().distanceSquared(event.getPlayer().getLocation().toVector());
+
+		nh.getServer().getScheduler().runTaskLater(nh, new Runnable(){
+
+			@Override
+			public void run() {
+				
+				if(before == (int) event.getVelocity().distanceSquared(event.getPlayer().getLocation().toVector())){
+					
+					int id = nh.raiseViolationLevel(event.getPlayer().getName(), CheckType.NOKNOCKBACK);
+					
+					if(id != 0){
+						
+						Utils.messageAdmins(ChatColor.YELLOW + "" + event.getPlayer().getName() + "" + ChatColor.GREEN + " failed NoKnockBack! Tried to avoid taking no knockback. VL " + id);					
+					}
+					
+					event.getPlayer().kickPlayer(ChatColor.RED + "You didn't move correctly! Are you hacking?");
+					
+				}
+				
+			}
+			
+		}, 20);
 		
 	}
 	

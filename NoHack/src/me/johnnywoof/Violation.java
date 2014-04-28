@@ -2,7 +2,7 @@ package me.johnnywoof;
 
 public class Violation {
 
-	private int fly, vs, hs, impossible, sb, ns, gm, crit, fr, fspeed, abl, fp, timer, spam, fc, as, v, nf, is, gl, fb;
+	private int fly, vs, hs, impossible, sb, ns, gm, crit, fr, fspeed, abl, fp, timer, spam, fc, as, v, nf, is, gl, fb, nkb;
 	private long lastnotification = 0;
 	
 	public void resetLevel(CheckType ct){
@@ -74,6 +74,9 @@ public class Violation {
 		case FULLBRIGHT:
 			this.fb = 0;
 			break;
+		case NOKNOCKBACK:
+			this.nkb = 0;
+			break;
 		default:
 			break;
 	}
@@ -127,6 +130,8 @@ public class Violation {
 				return this.gl;
 			case FULLBRIGHT:
 				return this.fb;
+			case NOKNOCKBACK:
+				return this.nkb;
 			default:
 				break;
 		}
@@ -203,6 +208,9 @@ public class Violation {
 				break;
 			case FULLBRIGHT:
 				this.fb++;
+				break;
+			case NOKNOCKBACK:
+				this.nkb++;
 				break;
 			default:
 				break;

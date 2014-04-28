@@ -5,6 +5,7 @@ import java.util.HashMap;
 import me.johnnywoof.CheckType;
 import me.johnnywoof.NoHack;
 import me.johnnywoof.util.Utils;
+import me.johnnywoof.util.XYZ;
 
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -13,7 +14,7 @@ import org.bukkit.entity.Player;
 
 public class BlockCheck {
 
-	final HashMap<String, Long> lastbreak = new HashMap<String, Long>();
+	private final HashMap<String, Long> lastbreak = new HashMap<String, Long>();
 	
 	public boolean checkPlace(NoHack nh, Block b, Block pa, Player p){
 		
@@ -35,17 +36,21 @@ public class BlockCheck {
 	
 	public boolean checkBreak(NoHack nh, long ls, Block b, Player p){
 		
-		if(this.checkFullbright(p.getEyeLocation().getBlock())){
+		XYZ c = nh.getCurrentBlock(p.getName());
+		
+		if(c != null){
 			
-			int id = nh.raiseViolationLevel(p.getName(), CheckType.FULLBRIGHT);
-			
-			if(id != 0){
+			if(c.x != b.getX() || c.y != b.getY() || c.z != b.getZ()){
 				
-				Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed Fullbright! Tried to break a block in the dark. VL " + id);
+				int id = nh.raiseViolationLevel(p.getName(), CheckType.VISIBLE);
+				
+				if(id != 0){
+					
+					Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed Visible! Tried to break another block than the one interacting with. VL " + id);					
+				}
+				return true;
 				
 			}
-			
-			return true;
 			
 		}
 		
