@@ -7,6 +7,7 @@ import me.johnnywoof.check.ChatCheck;
 import me.johnnywoof.check.FightCheck;
 import me.johnnywoof.check.InteractCheck;
 import me.johnnywoof.check.MovingCheck;
+import me.johnnywoof.util.MoveData;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -25,6 +26,7 @@ public class NoHack extends JavaPlugin{
 	final private HashMap<String, Violation> viodata = new HashMap<String, Violation>();
 	final private HashMap<String, Long> lastswong = new HashMap<String, Long>();
 	final public HashMap<String, Long> deniedlogin = new HashMap<String, Long>();
+	final private HashMap<String, MoveData> movedata = new HashMap<String, MoveData>();
 	
 	public int tps = 0;
 	private long second = 0;
@@ -77,6 +79,44 @@ public class NoHack extends JavaPlugin{
 	public void reloadConfig(){
 		
 		
+		
+	}
+	
+	public MoveData getMoveData(String n){
+		if(this.movedata.containsKey(n)){
+			
+			return this.movedata.get(n);
+			
+		}else{
+			
+			return new MoveData(0, 0);
+			
+		}
+	}
+	
+	public void setMoveData(String n, MoveData v){
+		this.movedata.put(n, v);
+	}
+	
+	public void setViolation(String v, Violation vio){
+		this.viodata.put(v, vio);
+	}
+	
+	public Violation getViolation(String v){
+		
+		Violation vio = null;
+		
+		if(this.viodata.containsKey(v)){
+			
+			vio = this.viodata.get(v);
+			
+		}else{
+			
+			vio = new Violation();
+			
+		}
+		
+		return vio;
 		
 	}
 	

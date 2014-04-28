@@ -13,7 +13,6 @@ import org.bukkit.entity.Player;
 
 public class BlockCheck {
 
-	final HashMap<String, Long> lastplaced = new HashMap<String, Long>();
 	final HashMap<String, Long> lastbreak = new HashMap<String, Long>();
 	
 	public boolean checkPlace(NoHack nh, Block b, Block pa, Player p){
@@ -30,31 +29,27 @@ public class BlockCheck {
 			return true;
 			
 		}
-		
-		long diff = (System.currentTimeMillis() - this.getLastPlaced(p.getName()));
-		
-		if(diff <= 170){
-			
-			this.lastplaced.put(p.getName(), System.currentTimeMillis());
-			int id = nh.raiseViolationLevel(p.getName(), CheckType.FASTPLACE);
-			
-			if(id != 0){
-				
-				Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed Fast Place! Speed was " + diff + ". VL " + id);
-				
-			}
-			return true;
-			
-		}
-		
-		this.lastplaced.put(p.getName(), System.currentTimeMillis());
 		return false;
 		
 	}
 	
 	public boolean checkBreak(NoHack nh, long ls, Block b, Player p){
 		
-		if((System.currentTimeMillis() - ls) >= 1000){
+		if(this.checkFullbright(p.getEyeLocation().getBlock())){
+			
+			int id = nh.raiseViolationLevel(p.getName(), CheckType.FULLBRIGHT);
+			
+			if(id != 0){
+				
+				Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed Fullbright! Tried to break a block in the dark. VL " + id);
+				
+			}
+			
+			return true;
+			
+		}
+		
+		if((System.currentTimeMillis() - ls) >= 2500){
 			
 			int id = nh.raiseViolationLevel(p.getName(), CheckType.NOSWING);
 			
@@ -88,25 +83,20 @@ public class BlockCheck {
 		
 	}
 	
+	/**
+	 * @param b = airblock
+	 * */
+	private boolean checkFullbright(Block b){
+		
+		return (b.getLightLevel() <= 0);
+		
+	}
+	
 	private long getLastBreak(String v){
 		
 		if(this.lastbreak.containsKey(v)){
 			
 			return this.lastbreak.get(v);
-			
-		}else{
-			
-			return 0;
-			
-		}
-		
-	}
-	
-	private long getLastPlaced(String v){
-		
-		if(this.lastplaced.containsKey(v)){
-			
-			return this.lastplaced.get(v);
 			
 		}else{
 			

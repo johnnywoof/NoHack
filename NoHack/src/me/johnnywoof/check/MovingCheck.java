@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import me.johnnywoof.CheckType;
 import me.johnnywoof.NoHack;
+import me.johnnywoof.util.MoveData;
 import me.johnnywoof.util.Utils;
 import me.johnnywoof.util.XYZ;
 
@@ -12,6 +13,7 @@ import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
 import org.bukkit.craftbukkit.v1_7_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -27,6 +29,7 @@ public class MovingCheck {
 		boolean up = ((to.getY() - from.getY()) > 0);//Moving up?
 		double md = this.getXZDistance(from.getX(), to.getX(), from.getZ(), to.getZ());//Horizontal speed
 		boolean inwater = ((CraftPlayer) p).getHandle().inWater;
+		boolean onladder = ((CraftPlayer) p).getHandle().h_();//On ladder? NMS ftw!
 		
 		@SuppressWarnings("deprecation")
 		boolean onground = p.isOnGround();//Yeah...I'm aware how clients can send "always true" booleans.
@@ -34,15 +37,14 @@ public class MovingCheck {
 		if(lg == null){
 			lg = new XYZ(from);
 		}
-		//double dis = lg.toLocation().distanceSquared(to);
-
+		
 		if(to.getBlockY() != from.getBlockY()){
 			
 			if(up && onground && !inwater){
 				
-				if(!to.getBlock().getRelative(BlockFace.DOWN).getType().isSolid()){
-					
-					if(to.getY() % 1 != 0){
+				if(to.getY() % 1 != 0){
+				
+					if(!to.getBlock().getRelative(BlockFace.DOWN).getType().isSolid()){
 						
 						int id = nh.raiseViolationLevel(p.getName(), CheckType.FLY);
 						
@@ -62,6 +64,22 @@ public class MovingCheck {
 		}
 		
 		if(to.getX() != from.getX() || to.getY() != from.getY() || to.getZ() != from.getZ()){
+			
+			double dis = from.distanceSquared(to);
+			
+			if(dis > 30){
+				
+				p.kickPlayer("You moved too fast! Hacking? :(");
+				int id = nh.raiseViolationLevel(p.getName(), CheckType.IMPOSSIBLE);
+				
+				if(id != 0){
+					
+					Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed Impossible! Tried to avoid anti-cheating by using code filter. VL " + id);
+					
+				}
+				return 0;
+				
+			}
 			
 			int tid = this.checkTimer(nh, p);
 			
@@ -96,9 +114,11 @@ public class MovingCheck {
 				
 			}
 			
+			double ydis = Math.abs(lg.y - to.getY());
+			
 			if(md != 0){
 				
-				if(md > this.getMaxHorizontal(p)){
+				if(md > this.getMaxHorizontal(onground, inwater, p)){
 					
 					int id = nh.raiseViolationLevel(p.getName(), CheckType.HORIZONTAL_SPEED);
 					
@@ -109,11 +129,30 @@ public class MovingCheck {
 					}
 					return 1;
 					
+				}else{
+					
+					if(!onground && !p.getAllowFlight()){
+						
+						double mdis = this.getXZDistance(to.getX(), lg.x, to.getZ(), lg.z);
+						//Bukkit.broadcastMessage("FAILED @ " + mdis + ":" + ydis);
+						if(mdis > this.getMaxMD(inwater, onground, p, ydis, nh.getMoveData(p.getName()))){
+							
+							int id = nh.raiseViolationLevel(p.getName(), CheckType.FLY);
+							
+							if(id != 0){
+								
+								Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed Fly! MDIS was " + mdis + ". VL " + id);
+								
+							}
+							return 1;
+							
+						}
+					
+					}
+					
 				}
 				
 			}
-			
-			double ydis = Math.abs(lg.y - to.getY());
 			
 			if(!up && yd > 0.25 && onground){ //Falling while onground? I DON'T THINK SO
 				
@@ -129,32 +168,13 @@ public class MovingCheck {
 				
 			}
 			
-			if(onground || inwater || p.isFlying()){
+			if(onground || inwater || p.isFlying() || onladder){
 				
 				this.lastGround.put(p.getName(), new XYZ(from));
 				
 			}else{
 				
-				if(!p.getAllowFlight() && !inwater){//Ignore users that are allowed to fly. Doesn't count for the hack fly!
-					
-					if(md != 0 && !onground && !inwater){
-						
-						double mdis = this.getXZDistance(to.getX(), lg.x, to.getZ(), lg.z);
-						//Bukkit.broadcastMessage("FAILED @ " + mdis + ":" + ydis);
-						if(mdis > (p.isSprinting() ? (18.3 + (8 * ydis)) : 5.6 + (3 * ydis))){
-							
-							int id = nh.raiseViolationLevel(p.getName(), CheckType.FLY);
-							
-							if(id != 0){
-								
-								Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed Fly! MDIS was " + mdis + ". VL " + id);
-								
-							}
-							return 1;
-							
-						}
-						
-					}
+				if(!p.getAllowFlight() && !inwater && !onladder){//Ignore users that are allowed to fly. Doesn't count for the hack fly!
 					
 					if(up){
 						
@@ -173,11 +193,6 @@ public class MovingCheck {
 						
 					}
 					
-					//TODO Make this work
-					//double xzd = this.getXZDistance(lg.x, to.getX(), lg.z, to.getZ());
-					
-					
-					
 				}
 				
 			}
@@ -185,6 +200,67 @@ public class MovingCheck {
 		}
 		
 		return 0;
+		
+	}
+	
+	private double getMaxMD(boolean inwater, boolean onground, Player p, double ydis, MoveData md){
+		
+		double d = 0D;
+		
+		boolean csneak = p.isSneaking();
+		boolean csprint = p.isSprinting();
+		
+		long now = System.currentTimeMillis();
+		
+		if(!p.isSneaking()){
+			
+			if((now - md.sneaktime) <= 1000){
+				
+				csneak = true;
+				
+			}
+			
+		}
+		
+		if(!p.isSprinting()){
+			
+			if((now - md.sprinttime) <= 1000){
+				
+				csprint = true;
+				
+			}
+			
+		}
+
+		//TODO Account jump effect
+		
+		if(p.isFlying()){
+		
+			d = 1.25;
+			
+		}else if(csprint){
+			
+			d = (18.3 + d) + (8 * ydis);
+			
+		}else if(csneak){
+			
+			if(onground){
+			
+				d = 0.065;
+				
+			}else{
+				
+				d = 0.64;
+				
+			}
+			
+		}else{
+			
+			d = (5.6 + d) + (3 * ydis);
+			
+		}
+		
+		return d;
 		
 	}
 	
@@ -270,44 +346,21 @@ public class MovingCheck {
 		if((System.currentTimeMillis() - mpd.getTimeStart()) >= 1000){
 			
 			if(mpd.getAmount() >= (23 + Math.round(Utils.getPing(p) / 100))){
-				
-				if(mpd.getAmount() == mpd.lastamount + 1){
 					
-					if((System.currentTimeMillis() - mpd.getTimeStart()) >= 5000){
-						
-						mpd.reset();
-						
-					}else{
-						
-						mpd.lastamount = mpd.getAmount() + 1;
-						int id = nh.raiseViolationLevel(p.getName(), CheckType.TIMER);
-						
-						if(id != 0){
-							
-							Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed Timer! Sent more packets than expected. VL " + id);
-							
-						}
-						return 1;
-						
-					}
+				int id = nh.raiseViolationLevel(p.getName(), CheckType.TIMER);
 					
-				}else{
-				
-					mpd.lastamount = mpd.getAmount();
-					int id = nh.raiseViolationLevel(p.getName(), CheckType.TIMER);
-					
-					if(id != 0){
+				if(id != 0){
 						
-						Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed Timer! Sent more packets than expected. VL " + id);
+					Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed Timer! Sent more packets than expected. VL " + id);
 						
-					}
-					return 1;
-				
 				}
+				p.teleport(mpd.lastloc.toLocation(p.getLocation().getPitch(), p.getLocation().getYaw()), TeleportCause.PLUGIN);
+				mpd.reset(new XYZ(p.getLocation()));
+				return 0;
 				
 			}else{
 				
-				mpd.reset();
+				mpd.reset(new XYZ(p.getLocation()));
 				
 			}
 			
@@ -318,11 +371,11 @@ public class MovingCheck {
 		
 	}
 	
-	private double getMaxHorizontal(Player p){
+	private double getMaxHorizontal(boolean onground, boolean inwater, Player p){
 		
 		double d = 0;
 		
-		if(p.isFlying() && p.getAllowFlight()){
+		if(p.isFlying()){
 		
 			d = 0.305;
 			
@@ -336,11 +389,19 @@ public class MovingCheck {
 				
 				if(p.getAllowFlight()){
 					
-					d = 0.0053;
+					d = 0.305;
 					
 				}else{
+					
+					if(onground){
 				
-					d = 0.0042;
+						d = 0.025;
+					
+					}else{
+						
+						d = 0.025;
+						
+					}
 				
 				}
 				

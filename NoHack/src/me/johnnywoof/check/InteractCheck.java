@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import me.johnnywoof.CheckType;
 import me.johnnywoof.NoHack;
+import me.johnnywoof.Violation;
 import me.johnnywoof.util.Utils;
 
 import org.bukkit.ChatColor;
@@ -16,7 +17,8 @@ public class InteractCheck {
 
 	final HashMap<String, Long> lastlaunch = new HashMap<String, Long>();
 	final HashMap<String, Long> lastclick = new HashMap<String, Long>();
-	final HashMap<String, Long> lastinteract = new HashMap<String, Long>();
+	final HashMap<String, Long> lastinteractright = new HashMap<String, Long>();
+	final HashMap<String, Long> lastinteractleft = new HashMap<String, Long>();
 	
 	public boolean checkInventoryClick(Player p, NoHack nh){
 		
@@ -80,11 +82,12 @@ public class InteractCheck {
 		
 			long diff = 0;
 			
-			if(this.lastinteract.containsKey(p.getName())){
-				diff = (System.currentTimeMillis() - this.lastinteract.get(p.getName()));
+			if(this.lastinteractright.containsKey(p.getName())){
+				diff = (System.currentTimeMillis() - this.lastinteractright.get(p.getName()));
+				
+				this.lastinteractright.put(p.getName(), System.currentTimeMillis());
+				
 				if(diff <= 180){
-					
-					this.lastinteract.put(p.getName(), System.currentTimeMillis());
 					
 					int id = nh.raiseViolationLevel(p.getName(), CheckType.FAST_INTERACT);
 					
@@ -98,8 +101,46 @@ public class InteractCheck {
 				}
 			}
 			
-			this.lastinteract.put(p.getName(), System.currentTimeMillis());
+			this.lastinteractright.put(p.getName(), System.currentTimeMillis());
 		
+		}else if(event.hasBlock() && event.getAction() == Action.LEFT_CLICK_BLOCK){
+			
+			long diff = 0;
+			
+			if(this.lastinteractleft.containsKey(p.getName())){
+				
+				diff = (System.currentTimeMillis() - this.lastinteractleft.get(p.getName()));
+				
+				this.lastinteractleft.put(p.getName(), System.currentTimeMillis());
+				
+				if(diff <= 4){		
+					
+					int id = nh.raiseViolationLevel(p.getName(), CheckType.FAST_INTERACT);
+					
+					if(id != 0){
+						
+						if(id > 50){
+							
+							Violation vio = nh.getViolation(p.getName());
+							
+							vio.resetLevel(CheckType.FAST_INTERACT);
+							
+							nh.setViolation(p.getName(), vio);
+							
+							p.kickPlayer(ChatColor.RED + "Block breaking out of sync!");
+							
+						}
+						
+						Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed Fast Interact! Diff " + diff + ". VL " + id);
+						
+					}
+					return true;
+					
+				}
+			}
+			
+			this.lastinteractleft.put(p.getName(), System.currentTimeMillis());
+			
 		}
 		
 		return false;

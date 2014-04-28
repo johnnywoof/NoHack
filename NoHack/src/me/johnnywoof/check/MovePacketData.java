@@ -1,10 +1,13 @@
 package me.johnnywoof.check;
 
+import me.johnnywoof.util.XYZ;
+
 public class MovePacketData {
 
 	private long timestart;
 	private int amount;
 	public int lastamount = 0;
+	public XYZ lastloc = null;
 	
 	public MovePacketData(){}
 	
@@ -29,10 +32,11 @@ public class MovePacketData {
 		this.amount = v;
 	}
 	
-	public void reset(){
+	public void reset(XYZ now){
 		this.setTimeStart(System.currentTimeMillis());
 		this.setAmount(0);
 		this.lastamount = -1;
+		this.lastloc = now;
 	}
 	
 }

@@ -2,9 +2,9 @@ package me.johnnywoof;
 
 import java.util.HashMap;
 
+import me.johnnywoof.util.MoveData;
 import me.johnnywoof.util.Utils;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -33,6 +33,8 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerLoginEvent.Result;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerToggleSneakEvent;
+import org.bukkit.event.player.PlayerToggleSprintEvent;
 
 public class NoHackListener implements Listener {
 
@@ -43,6 +45,32 @@ public class NoHackListener implements Listener {
 	public NoHackListener(NoHack nh){
 		
 		this.nh = nh;
+		
+	}
+	
+	@EventHandler(ignoreCancelled = true)
+	public void onSneak(PlayerToggleSneakEvent event){
+		
+		MoveData md = nh.getMoveData(event.getPlayer().getName());
+		
+		md.sneaktime = System.currentTimeMillis();
+		
+		md.sneaking = event.isSneaking();
+		
+		nh.setMoveData(event.getPlayer().getName(), md);
+		
+	}
+	
+	@EventHandler(ignoreCancelled = true)
+	public void onSprint(PlayerToggleSprintEvent event){
+		
+		MoveData md = nh.getMoveData(event.getPlayer().getName());
+		
+		md.sprinttime = System.currentTimeMillis();
+		
+		md.sprinting = event.isSprinting();
+		
+		nh.setMoveData(event.getPlayer().getName(), md);
 		
 	}
 	
@@ -87,7 +115,7 @@ public class NoHackListener implements Listener {
 					
 					if(id != 0){
 						
-						Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed GodMode! Tried to regain health too fast. VL " + id);
+						Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed GodMode! Tried to regain health too fast. Diff " + diff + " VL " + id);
 						
 					}
 					event.setCancelled(true);
@@ -160,6 +188,7 @@ public class NoHackListener implements Listener {
 	@EventHandler(priority=EventPriority.NORMAL, ignoreCancelled = true)
 	public void onFood(FoodLevelChangeEvent event){
 		
+		//TODO Remove this.....
 		event.setFoodLevel(20);
 		((Player) event.getEntity()).setSaturation(20);
 		
@@ -224,7 +253,7 @@ public class NoHackListener implements Listener {
 		
 		if(event.getBed().getType() != Material.BED_BLOCK){
 			
-			Bukkit.broadcastMessage("Detected spoof bed leave");
+			event.getPlayer().kickPlayer("Go find a real bed!");
 			
 		}
 		
@@ -246,7 +275,7 @@ public class NoHackListener implements Listener {
 		
 		if(event.getBed().getType() != Material.BED_BLOCK){
 			
-			Bukkit.broadcastMessage("Detected spoof bed enter");
+			event.getPlayer().kickPlayer("Go find a real bed!");
 			
 		}
 		
@@ -312,15 +341,8 @@ public class NoHackListener implements Listener {
 								double d = b.getLocation().distanceSquared(event.getFrom());
 								
 								if(d < md){
-								
-									loc = b.getLocation();
-									loc.setY(loc.getBlockY() + 1);
-									loc.setX(loc.getBlockX() + 0.5);
-									loc.setZ(loc.getBlockZ() + 0.5);
-									loc.setPitch(event.getFrom().getPitch());
-									loc.setYaw(event.getFrom().getYaw());
 									
-									event.setTo(loc);
+									event.setTo(new Location(loc.getWorld(), x + 0.5, y + 1, z + 0.5, event.getTo().getYaw(), event.getTo().getPitch()));
 									
 									md = d;
 								
