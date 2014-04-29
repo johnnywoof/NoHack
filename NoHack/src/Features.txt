@@ -1,0 +1,27 @@
+Enforces climbing, walking, sprinting, and sneaking speeds.
+Prevents fly.
+Prevents the use of the checkpoint exploit.
+Prevents healing too fast
+Prevents players from sending a chat message when sneaking, sprinting, or blocking
+Prevents attacking while blocking
+Blocks fast interactions, such as using noteblocks too fast.
+Blocks fastplace
+Blocks noswing
+Blocks nuker
+Prevents players from sending colored messages
+Somewhat prevents spam* (Need to work on this)
+Prevents attacking while dead
+Limits attack reach
+Limits attack speed
+Somewhat prevents aimbot
+Prevents interacting with the inventory while sprinting, sneaking, sleeping, or blocking. A counter to autosoup
+Prevents interacting with a container too fast
+Prevents throwing too many projectiles in a time span
+Prevents spider/climb
+Blocks nofall
+Blocks sneaking and sprinting, counter to autosprint
+Blocks code filter
+Blocks timer
+Blocks highjump
+Blocks step
+Limits speed on the y axis

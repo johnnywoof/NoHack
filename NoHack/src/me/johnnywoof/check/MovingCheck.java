@@ -21,7 +21,6 @@ public class MovingCheck {
 
 	private final HashMap<String, MovePacketData> movepackets = new HashMap<String, MovePacketData>();
 	public final HashMap<String, XYZ> lastGround = new HashMap<String, XYZ>();
-	public final HashMap<String, Double> yData = new HashMap<String, Double>();
 	
 	public int checkMove(NoHack nh, Player p, Location from, Location to){
 		
