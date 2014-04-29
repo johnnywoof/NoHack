@@ -14,6 +14,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class NoHack extends JavaPlugin{
@@ -215,6 +216,21 @@ public class NoHack extends JavaPlugin{
 					this.reloadConfig();
 					
 					sender.sendMessage(ChatColor.GOLD + "Config file has been reloaded.");
+					
+				}else if(args[0].equalsIgnoreCase("enable") || args[0].equalsIgnoreCase("disable")){
+					
+					HandlerList.unregisterAll(this);
+					
+					if(args[0].equalsIgnoreCase("enable")){
+						
+						this.getServer().getPluginManager().registerEvents(new NoHackListener(this), this);
+						sender.sendMessage(ChatColor.GREEN + "Listener is now active");
+						
+					}else{
+						
+						sender.sendMessage(ChatColor.GREEN + "Listener is no longer active");
+						
+					}
 					
 				}else if(args[0].equalsIgnoreCase("test")){
 					

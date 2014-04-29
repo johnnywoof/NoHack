@@ -130,7 +130,7 @@ public class InteractCheck {
 							
 							nh.setViolation(p.getName(), vio);
 							
-							p.kickPlayer(ChatColor.RED + "Block breaking out of sync!");
+							//p.kickPlayer(ChatColor.RED + "Block breaking out of sync!");
 							
 						}
 						

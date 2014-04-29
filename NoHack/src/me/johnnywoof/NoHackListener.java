@@ -307,7 +307,7 @@ public class NoHackListener implements Listener {
 	@EventHandler(priority=EventPriority.MONITOR, ignoreCancelled = true)//need to confirm no plugin canceled this.
 	public void onPlayerVelocityEvent(final PlayerVelocityEvent event){
 
-		final int before = (int) event.getVelocity().distanceSquared(event.getPlayer().getLocation().toVector());
+		/*final int before = (int) event.getVelocity().distanceSquared(event.getPlayer().getLocation().toVector());
 
 		nh.getServer().getScheduler().runTaskLater(nh, new Runnable(){
 
@@ -329,7 +329,7 @@ public class NoHackListener implements Listener {
 				
 			}
 			
-		}, 20);
+		}, 20);*/
 		
 	}
 	

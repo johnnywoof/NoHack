@@ -44,7 +44,7 @@ public class MovingCheck {
 				
 				if(to.getY() % 1 != 0){
 				
-					if(!to.getBlock().getRelative(BlockFace.DOWN).getType().isSolid()){
+					if(to.getBlock().getRelative(BlockFace.DOWN).getType() == org.bukkit.Material.AIR){
 						
 						int id = nh.raiseViolationLevel(p.getName(), CheckType.FLY);
 						
@@ -64,6 +64,19 @@ public class MovingCheck {
 		}
 		
 		if(to.getX() != from.getX() || to.getY() != from.getY() || to.getZ() != from.getZ()){
+			
+			if(p.isSneaking() && p.isSprinting()){
+				
+				int id = nh.raiseViolationLevel(p.getName(), CheckType.IMPOSSIBLE);
+				
+				if(id != 0){
+					
+					Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed Impossible! Tried to sneak and sprint at the same time. VL " + id);
+					
+				}
+				return 1;
+				
+			}
 			
 			double dis = from.distanceSquared(to);
 			
@@ -89,9 +102,20 @@ public class MovingCheck {
 			
 			if(yd != 0){//Actually move on the y axis
 				
-				if(!up && !onground){
+				if(up && onladder){
 					
-					//TODO Add glide check back...
+					if(yd > ((p.getAllowFlight() || (to.getY() % 1) <= 0.4) ? 0.424 : 0.118)){
+						
+						int id = nh.raiseViolationLevel(p.getName(), CheckType.VERTICAL_SPEED);
+						
+						if(id != 0){
+							
+							Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed Vertical Speed! Moved too fast on a ladder (" + yd + "). VL " + id);
+							
+						}
+						return 1;
+						
+					}
 					
 				}
 				
@@ -118,7 +142,7 @@ public class MovingCheck {
 			
 			if(md != 0){
 				
-				if(md > this.getMaxHorizontal(onground, inwater, p)){
+				if(md > this.getMaxHorizontal(onground, inwater, p, nh.getMoveData(p.getName()))){
 					
 					int id = nh.raiseViolationLevel(p.getName(), CheckType.HORIZONTAL_SPEED);
 					
@@ -245,12 +269,12 @@ public class MovingCheck {
 		}else if(csneak){
 			
 			if(onground){
-			
+				
 				d = 0.065;
 				
 			}else{
 				
-				d = 0.64;
+				d = 0.67;
 				
 			}
 			
@@ -351,7 +375,7 @@ public class MovingCheck {
 		
 		if((System.currentTimeMillis() - mpd.getTimeStart()) >= 500){
 			
-			if(mpd.getAmount() >= (12 + Math.round(Utils.getPing(p) / 100))){
+			if(mpd.getAmount() >= (13 + Math.round(Utils.getPing(p) / 100))){
 					
 				int id = nh.raiseViolationLevel(p.getName(), CheckType.TIMER);
 					
@@ -377,9 +401,33 @@ public class MovingCheck {
 		
 	}
 	
-	private double getMaxHorizontal(boolean onground, boolean inwater, Player p){
+	private double getMaxHorizontal(boolean onground, boolean inwater, Player p, MoveData md){
 		
 		double d = 0;
+		
+		boolean csneak = p.isSneaking();
+		
+		if(!csneak){
+			
+			if((System.currentTimeMillis() - md.sneaktime) <= 1000){
+				
+				csneak = true;
+				
+			}
+			
+		}
+		
+		boolean csprint = p.isSprinting();
+		
+		if(!csprint){
+			
+			if((System.currentTimeMillis() - md.sprinttime) <= 1000){
+				
+				csprint = true;
+				
+			}
+			
+		}
 		
 		if(p.isFlying()){
 		
@@ -387,11 +435,11 @@ public class MovingCheck {
 			
 		}else{
 			
-			if(p.isSprinting()){
+			if(csprint){
 				
 				d = 0.788;
 				
-			}else if(p.isSneaking()){
+			}else if(csneak){
 				
 				if(p.getAllowFlight()){
 					
@@ -399,13 +447,13 @@ public class MovingCheck {
 					
 				}else{
 					
-					if(onground){
+					if(onground && p.isSneaking()){
 				
 						d = 0.025;
 					
-					}else{
+					}else if(onground){
 						
-						d = 0.025;
+						d = 0.467;
 						
 					}
 				
@@ -417,7 +465,7 @@ public class MovingCheck {
 				
 			}else{
 				
-				d = 0.466;
+				d = 0.467;
 			
 			}
 		
