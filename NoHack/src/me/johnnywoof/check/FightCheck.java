@@ -93,7 +93,7 @@ public class FightCheck {
 			
 			//reach check
 			
-			if(d > ((k.getGameMode() == GameMode.CREATIVE) ? 27 : 13.5)){
+			if(d > ((k.getGameMode() == GameMode.CREATIVE) ? 27.5 : 14)){
 				
 				int id = nh.raiseViolationLevel(k.getName(), CheckType.ATTACK_REACH);
 				
