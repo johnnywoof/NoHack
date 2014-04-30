@@ -15,6 +15,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
 
 public class InteractCheck {
 
@@ -101,6 +102,26 @@ public class InteractCheck {
 		
 		if(event.hasBlock() && event.getAction() == Action.RIGHT_CLICK_BLOCK){
 		
+			if(event.getClickedBlock().getType().toString().toLowerCase().contains("rail") || event.getClickedBlock().isLiquid()){
+				
+				ItemStack i = event.getPlayer().getItemInHand();
+				
+				if(i != null){
+					
+					Material m = i.getType();
+					
+					if(m == Material.MINECART || m == Material.HOPPER_MINECART || m == Material.COMMAND_MINECART ||
+							m == Material.BOAT || m == Material.STORAGE_MINECART || m == Material.POWERED_MINECART ||
+							m == Material.EXPLOSIVE_MINECART || m == Material.BOAT){
+						
+						return false;
+						
+					}
+					
+				}
+			
+			}
+			
 			long diff = 0;
 			
 			if(this.lastinteractright.containsKey(p.getName())){
@@ -171,7 +192,7 @@ public class InteractCheck {
 							
 							nh.setViolation(p.getName(), vio);
 							
-							//p.kickPlayer(ChatColor.RED + "Block breaking out of sync!");
+							p.kickPlayer(ChatColor.RED + "Block breaking out of sync!");
 							
 						}
 						
