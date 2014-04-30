@@ -1,5 +1,6 @@
 package me.johnnywoof.util;
 
+import me.johnnywoof.NoHack;
 import net.minecraft.server.v1_7_R3.Vec3D;
 
 import org.bukkit.Bukkit;
@@ -33,7 +34,7 @@ public class Utils {
 			
 			if(p.hasPermission("nohack.notification") || p.isOp()){
 				
-				p.sendMessage(ChatColor.RED + "[NoHack] " + message);
+				p.sendMessage(ChatColor.RED + "[NoHack] " + message + ChatColor.GREEN + ". TPS " + NoHack.tps);
 				
 			}
 			

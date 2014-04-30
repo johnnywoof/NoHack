@@ -129,7 +129,7 @@ public class InteractCheck {
 				
 				this.lastinteractright.put(p.getName(), System.currentTimeMillis());
 				
-				if(diff <= 180){
+				if(diff <= 150){
 					
 					int id = nh.raiseViolationLevel(p.getName(), CheckType.FAST_INTERACT);
 					
@@ -141,10 +141,12 @@ public class InteractCheck {
 					return true;
 					
 				}
+			}else{
+				
+				this.lastinteractright.put(p.getName(), System.currentTimeMillis());
+				
 			}
-			
-			this.lastinteractright.put(p.getName(), System.currentTimeMillis());
-			
+
 			Material m = event.getClickedBlock().getType();
 			
 			if(m == Material.CHEST || m == Material.TRAPPED_CHEST || m == Material.BREWING_STAND || m == Material.ENDER_CHEST || m == Material.ANVIL || m == Material.TRAP_DOOR || m == Material.IRON_DOOR_BLOCK || m == Material.WOODEN_DOOR
@@ -178,7 +180,7 @@ public class InteractCheck {
 				
 				this.lastinteractleft.put(p.getName(), System.nanoTime());
 				
-				if(diff <= 200000){		
+				if(diff <= 190000){		
 					
 					int id = nh.raiseViolationLevel(p.getName(), CheckType.FAST_INTERACT);
 					
@@ -202,9 +204,11 @@ public class InteractCheck {
 					return true;
 					
 				}
+			}else{
+				
+				this.lastinteractleft.put(p.getName(), System.nanoTime());
+				
 			}
-			
-			this.lastinteractleft.put(p.getName(), System.nanoTime());
 			
 		}
 		

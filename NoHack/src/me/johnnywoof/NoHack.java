@@ -31,7 +31,7 @@ public class NoHack extends JavaPlugin{
 	final private HashMap<String, MoveData> movedata = new HashMap<String, MoveData>();
 	private final HashMap<String, XYZ> currentInteracting = new HashMap<String, XYZ>();
 	
-	public int tps = 0;
+	public static int tps = 0;
 	private long second = 0;
 
 	public void onEnable(){
