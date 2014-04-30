@@ -1,20 +1,15 @@
 package me.johnnywoof.check;
 
-import java.util.HashMap;
-
 import me.johnnywoof.CheckType;
 import me.johnnywoof.NoHack;
 import me.johnnywoof.util.Utils;
 import me.johnnywoof.util.XYZ;
 
 import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
 public class BlockCheck {
-
-	private final HashMap<String, Long> lastbreak = new HashMap<String, Long>();
 	
 	public boolean checkPlace(NoHack nh, Block b, Block pa, Player p){
 		
@@ -66,24 +61,6 @@ public class BlockCheck {
 			return true;
 			
 		}
-		
-		long diff = (System.currentTimeMillis() - this.getLastBreak(p.getName()));
-		
-		if(diff <= 40 && p.getGameMode() == GameMode.CREATIVE){
-			
-			int id = nh.raiseViolationLevel(p.getName(), CheckType.SPEED_BREAK);
-			
-			if(id != 0){
-				
-				Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed Speed Break! Difference was " + diff + ". VL " + id);
-				
-			}
-			this.lastbreak.put(p.getName(), System.currentTimeMillis());
-			return true;
-			
-		}
-		
-		this.lastbreak.put(p.getName(), System.currentTimeMillis());
 		return false;
 		
 	}
@@ -96,19 +73,5 @@ public class BlockCheck {
 		return (b.getLightLevel() <= 0);
 		
 	}*/
-	
-	private long getLastBreak(String v){
-		
-		if(this.lastbreak.containsKey(v)){
-			
-			return this.lastbreak.get(v);
-			
-		}else{
-			
-			return 0;
-			
-		}
-		
-	}
 	
 }

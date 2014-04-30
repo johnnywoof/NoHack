@@ -9,6 +9,8 @@ import me.johnnywoof.util.Utils;
 import me.johnnywoof.util.XYZ;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.block.Action;
@@ -77,6 +79,24 @@ public class InteractCheck {
 		
 	}
 	
+	public boolean checkEntityInteract(NoHack nh, Entity e, Player p){
+		
+		if(!p.hasLineOfSight(e)){
+			
+			int id = nh.raiseViolationLevel(p.getName(), CheckType.VISIBLE);
+			
+			if(id != 0){
+				
+				Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed Visible! Tried to interact with an entity out of sight. VL " + id);					
+			}
+			return true;
+			
+		}
+		
+		return false;
+		
+	}
+	
 	public boolean checkInteract(NoHack nh, PlayerInteractEvent event, Player p){
 		
 		if(event.hasBlock() && event.getAction() == Action.RIGHT_CLICK_BLOCK){
@@ -103,6 +123,27 @@ public class InteractCheck {
 			}
 			
 			this.lastinteractright.put(p.getName(), System.currentTimeMillis());
+			
+			Material m = event.getClickedBlock().getType();
+			
+			if(m == Material.CHEST || m == Material.TRAPPED_CHEST || m == Material.BREWING_STAND || m == Material.ENDER_CHEST || m == Material.ANVIL || m == Material.TRAP_DOOR || m == Material.IRON_DOOR_BLOCK || m == Material.WOODEN_DOOR
+					|| m == Material.BEACON || m == Material.BURNING_FURNACE || m == Material.CAKE_BLOCK || m == Material.CAULDRON || m == Material.BED_BLOCK || m == Material.COMMAND || m == Material.DIODE_BLOCK_OFF || m == Material.DIODE_BLOCK_ON || m == Material.DISPENSER ||
+					m == Material.WORKBENCH || m == Material.WOOD_BUTTON || m == Material.NOTE_BLOCK || m == Material.STONE_BUTTON || m == Material.JUKEBOX || m == Material.HOPPER || m == Material.DRAGON_EGG || m == Material.DROPPER || m == Material.FENCE_GATE || 
+					m == Material.FURNACE || m == Material.ENCHANTMENT_TABLE){
+				
+				if(!Utils.canSee(p, event.getClickedBlock().getRelative(event.getBlockFace()).getLocation())){
+					
+					int id = nh.raiseViolationLevel(p.getName(), CheckType.VISIBLE);
+					
+					if(id != 0){
+						
+						Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed Visible! Tried to interact with a block out of sight. VL " + id);					
+					}
+					return true;
+					
+				}
+			
+			}
 		
 		}else if(event.hasBlock() && event.getAction() == Action.LEFT_CLICK_BLOCK){
 			

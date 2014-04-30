@@ -28,7 +28,7 @@ public class MovingCheck {
 		boolean up = ((to.getY() - from.getY()) > 0);//Moving up?
 		double md = this.getXZDistance(from.getX(), to.getX(), from.getZ(), to.getZ());//Horizontal speed
 		boolean inwater = ((CraftPlayer) p).getHandle().inWater;
-		boolean onladder = ((CraftPlayer) p).getHandle().h_();//On ladder? NMS ftw!
+		boolean onladder = ((CraftPlayer) p).getHandle().h_();//Near ladder? NMS ftw!
 		
 		@SuppressWarnings("deprecation")
 		boolean onground = p.isOnGround();//Yeah...I'm aware how clients can send "always true" booleans.
@@ -374,13 +374,13 @@ public class MovingCheck {
 		
 		if((System.currentTimeMillis() - mpd.getTimeStart()) >= 500){
 			
-			if(mpd.getAmount() >= (13 + Math.round(Utils.getPing(p) / 100))){
+			if(mpd.getAmount() >= (14 + Math.round(Utils.getPing(p) / 100))){
 					
 				int id = nh.raiseViolationLevel(p.getName(), CheckType.TIMER);
 					
 				if(id != 0){
 						
-					Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed Timer! Sent more packets than expected. VL " + id);
+					Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed Timer! Sent " + mpd.getAmount() + " packets but expected no more than " + (14 + Math.round(Utils.getPing(p) / 100)) + ". VL " + id);
 						
 				}
 				p.teleport(mpd.lastloc.toLocation(p.getLocation().getPitch(), p.getLocation().getYaw()), TeleportCause.PLUGIN);

@@ -25,3 +25,5 @@ Blocks timer
 Blocks highjump
 Blocks step
 Limits speed on the y axis
+Prevents interacting with entities out of sight
+Prevents interacting with containers out of sight (against freecam)

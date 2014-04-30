@@ -29,6 +29,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerAnimationType;
 import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerBedLeaveEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerLoginEvent.Result;
@@ -46,6 +47,21 @@ public class NoHackListener implements Listener {
 	public NoHackListener(NoHack nh){
 		
 		this.nh = nh;
+		
+	}
+	
+	@EventHandler(ignoreCancelled = true)
+	public void onEntityInteract(PlayerInteractEntityEvent event){
+		
+		if(event.getRightClicked() != null){
+			
+			if(nh.ic.checkEntityInteract(nh, event.getRightClicked(), event.getPlayer())){
+				
+				event.setCancelled(true);
+				
+			}
+			
+		}
 		
 	}
 	
