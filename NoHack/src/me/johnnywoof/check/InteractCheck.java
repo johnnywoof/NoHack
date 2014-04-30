@@ -174,11 +174,11 @@ public class InteractCheck {
 			
 			if(this.lastinteractleft.containsKey(p.getName())){
 				
-				diff = (System.currentTimeMillis() - this.lastinteractleft.get(p.getName()));
+				diff = (System.nanoTime() - this.lastinteractleft.get(p.getName()));
 				
-				this.lastinteractleft.put(p.getName(), System.currentTimeMillis());
+				this.lastinteractleft.put(p.getName(), System.nanoTime());
 				
-				if(diff <= 4){		
+				if(diff <= 200000){		
 					
 					int id = nh.raiseViolationLevel(p.getName(), CheckType.FAST_INTERACT);
 					
@@ -204,7 +204,7 @@ public class InteractCheck {
 				}
 			}
 			
-			this.lastinteractleft.put(p.getName(), System.currentTimeMillis());
+			this.lastinteractleft.put(p.getName(), System.nanoTime());
 			
 		}
 		
