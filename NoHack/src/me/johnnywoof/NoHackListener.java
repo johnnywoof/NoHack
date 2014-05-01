@@ -72,7 +72,7 @@ public class NoHackListener implements Listener {
 		
 		md.sneaktime = System.currentTimeMillis();
 		
-		md.sneaking = event.isSneaking();
+		md.wassneaking = !event.isSneaking();
 		
 		nh.setMoveData(event.getPlayer().getName(), md);
 		
@@ -85,7 +85,7 @@ public class NoHackListener implements Listener {
 		
 		md.sprinttime = System.currentTimeMillis();
 		
-		md.sprinting = event.isSprinting();
+		md.wassprinting = !event.isSprinting();
 		
 		nh.setMoveData(event.getPlayer().getName(), md);
 		
@@ -128,7 +128,7 @@ public class NoHackListener implements Listener {
 				
 				if(diff <= 3800){
 					
-					int id = nh.raiseViolationLevel(p.getName(), CheckType.GOD_MODE);
+					int id = nh.raiseViolationLevel(p.getName(), CheckType.GOD_MODE, p);
 					
 					if(id != 0){
 						

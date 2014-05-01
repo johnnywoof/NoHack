@@ -28,7 +28,7 @@ public class InteractCheck {
 		
 		if(p.isBlocking() || p.isSneaking() || p.isSprinting() || p.isSleeping()){
 			
-			int id = nh.raiseViolationLevel(p.getName(), CheckType.IMPOSSIBLE);
+			int id = nh.raiseViolationLevel(p.getName(), CheckType.IMPOSSIBLE, p);
 			
 			if(id != 0){
 				
@@ -44,7 +44,7 @@ public class InteractCheck {
 		
 		if(diff <= 50){
 			
-			int id = nh.raiseViolationLevel(p.getName(), CheckType.FASTCLICK);
+			int id = nh.raiseViolationLevel(p.getName(), CheckType.FASTCLICK, p);
 			
 			if(id != 0){
 				
@@ -59,7 +59,7 @@ public class InteractCheck {
 			
 			if((System.currentTimeMillis() - nh.fc.getLastAttackTime(p.getName())) <= 600){
 				
-				int id = nh.raiseViolationLevel(p.getName(), CheckType.AUTOSOUP);
+				int id = nh.raiseViolationLevel(p.getName(), CheckType.AUTOSOUP, p);
 				
 				if(id != 0){
 					
@@ -84,7 +84,7 @@ public class InteractCheck {
 		
 		if(!p.hasLineOfSight(e)){
 			
-			int id = nh.raiseViolationLevel(p.getName(), CheckType.VISIBLE);
+			int id = nh.raiseViolationLevel(p.getName(), CheckType.VISIBLE, p);
 			
 			if(id != 0){
 				
@@ -131,7 +131,7 @@ public class InteractCheck {
 				
 				if(diff <= 150){
 					
-					int id = nh.raiseViolationLevel(p.getName(), CheckType.FAST_INTERACT);
+					int id = nh.raiseViolationLevel(p.getName(), CheckType.FAST_INTERACT, p);
 					
 					if(id != 0){
 						
@@ -156,7 +156,7 @@ public class InteractCheck {
 				
 				if(!Utils.canSee(p, event.getClickedBlock().getRelative(event.getBlockFace()).getLocation())){
 					
-					int id = nh.raiseViolationLevel(p.getName(), CheckType.VISIBLE);
+					int id = nh.raiseViolationLevel(p.getName(), CheckType.VISIBLE, p);
 					
 					if(id != 0){
 						
@@ -182,7 +182,7 @@ public class InteractCheck {
 				
 				if(diff <= 190000){		
 					
-					int id = nh.raiseViolationLevel(p.getName(), CheckType.FAST_INTERACT);
+					int id = nh.raiseViolationLevel(p.getName(), CheckType.FAST_INTERACT, p);
 					
 					if(id != 0){
 						
@@ -190,7 +190,7 @@ public class InteractCheck {
 							
 							Violation vio = nh.getViolation(p.getName());
 							
-							vio.resetLevel(CheckType.FAST_INTERACT);
+							vio.resetLevel(CheckType.FAST_INTERACT, p);
 							
 							nh.setViolation(p.getName(), vio);
 							
@@ -232,7 +232,7 @@ public class InteractCheck {
 					
 					if(diff <= 180){
 						
-						int id = nh.raiseViolationLevel(p.getName(), CheckType.FAST_THROW);
+						int id = nh.raiseViolationLevel(p.getName(), CheckType.FAST_THROW, p);
 						
 						if(id != 0){
 							

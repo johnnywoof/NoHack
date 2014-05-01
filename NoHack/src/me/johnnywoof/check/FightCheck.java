@@ -28,7 +28,7 @@ public class FightCheck {
 			
 			if(k.isDead()){
 				
-				int id = nh.raiseViolationLevel(k.getName(), CheckType.GOD_MODE);
+				int id = nh.raiseViolationLevel(k.getName(), CheckType.GOD_MODE, k);
 				
 				if(id != 0){
 					
@@ -42,7 +42,7 @@ public class FightCheck {
 			//prevents attacking while blocking
 			if(k.isBlocking()){
 				
-				int id = nh.raiseViolationLevel(k.getName(), CheckType.IMPOSSIBLE);
+				int id = nh.raiseViolationLevel(k.getName(), CheckType.IMPOSSIBLE, k);
 				
 				if(id != 0){
 					
@@ -63,7 +63,7 @@ public class FightCheck {
 				
 				if(k.getFallDistance() <= 0.05){//client must have onground to false for fall distance, no need to check for onground.
 					
-					int id = nh.raiseViolationLevel(k.getName(), CheckType.CRITICAL);
+					int id = nh.raiseViolationLevel(k.getName(), CheckType.CRITICAL, k);
 					
 					if(id != 0){
 						
@@ -78,7 +78,7 @@ public class FightCheck {
 			
 			if((System.currentTimeMillis() - ls) >= 10){
 				
-				int id = nh.raiseViolationLevel(k.getName(), CheckType.NOSWING);
+				int id = nh.raiseViolationLevel(k.getName(), CheckType.NOSWING, k);
 				
 				if(id != 0){
 					
@@ -95,7 +95,7 @@ public class FightCheck {
 			
 			if(d > ((k.getGameMode() == GameMode.CREATIVE) ? 27.5 : 14)){
 				
-				int id = nh.raiseViolationLevel(k.getName(), CheckType.ATTACK_REACH);
+				int id = nh.raiseViolationLevel(k.getName(), CheckType.ATTACK_REACH, k);
 				
 				if(id != 0){
 					
@@ -113,7 +113,7 @@ public class FightCheck {
 				if(diff <= 90){
 					
 					this.registerLastAttack(k.getName());
-					int id = nh.raiseViolationLevel(k.getName(), CheckType.ATTACK_SPEED);
+					int id = nh.raiseViolationLevel(k.getName(), CheckType.ATTACK_SPEED, k);
 					
 					if(id != 0){
 						
@@ -131,7 +131,7 @@ public class FightCheck {
 			
 			if(k.getLocation().getYaw() <= (a[1] + 2) && k.getLocation().getYaw() >= (a[1] - 2) && k.getLocation().getPitch() <= (a[0] + 2) && k.getLocation().getPitch() >= (a[0] - 2)){
 				
-				int id = nh.raiseViolationLevel(k.getName(), CheckType.AIMBOT);
+				int id = nh.raiseViolationLevel(k.getName(), CheckType.AIMBOT, k);
 				
 				if(id != 0){
 					

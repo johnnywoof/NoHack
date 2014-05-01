@@ -15,7 +15,7 @@ public class BlockCheck {
 		
 		if(pa.isLiquid()){
 			
-			int id = nh.raiseViolationLevel(p.getName(), CheckType.IMPOSSIBLE);
+			int id = nh.raiseViolationLevel(p.getName(), CheckType.IMPOSSIBLE, p);
 			
 			if(id != 0){
 				
@@ -37,7 +37,7 @@ public class BlockCheck {
 			
 			if(c.x != b.getX() || c.y != b.getY() || c.z != b.getZ()){
 				
-				int id = nh.raiseViolationLevel(p.getName(), CheckType.VISIBLE);
+				int id = nh.raiseViolationLevel(p.getName(), CheckType.VISIBLE, p);
 				
 				if(id != 0){
 					
@@ -51,7 +51,7 @@ public class BlockCheck {
 		
 		if((System.currentTimeMillis() - ls) >= 2500){
 			
-			int id = nh.raiseViolationLevel(p.getName(), CheckType.NOSWING);
+			int id = nh.raiseViolationLevel(p.getName(), CheckType.NOSWING, p);
 			
 			if(id != 0){
 				

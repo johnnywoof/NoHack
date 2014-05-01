@@ -1,85 +1,100 @@
 package me.johnnywoof;
 
+import me.johnnywoof.event.ViolationChangedEvent;
+
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+
 public class Violation {
 
 	private int fly, vs, hs, impossible, sb, ns, gm, crit, fr, fspeed, abl, fp, timer, spam, fc, as, v, nf, is, gl, fb, nkb;
 	private long lastnotification = 0;
 	
-	public void resetLevel(CheckType ct){
+	public boolean resetLevel(CheckType ct, Player p){
+		
+		ViolationChangedEvent vce = new ViolationChangedEvent(0, this.getLevel(ct), ct, p);
+		
+		Bukkit.getPluginManager().callEvent(vce);
+		
+		if(vce.isCancelled()){
+			return true;
+		}
 		
 		switch(ct){
 		case AIMBOT:
-			this.abl = 0;
+			this.abl = vce.getNewLevel();
 			break;
 		case ATTACK_REACH:
-			this.fr = 0;
+			this.fr = vce.getNewLevel();
 			break;
 		case ATTACK_SPEED:
-			this.fspeed = 0;
+			this.fspeed = vce.getNewLevel();
 			break;
 		case CRITICAL:
-			this.crit = 0;
+			this.crit = vce.getNewLevel();
 			break;
 		case FASTPLACE:
-			this.fp = 0;
+			this.fp = vce.getNewLevel();
 			break;
 		case FAST_THROW:
-			this.fp = 0;
+			this.fp = vce.getNewLevel();
 			break;
 		case FLY:
-			this.fly = 0;
+			this.fly = vce.getNewLevel();
 			break;
 		case GOD_MODE:
-			this.gm = 0;
+			this.gm = vce.getNewLevel();
 			break;
 		case HORIZONTAL_SPEED:
-			this.hs = 0;
+			this.hs = vce.getNewLevel();
 			break;
 		case IMPOSSIBLE:
-			this.impossible = 0;
+			this.impossible = vce.getNewLevel();
 			break;
 		case NOSWING:
-			this.ns = 0;
+			this.ns = vce.getNewLevel();
 			break;
 		case SPEED_BREAK:
-			this.sb = 0;
+			this.sb = vce.getNewLevel();
 			break;
 		case VERTICAL_SPEED:
-			this.vs = 0;
+			this.vs = vce.getNewLevel();
 			break;
 		case TIMER:
-			this.timer = 0;
+			this.timer = vce.getNewLevel();
 			break;
 		case SPAM:
-			this.spam = 0;
+			this.spam = vce.getNewLevel();
 			break;
 		case FASTCLICK:
-			this.fc = 0;
+			this.fc = vce.getNewLevel();
 			break;
 		case AUTOSOUP:
-			this.as = 0;
+			this.as = vce.getNewLevel();
 			break;
 		case VISIBLE:
-			this.v = 0;
+			this.v = vce.getNewLevel();
 			break;
 		case NOFALL:
-			this.nf = 0;
+			this.nf = vce.getNewLevel();
 			break;
 		case FAST_INTERACT:
-			this.is = 0;
+			this.is = vce.getNewLevel();
 			break;
 		case GLIDE:
-			this.gl = 0;
+			this.gl = vce.getNewLevel();
 			break;
 		case FULLBRIGHT:
-			this.fb = 0;
+			this.fb = vce.getNewLevel();
 			break;
 		case NOKNOCKBACK:
-			this.nkb = 0;
+			this.nkb = vce.getNewLevel();
 			break;
 		default:
 			break;
 	}
+		
+		return false;
 		
 	}
 	
@@ -140,81 +155,91 @@ public class Violation {
 		
 	}
 	
-	public void raiseLevel(CheckType ct){
+	public boolean raiseLevel(CheckType ct, Player p){
+		
+		ViolationChangedEvent vce = new ViolationChangedEvent(this.getLevel(ct) + 1, this.getLevel(ct), ct, p);
+		
+		Bukkit.getPluginManager().callEvent(vce);
+		
+		if(vce.isCancelled()){
+			return true;
+		}
 		
 		switch(ct){
 			case AIMBOT:
-				this.abl++;
+				this.abl = vce.getNewLevel();
 				break;
 			case ATTACK_REACH:
-				this.fr++;
+				this.fr = vce.getNewLevel();
 				break;
 			case ATTACK_SPEED:
-				this.fspeed++;
+				this.fspeed = vce.getNewLevel();
 				break;
 			case CRITICAL:
-				this.crit++;
+				this.crit = vce.getNewLevel();
 				break;
 			case FASTPLACE:
-				this.fp++;
+				this.fp = vce.getNewLevel();
 				break;
 			case FAST_THROW:
-				this.fp++;
+				this.fp = vce.getNewLevel();
 				break;
 			case FLY:
-				this.fly++;
+				this.fly = vce.getNewLevel();
 				break;
 			case GOD_MODE:
-				this.gm++;
+				this.gm = vce.getNewLevel();
 				break;
 			case HORIZONTAL_SPEED:
-				this.hs++;
+				this.hs = vce.getNewLevel();
 				break;
 			case IMPOSSIBLE:
-				this.impossible++;
+				this.impossible = vce.getNewLevel();
 				break;
 			case NOSWING:
-				this.ns++;
+				this.ns = vce.getNewLevel();
 				break;
 			case SPEED_BREAK:
-				this.sb++;
+				this.sb = vce.getNewLevel();
 				break;
 			case VERTICAL_SPEED:
-				this.vs++;
+				this.vs = vce.getNewLevel();
 				break;
 			case TIMER:
-				this.timer++;
+				this.timer = vce.getNewLevel();
 				break;
 			case SPAM:
-				this.spam++;
+				this.spam = vce.getNewLevel();
 				break;
 			case FASTCLICK:
-				this.fc++;
+				this.fc = vce.getNewLevel();
 				break;
 			case AUTOSOUP:
-				this.as++;
+				this.as = vce.getNewLevel();
 				break;
 			case VISIBLE:
-				this.v++;
+				this.v = vce.getNewLevel();
 				break;
 			case NOFALL:
-				this.nf++;
+				this.nf = vce.getNewLevel();
 				break;
 			case FAST_INTERACT:
-				this.is++;
+				this.is = vce.getNewLevel();
 				break;
 			case GLIDE:
-				this.gl++;
+				this.gl = vce.getNewLevel();
 				break;
 			case FULLBRIGHT:
-				this.fb++;
+				this.fb = vce.getNewLevel();
 				break;
 			case NOKNOCKBACK:
-				this.nkb++;
+				this.nkb = vce.getNewLevel();
 				break;
 			default:
 				break;
 		}
+		
+		return false;
 		
 	}
 	

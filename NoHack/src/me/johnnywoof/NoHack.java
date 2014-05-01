@@ -143,7 +143,7 @@ public class NoHack extends JavaPlugin{
 		this.lastswong.put(v, System.currentTimeMillis());
 	}
 	
-	public int raiseViolationLevel(String v, CheckType ct){
+	public int raiseViolationLevel(String v, CheckType ct, Player p){
 		
 		Violation vio = null;
 		
@@ -157,9 +157,13 @@ public class NoHack extends JavaPlugin{
 			
 		}
 		
-		vio.raiseLevel(ct);
-		
 		boolean non = vio.shouldNotify();
+		
+		if(vio.raiseLevel(ct, p)){//Plugin canceled it, do not notify
+			
+			non = false;
+			
+		}
 		
 		if(non){
 			

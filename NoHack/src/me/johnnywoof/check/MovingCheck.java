@@ -45,7 +45,7 @@ public class MovingCheck {
 				
 					if(to.getBlock().getRelative(BlockFace.DOWN).getType() == org.bukkit.Material.AIR){
 						
-						int id = nh.raiseViolationLevel(p.getName(), CheckType.FLY);
+						int id = nh.raiseViolationLevel(p.getName(), CheckType.FLY, p);
 						
 						if(id != 0){
 							
@@ -66,7 +66,7 @@ public class MovingCheck {
 			
 			if(p.isSneaking() && p.isSprinting()){
 				
-				int id = nh.raiseViolationLevel(p.getName(), CheckType.IMPOSSIBLE);
+				int id = nh.raiseViolationLevel(p.getName(), CheckType.IMPOSSIBLE, p);
 				
 				if(id != 0){
 					
@@ -82,7 +82,7 @@ public class MovingCheck {
 			if(dis > 30){
 				
 				p.kickPlayer("You moved too fast! Hacking? :(");
-				int id = nh.raiseViolationLevel(p.getName(), CheckType.IMPOSSIBLE);
+				int id = nh.raiseViolationLevel(p.getName(), CheckType.IMPOSSIBLE, p);
 				
 				if(id != 0){
 					
@@ -105,7 +105,7 @@ public class MovingCheck {
 					
 					if(yd > ((p.getAllowFlight() || (to.getY() % 1) <= 0.4) ? 0.424 : 0.118)){
 						
-						int id = nh.raiseViolationLevel(p.getName(), CheckType.VERTICAL_SPEED);
+						int id = nh.raiseViolationLevel(p.getName(), CheckType.VERTICAL_SPEED, p);
 						
 						if(id != 0){
 							
@@ -122,7 +122,7 @@ public class MovingCheck {
 					
 					if(yd > this.getMaxVertical(p)){//Moving up only
 						
-						int id = nh.raiseViolationLevel(p.getName(), CheckType.VERTICAL_SPEED);
+						int id = nh.raiseViolationLevel(p.getName(), CheckType.VERTICAL_SPEED, p);
 						
 						if(id != 0){
 							
@@ -143,7 +143,7 @@ public class MovingCheck {
 				
 				if(md > this.getMaxHorizontal(onground, inwater, p, nh.getMoveData(p.getName()))){
 					
-					int id = nh.raiseViolationLevel(p.getName(), CheckType.HORIZONTAL_SPEED);
+					int id = nh.raiseViolationLevel(p.getName(), CheckType.HORIZONTAL_SPEED, p);
 					
 					if(id != 0){
 						
@@ -160,11 +160,11 @@ public class MovingCheck {
 						//Bukkit.broadcastMessage("FAILED @ " + mdis + ":" + ydis);
 						if(mdis > this.getMaxMD(inwater, onground, p, ydis, nh.getMoveData(p.getName()))){
 							
-							int id = nh.raiseViolationLevel(p.getName(), CheckType.FLY);
+							int id = nh.raiseViolationLevel(p.getName(), CheckType.FLY, p);
 							
 							if(id != 0){
 								
-								Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed Fly! MDIS was " + mdis + ". VL " + id);
+								Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed Fly! MDIS was " + mdis + " and max speed is " + this.getMaxMD(inwater, onground, p, ydis, nh.getMoveData(p.getName())) + ". VL " + id);
 								
 							}
 							return 1;
@@ -179,7 +179,7 @@ public class MovingCheck {
 			
 			if(!up && yd > 0.25 && onground){ //Falling while onground? I DON'T THINK SO
 				
-				int id = nh.raiseViolationLevel(p.getName(), CheckType.NOFALL);
+				int id = nh.raiseViolationLevel(p.getName(), CheckType.NOFALL, p);
 					
 				if(id != 0){
 						
@@ -203,7 +203,7 @@ public class MovingCheck {
 						
 						if(ydis > this.getMaxHight(p)){
 							
-							int id = nh.raiseViolationLevel(p.getName(), CheckType.FLY);
+							int id = nh.raiseViolationLevel(p.getName(), CheckType.FLY, p);
 							
 							if(id != 0){
 								
@@ -235,7 +235,7 @@ public class MovingCheck {
 		
 		long now = System.currentTimeMillis();
 		
-		if(!p.isSneaking()){
+		if(!csneak){
 			
 			if((now - md.sneaktime) <= 1000){
 				
@@ -243,9 +243,21 @@ public class MovingCheck {
 				
 			}
 			
+		}else{
+			
+			if(!onground){
+				
+				if((now - md.sneaktime) <= 1000){
+					
+					csneak = false;
+					
+				}
+				
+			}
+			
 		}
 		
-		if(!p.isSprinting()){
+		if(!csprint){
 			
 			if((now - md.sprinttime) <= 1000){
 				
@@ -272,7 +284,7 @@ public class MovingCheck {
 				d = 0.065;
 				
 			}else{
-				
+					
 				d = 0.67;
 				
 			}
@@ -376,7 +388,7 @@ public class MovingCheck {
 			
 			if(mpd.getAmount() >= (14 + Math.round(Utils.getPing(p) / 100))){
 					
-				int id = nh.raiseViolationLevel(p.getName(), CheckType.TIMER);
+				int id = nh.raiseViolationLevel(p.getName(), CheckType.TIMER, p);
 					
 				if(id != 0){
 						
@@ -454,6 +466,10 @@ public class MovingCheck {
 						
 						d = 0.467;
 						
+					}else if(!onground && p.isSneaking()){
+						
+						d = 0.467;
+						
 					}
 				
 				}
@@ -518,7 +534,8 @@ public class MovingCheck {
 		
 	}
 	
-	public boolean isReallyOnGround(Location loc)
+	/*
+	private boolean isReallyOnGround(Location loc)
 	{
 		if(loc.getBlock().getRelative(BlockFace.DOWN).getType().isSolid()){
 			double dv = loc.getY() % 1;
@@ -547,6 +564,6 @@ public class MovingCheck {
 		
 		}
 		
-	}
+	}*/
 	
 }

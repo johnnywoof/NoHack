@@ -17,7 +17,7 @@ public class ChatCheck {
 		
 		if(p.isBlocking() || p.isSneaking() || p.isSprinting()){
 			
-			int id = nh.raiseViolationLevel(p.getName(), CheckType.IMPOSSIBLE);
+			int id = nh.raiseViolationLevel(p.getName(), CheckType.IMPOSSIBLE, p);
 			
 			if(id != 0){
 				
@@ -33,7 +33,7 @@ public class ChatCheck {
 		
 		if(message.contains("§")){
 			
-			int id = nh.raiseViolationLevel(p.getName(), CheckType.IMPOSSIBLE);
+			int id = nh.raiseViolationLevel(p.getName(), CheckType.IMPOSSIBLE, p);
 			
 			if(id != 0){
 				
@@ -48,7 +48,7 @@ public class ChatCheck {
 		
 		if(diff <= 400){
 			
-			int id = nh.raiseViolationLevel(p.getName(), CheckType.SPAM);
+			int id = nh.raiseViolationLevel(p.getName(), CheckType.SPAM, p);
 			
 			if(id != 0){
 				
