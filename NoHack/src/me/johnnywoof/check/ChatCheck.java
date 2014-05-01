@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import me.johnnywoof.CheckType;
 import me.johnnywoof.NoHack;
+import me.johnnywoof.event.ViolationTriggeredEvent;
 import me.johnnywoof.util.Utils;
 
 import org.bukkit.ChatColor;
@@ -19,13 +20,21 @@ public class ChatCheck {
 			
 			int id = nh.raiseViolationLevel(p.getName(), CheckType.IMPOSSIBLE, p);
 			
-			if(id != 0){
-				
-				Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed Impossible! Tried to send a chat message when not possible. VL " + id);
-				
-			}
+			ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.IMPOSSIBLE, p);
 			
-			p.sendMessage(ChatColor.RED + "You tried to send a chat message in an illegal state! Are you hacking? :(");
+			nh.getServer().getPluginManager().callEvent(vte);
+			
+			if(!vte.isCancelled()){
+				
+				if(id != 0){
+					
+					Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed Impossible! Tried to send a chat message when not possible. VL " + id);
+					
+				}
+				
+				p.sendMessage(ChatColor.RED + "You tried to send a chat message in an illegal state! Are you hacking? :(");
+			
+			}
 			
 			return true;
 			
@@ -35,12 +44,20 @@ public class ChatCheck {
 			
 			int id = nh.raiseViolationLevel(p.getName(), CheckType.IMPOSSIBLE, p);
 			
-			if(id != 0){
+			ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.IMPOSSIBLE, p);
+			
+			nh.getServer().getPluginManager().callEvent(vte);
+			
+			if(!vte.isCancelled()){
 				
-				Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed Impossible! Tried to send colored messages. VL " + id);
-				
+				if(id != 0){
+					
+					Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed Impossible! Tried to send colored messages. VL " + id);
+					
+				}
+				return true;
+			
 			}
-			return true;
 			
 		}
 		
@@ -50,10 +67,18 @@ public class ChatCheck {
 			
 			int id = nh.raiseViolationLevel(p.getName(), CheckType.SPAM, p);
 			
-			if(id != 0){
+			ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.SPAM, p);
+			
+			nh.getServer().getPluginManager().callEvent(vte);
+			
+			if(vte.isCancelled()){
 				
-				Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed Spam! Tried to spam the chat. VL " + id);
-				
+				if(id != 0){
+					
+					Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed Spam! Tried to spam the chat. VL " + id);
+					
+				}
+			
 			}
 			
 		}

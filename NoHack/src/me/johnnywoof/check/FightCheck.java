@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import me.johnnywoof.CheckType;
 import me.johnnywoof.NoHack;
+import me.johnnywoof.event.ViolationTriggeredEvent;
 import me.johnnywoof.util.Utils;
 
 import org.bukkit.Bukkit;
@@ -30,12 +31,20 @@ public class FightCheck {
 				
 				int id = nh.raiseViolationLevel(k.getName(), CheckType.GOD_MODE, k);
 				
-				if(id != 0){
+				ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.GOD_MODE, k);
+				
+				nh.getServer().getPluginManager().callEvent(vte);
+				
+				if(!vte.isCancelled()){
 					
-					Utils.messageAdmins(ChatColor.YELLOW + "" + k.getName() + "" + ChatColor.GREEN + " failed GodMoe! Tried to attack while dead. VL " + id);
-					
+					if(id != 0){
+						
+						Utils.messageAdmins(ChatColor.YELLOW + "" + k.getName() + "" + ChatColor.GREEN + " failed GodMoe! Tried to attack while dead. VL " + id);
+						
+					}
+					return true;
+				
 				}
-				return true;
 				
 			}
 			
@@ -44,12 +53,20 @@ public class FightCheck {
 				
 				int id = nh.raiseViolationLevel(k.getName(), CheckType.IMPOSSIBLE, k);
 				
-				if(id != 0){
+				ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.IMPOSSIBLE, k);
+				
+				nh.getServer().getPluginManager().callEvent(vte);
+				
+				if(!vte.isCancelled()){
 					
-					Utils.messageAdmins(ChatColor.YELLOW + "" + k.getName() + "" + ChatColor.GREEN + " failed Impossible! Tried to attack while blocking. VL " + id);
-					
+					if(id != 0){
+						
+						Utils.messageAdmins(ChatColor.YELLOW + "" + k.getName() + "" + ChatColor.GREEN + " failed Impossible! Tried to attack while blocking. VL " + id);
+						
+					}
+					return true;
+				
 				}
-				return true;
 				
 			}
 			
@@ -65,12 +82,20 @@ public class FightCheck {
 					
 					int id = nh.raiseViolationLevel(k.getName(), CheckType.CRITICAL, k);
 					
-					if(id != 0){
+					ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.CRITICAL, k);
+					
+					nh.getServer().getPluginManager().callEvent(vte);
+					
+					if(!vte.isCancelled()){
 						
-						Utils.messageAdmins(ChatColor.YELLOW + "" + k.getName() + "" + ChatColor.GREEN + " failed Critical! Tried to do a critical hit when not possible. VL " + id);
-						
+						if(id != 0){
+							
+							Utils.messageAdmins(ChatColor.YELLOW + "" + k.getName() + "" + ChatColor.GREEN + " failed Critical! Tried to do a critical hit when not possible. VL " + id);
+							
+						}
+						return true;
+					
 					}
-					return true;
 					
 				}
 				
@@ -80,12 +105,20 @@ public class FightCheck {
 				
 				int id = nh.raiseViolationLevel(k.getName(), CheckType.NOSWING, k);
 				
-				if(id != 0){
-					
-					Utils.messageAdmins(ChatColor.YELLOW + "" + k.getName() + "" + ChatColor.GREEN + " failed NoSwing! Difference was " + (System.currentTimeMillis() - ls) + ". VL " + id);
-					
+				ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.NOSWING, k);
+				
+				nh.getServer().getPluginManager().callEvent(vte);
+				
+				if(!vte.isCancelled()){
+				
+					if(id != 0){
+						
+						Utils.messageAdmins(ChatColor.YELLOW + "" + k.getName() + "" + ChatColor.GREEN + " failed NoSwing! Difference was " + (System.currentTimeMillis() - ls) + ". VL " + id);
+						
+					}
+					return true;
+				
 				}
-				return true;
 				
 			}
 			
@@ -97,12 +130,20 @@ public class FightCheck {
 				
 				int id = nh.raiseViolationLevel(k.getName(), CheckType.ATTACK_REACH, k);
 				
-				if(id != 0){
+				ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.ATTACK_REACH, k);
+				
+				nh.getServer().getPluginManager().callEvent(vte);
+				
+				if(!vte.isCancelled()){
 					
-					Utils.messageAdmins(ChatColor.YELLOW + "" + k.getName() + "" + ChatColor.GREEN + " failed Attack reach! Tried to do an attack far away. VL " + id);
-					
+					if(id != 0){
+						
+						Utils.messageAdmins(ChatColor.YELLOW + "" + k.getName() + "" + ChatColor.GREEN + " failed Attack reach! Tried to do an attack far away. VL " + id);
+						
+					}
+					return true;
+				
 				}
-				return true;
 				
 			}
 			
@@ -115,12 +156,20 @@ public class FightCheck {
 					this.registerLastAttack(k.getName());
 					int id = nh.raiseViolationLevel(k.getName(), CheckType.ATTACK_SPEED, k);
 					
-					if(id != 0){
-						
-						Utils.messageAdmins(ChatColor.YELLOW + "" + k.getName() + "" + ChatColor.GREEN + " failed Attack Speed! Tried to attack too fast. VL " + id);
-						
+					ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.ATTACK_SPEED, k);
+					
+					nh.getServer().getPluginManager().callEvent(vte);
+					
+					if(!vte.isCancelled()){
+					
+						if(id != 0){
+							
+							Utils.messageAdmins(ChatColor.YELLOW + "" + k.getName() + "" + ChatColor.GREEN + " failed Attack Speed! Tried to attack too fast. VL " + id);
+							
+						}
+						return true;
+					
 					}
-					return true;
 					
 				}
 				
@@ -133,12 +182,20 @@ public class FightCheck {
 				
 				int id = nh.raiseViolationLevel(k.getName(), CheckType.AIMBOT, k);
 				
-				if(id != 0){
-					
-					Utils.messageAdmins(ChatColor.YELLOW + "" + k.getName() + "" + ChatColor.GREEN + " failed Aimbot! Position head in a weird way. VL " + id);
-					
+				ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.AIMBOT, k);
+				
+				nh.getServer().getPluginManager().callEvent(vte);
+				
+				if(!vte.isCancelled()){
+				
+					if(id != 0){
+						
+						Utils.messageAdmins(ChatColor.YELLOW + "" + k.getName() + "" + ChatColor.GREEN + " failed Aimbot! Position head in a weird way. VL " + id);
+						
+					}
+					return true;
+				
 				}
-				return true;
 				
 			}
 			

@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import me.johnnywoof.CheckType;
 import me.johnnywoof.NoHack;
+import me.johnnywoof.event.ViolationTriggeredEvent;
 import me.johnnywoof.util.MoveData;
 import me.johnnywoof.util.Utils;
 import me.johnnywoof.util.XYZ;
@@ -47,12 +48,20 @@ public class MovingCheck {
 						
 						int id = nh.raiseViolationLevel(p.getName(), CheckType.FLY, p);
 						
-						if(id != 0){
-							
-							Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed Fly! Tried to fly with nofall enabled. VL " + id);
-							
+						ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.FLY, p);
+						
+						nh.getServer().getPluginManager().callEvent(vte);
+						
+						if(!vte.isCancelled()){
+						
+							if(id != 0){
+								
+								Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed Fly! Tried to fly with nofall enabled. VL " + id);
+								
+							}
+							return 4;
+						
 						}
-						return 4;
 						
 					}
 					
@@ -68,28 +77,20 @@ public class MovingCheck {
 				
 				int id = nh.raiseViolationLevel(p.getName(), CheckType.IMPOSSIBLE, p);
 				
-				if(id != 0){
-					
-					Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed Impossible! Tried to sneak and sprint at the same time. VL " + id);
-					
+				ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.IMPOSSIBLE, p);
+				
+				nh.getServer().getPluginManager().callEvent(vte);
+				
+				if(!vte.isCancelled()){
+				
+					if(id != 0){
+						
+						Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed Impossible! Tried to sneak and sprint at the same time. VL " + id);
+						
+					}
+					return 1;
+				
 				}
-				return 1;
-				
-			}
-			
-			double dis = from.distanceSquared(to);
-			
-			if(dis > 30){
-				
-				p.kickPlayer("You moved too fast! Hacking? :(");
-				int id = nh.raiseViolationLevel(p.getName(), CheckType.IMPOSSIBLE, p);
-				
-				if(id != 0){
-					
-					Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed Impossible! Tried to avoid anti-cheating by using code filter. VL " + id);
-					
-				}
-				return 0;
 				
 			}
 			
@@ -107,12 +108,20 @@ public class MovingCheck {
 						
 						int id = nh.raiseViolationLevel(p.getName(), CheckType.VERTICAL_SPEED, p);
 						
-						if(id != 0){
+						ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.VERTICAL_SPEED, p);
+						
+						nh.getServer().getPluginManager().callEvent(vte);
+						
+						if(!vte.isCancelled()){
 							
-							Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed Vertical Speed! Moved too fast on a ladder (" + yd + "). VL " + id);
-							
+							if(id != 0){
+								
+								Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed Vertical Speed! Moved too fast on a ladder (" + yd + "). VL " + id);
+								
+							}
+							return 1;
+						
 						}
-						return 1;
 						
 					}
 					
@@ -124,12 +133,20 @@ public class MovingCheck {
 						
 						int id = nh.raiseViolationLevel(p.getName(), CheckType.VERTICAL_SPEED, p);
 						
-						if(id != 0){
-							
-							Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed Vertical Speed! Speed was " + yd + " and max is " + this.getMaxVertical(p) + ". VL " + id);
-							
+						ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.VERTICAL_SPEED, p);
+						
+						nh.getServer().getPluginManager().callEvent(vte);
+						
+						if(!vte.isCancelled()){
+						
+							if(id != 0){
+								
+								Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed Vertical Speed! Speed was " + yd + " and max is " + this.getMaxVertical(p) + ". VL " + id);
+								
+							}
+							return 1;
+						
 						}
-						return 1;
 						
 					}
 					
@@ -145,12 +162,20 @@ public class MovingCheck {
 					
 					int id = nh.raiseViolationLevel(p.getName(), CheckType.HORIZONTAL_SPEED, p);
 					
-					if(id != 0){
-						
-						Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed Horizontal Speed! Speed was " + md + ". VL " + id);
-						
+					ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.HORIZONTAL_SPEED, p);
+					
+					nh.getServer().getPluginManager().callEvent(vte);
+					
+					if(!vte.isCancelled()){
+					
+						if(id != 0){
+							
+							Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed Horizontal Speed! Speed was " + md + ". VL " + id);
+							
+						}
+						return 1;
+					
 					}
-					return 1;
 					
 				}else{
 					
@@ -162,12 +187,20 @@ public class MovingCheck {
 							
 							int id = nh.raiseViolationLevel(p.getName(), CheckType.FLY, p);
 							
-							if(id != 0){
-								
-								Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed Fly! MDIS was " + mdis + " and max speed is " + this.getMaxMD(inwater, onground, p, ydis, nh.getMoveData(p.getName())) + ". VL " + id);
-								
+							ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.FLY, p);
+							
+							nh.getServer().getPluginManager().callEvent(vte);
+							
+							if(!vte.isCancelled()){
+							
+								if(id != 0){
+									
+									Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed Fly! MDIS was " + mdis + " and max speed is " + this.getMaxMD(inwater, onground, p, ydis, nh.getMoveData(p.getName())) + ". VL " + id);
+									
+								}
+								return 1;
+							
 							}
-							return 1;
 							
 						}
 					
@@ -181,13 +214,21 @@ public class MovingCheck {
 				
 				int id = nh.raiseViolationLevel(p.getName(), CheckType.NOFALL, p);
 					
-				if(id != 0){
-						
-					Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed NoFall! Tried to fall while stating on the ground. VL " + id);
-						
-				}
+				ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.NOFALL, p);
 				
-				return 4;//More expensive to put the player back than to check it
+				nh.getServer().getPluginManager().callEvent(vte);
+				
+				if(!vte.isCancelled()){
+				
+					if(id != 0){
+							
+						Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed NoFall! Tried to fall while stating on the ground. VL " + id);
+							
+					}
+					
+					return 4;//More expensive to put the player back than to check it
+				
+				}
 				
 			}
 			
@@ -205,12 +246,20 @@ public class MovingCheck {
 							
 							int id = nh.raiseViolationLevel(p.getName(), CheckType.FLY, p);
 							
-							if(id != 0){
-								
-								Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed Fly! Height was " + ydis + ". VL " + id);
-								
+							ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.FLY, p);
+							
+							nh.getServer().getPluginManager().callEvent(vte);
+							
+							if(!vte.isCancelled()){
+							
+								if(id != 0){
+									
+									Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed Fly! Height was " + ydis + ". VL " + id);
+									
+								}
+								return 1;
+							
 							}
-							return 1;
 							
 						}
 						
@@ -390,14 +439,22 @@ public class MovingCheck {
 					
 				int id = nh.raiseViolationLevel(p.getName(), CheckType.TIMER, p);
 					
-				if(id != 0){
-						
-					Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed Timer! Sent " + mpd.getAmount() + " packets but expected no more than " + (14 + Math.round(Utils.getPing(p) / 100)) + ". VL " + id);
-						
+				ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.TIMER, p);
+				
+				nh.getServer().getPluginManager().callEvent(vte);
+				
+				if(!vte.isCancelled()){
+				
+					if(id != 0){
+							
+						Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed Timer! Sent " + mpd.getAmount() + " packets but expected no more than " + (14 + Math.round(Utils.getPing(p) / 100)) + ". VL " + id);
+							
+					}
+					p.teleport(mpd.lastloc.toLocation(p.getLocation().getPitch(), p.getLocation().getYaw()), TeleportCause.PLUGIN);
+					mpd.reset(new XYZ(p.getLocation()));
+					return 0;
+				
 				}
-				p.teleport(mpd.lastloc.toLocation(p.getLocation().getPitch(), p.getLocation().getYaw()), TeleportCause.PLUGIN);
-				mpd.reset(new XYZ(p.getLocation()));
-				return 0;
 				
 			}else{
 				

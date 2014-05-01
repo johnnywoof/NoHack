@@ -2,6 +2,7 @@ package me.johnnywoof;
 
 import java.util.HashMap;
 
+import me.johnnywoof.event.ViolationTriggeredEvent;
 import me.johnnywoof.util.MoveData;
 import me.johnnywoof.util.Utils;
 
@@ -130,12 +131,20 @@ public class NoHackListener implements Listener {
 					
 					int id = nh.raiseViolationLevel(p.getName(), CheckType.GOD_MODE, p);
 					
-					if(id != 0){
-						
-						Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed GodMode! Tried to regain health too fast. Diff " + diff + " VL " + id);
-						
+					ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.GOD_MODE, p);
+					
+					nh.getServer().getPluginManager().callEvent(vte);
+					
+					if(!vte.isCancelled()){
+					
+						if(id != 0){
+							
+							Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed GodMode! Tried to regain health too fast. Diff " + diff + " VL " + id);
+							
+						}
+						event.setCancelled(true);
+					
 					}
-					event.setCancelled(true);
 					
 				}
 				

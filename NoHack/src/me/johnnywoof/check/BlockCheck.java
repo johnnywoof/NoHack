@@ -2,6 +2,7 @@ package me.johnnywoof.check;
 
 import me.johnnywoof.CheckType;
 import me.johnnywoof.NoHack;
+import me.johnnywoof.event.ViolationTriggeredEvent;
 import me.johnnywoof.util.Utils;
 import me.johnnywoof.util.XYZ;
 
@@ -17,12 +18,20 @@ public class BlockCheck {
 			
 			int id = nh.raiseViolationLevel(p.getName(), CheckType.IMPOSSIBLE, p);
 			
-			if(id != 0){
-				
-				Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed Impossible! Placed a block on a liquid. VL " + id);
-				
+			ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.IMPOSSIBLE, p);
+			
+			nh.getServer().getPluginManager().callEvent(vte);
+			
+			if(!vte.isCancelled()){
+			
+				if(id != 0){
+					
+					Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed Impossible! Placed a block on a liquid. VL " + id);
+					
+				}
+				return true;
+			
 			}
-			return true;
 			
 		}
 		return false;
@@ -39,11 +48,19 @@ public class BlockCheck {
 				
 				int id = nh.raiseViolationLevel(p.getName(), CheckType.VISIBLE, p);
 				
-				if(id != 0){
+				ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.VISIBLE, p);
+				
+				nh.getServer().getPluginManager().callEvent(vte);
+				
+				if(!vte.isCancelled()){
 					
-					Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed Visible! Tried to break another block than the one interacting with. VL " + id);					
+					if(id != 0){
+						
+						Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed Visible! Tried to break another block than the one interacting with. VL " + id);					
+					}
+					return true;
+				
 				}
-				return true;
 				
 			}
 			
@@ -53,12 +70,20 @@ public class BlockCheck {
 			
 			int id = nh.raiseViolationLevel(p.getName(), CheckType.NOSWING, p);
 			
-			if(id != 0){
-				
-				Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed NoSwing! Difference was " + (System.currentTimeMillis() - ls) + ". VL " + id);
-				
+			ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.NOSWING, p);
+			
+			nh.getServer().getPluginManager().callEvent(vte);
+			
+			if(!vte.isCancelled()){
+			
+				if(id != 0){
+					
+					Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed NoSwing! Difference was " + (System.currentTimeMillis() - ls) + ". VL " + id);
+					
+				}
+				return true;
+			
 			}
-			return true;
 			
 		}
 		return false;

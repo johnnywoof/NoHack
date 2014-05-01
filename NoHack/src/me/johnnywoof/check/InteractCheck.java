@@ -5,6 +5,7 @@ import java.util.HashMap;
 import me.johnnywoof.CheckType;
 import me.johnnywoof.NoHack;
 import me.johnnywoof.Violation;
+import me.johnnywoof.event.ViolationTriggeredEvent;
 import me.johnnywoof.util.Utils;
 import me.johnnywoof.util.XYZ;
 
@@ -30,13 +31,21 @@ public class InteractCheck {
 			
 			int id = nh.raiseViolationLevel(p.getName(), CheckType.IMPOSSIBLE, p);
 			
-			if(id != 0){
-				
-				Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed Impossible! Tried to do illegal clicks. VL " + id);
-				
-			}
+			ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.IMPOSSIBLE, p);
 			
-			return true;
+			nh.getServer().getPluginManager().callEvent(vte);
+			
+			if(!vte.isCancelled()){
+			
+				if(id != 0){
+					
+					Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed Impossible! Tried to do illegal clicks. VL " + id);
+					
+				}
+				
+				return true;
+			
+			}
 			
 		}
 		
@@ -46,14 +55,23 @@ public class InteractCheck {
 			
 			int id = nh.raiseViolationLevel(p.getName(), CheckType.FASTCLICK, p);
 			
-			if(id != 0){
-				
-				Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed FastClick! Interacted with a container too fast. VL " + id);
-				
-			}
+			ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.FASTCLICK, p);
+			
+			nh.getServer().getPluginManager().callEvent(vte);
 			
 			this.lastclick.put(p.getName(), System.currentTimeMillis());
-			return true;
+			
+			if(!vte.isCancelled()){
+			
+				if(id != 0){
+					
+					Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed FastClick! Interacted with a container too fast. VL " + id);
+					
+				}
+				
+				return true;
+			
+			}
 			
 		}else{
 			
@@ -61,14 +79,22 @@ public class InteractCheck {
 				
 				int id = nh.raiseViolationLevel(p.getName(), CheckType.AUTOSOUP, p);
 				
-				if(id != 0){
-					
-					Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed AutoSoup! Tried to click inventory while fighting. VL " + id);
-					
-				}
+				ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.AUTOSOUP, p);
 				
-				this.lastclick.put(p.getName(), System.currentTimeMillis());
-				return true;
+				nh.getServer().getPluginManager().callEvent(vte);
+				
+				if(!vte.isCancelled()){
+					
+					if(id != 0){
+						
+						Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed AutoSoup! Tried to click inventory while fighting. VL " + id);
+						
+					}
+					
+					this.lastclick.put(p.getName(), System.currentTimeMillis());
+					return true;
+				
+				}
 				
 			}
 			
@@ -86,11 +112,19 @@ public class InteractCheck {
 			
 			int id = nh.raiseViolationLevel(p.getName(), CheckType.VISIBLE, p);
 			
-			if(id != 0){
-				
-				Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed Visible! Tried to interact with an entity out of sight. VL " + id);					
+			ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.VISIBLE, p);
+			
+			nh.getServer().getPluginManager().callEvent(vte);
+			
+			if(!vte.isCancelled()){
+			
+				if(id != 0){
+					
+					Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed Visible! Tried to interact with an entity out of sight. VL " + id);					
+				}
+				return true;
+			
 			}
-			return true;
 			
 		}
 		
@@ -133,12 +167,20 @@ public class InteractCheck {
 					
 					int id = nh.raiseViolationLevel(p.getName(), CheckType.FAST_INTERACT, p);
 					
-					if(id != 0){
-						
-						Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed Fast Interact! Diff " + diff + ". VL " + id);
-						
+					ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.FAST_INTERACT, p);
+					
+					nh.getServer().getPluginManager().callEvent(vte);
+					
+					if(!vte.isCancelled()){
+					
+						if(id != 0){
+							
+							Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed Fast Interact! Diff " + diff + ". VL " + id);
+							
+						}
+						return true;
+					
 					}
-					return true;
 					
 				}
 			}else{
@@ -158,11 +200,19 @@ public class InteractCheck {
 					
 					int id = nh.raiseViolationLevel(p.getName(), CheckType.VISIBLE, p);
 					
-					if(id != 0){
-						
-						Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed Visible! Tried to interact with a block out of sight. VL " + id);					
+					ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.VISIBLE, p);
+					
+					nh.getServer().getPluginManager().callEvent(vte);
+					
+					if(!vte.isCancelled()){
+					
+						if(id != 0){
+							
+							Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed Visible! Tried to interact with a block out of sight. VL " + id);					
+						}
+						return true;
+					
 					}
-					return true;
 					
 				}
 			
@@ -184,24 +234,32 @@ public class InteractCheck {
 					
 					int id = nh.raiseViolationLevel(p.getName(), CheckType.FAST_INTERACT, p);
 					
-					if(id != 0){
-						
-						if(id > 50){
+					ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.FAST_INTERACT, p);
+					
+					nh.getServer().getPluginManager().callEvent(vte);
+					
+					if(!vte.isCancelled()){
+					
+						if(id != 0){
 							
-							Violation vio = nh.getViolation(p.getName());
+							if(id > 50){
+								
+								Violation vio = nh.getViolation(p.getName());
+								
+								vio.resetLevel(CheckType.FAST_INTERACT, p);
+								
+								nh.setViolation(p.getName(), vio);
+								
+								p.kickPlayer(ChatColor.RED + "Block breaking out of sync!");
+								
+							}
 							
-							vio.resetLevel(CheckType.FAST_INTERACT, p);
-							
-							nh.setViolation(p.getName(), vio);
-							
-							p.kickPlayer(ChatColor.RED + "Block breaking out of sync!");
+							Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed Fast Interact! Diff " + diff + ". VL " + id);
 							
 						}
-						
-						Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed Fast Interact! Diff " + diff + ". VL " + id);
-						
+						return true;
+					
 					}
-					return true;
 					
 				}
 			}else{
