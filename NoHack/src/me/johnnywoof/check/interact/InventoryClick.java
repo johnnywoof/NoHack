@@ -2,6 +2,7 @@ package me.johnnywoof.check.interact;
 
 import java.util.HashMap;
 
+import me.johnnywoof.Settings;
 import me.johnnywoof.Variables;
 import me.johnnywoof.check.Check;
 import me.johnnywoof.check.CheckType;
@@ -41,7 +42,7 @@ public class InventoryClick extends Check{
 			
 				if(id != 0){
 					
-					String message = this.vars.impossibleclick;
+					String message = Settings.impossibleclick;
 					
 					message = message.replaceAll("%name%", ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN);
 					message = message.replaceAll("%vl%", id + "");

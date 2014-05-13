@@ -11,6 +11,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
+import me.johnnywoof.Settings;
 import me.johnnywoof.Variables;
 import me.johnnywoof.check.Check;
 import me.johnnywoof.check.CheckType;
@@ -63,7 +64,7 @@ public class Timer extends Check{
 				
 					if(id != 0){
 							
-						String message = this.vars.timermes;
+						String message = Settings.timermes;
 						
 						message = message.replaceAll("%name%", ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN);
 						message = message.replaceAll("%vl%", id + "");

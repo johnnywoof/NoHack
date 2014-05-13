@@ -8,6 +8,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
+import me.johnnywoof.Settings;
 import me.johnnywoof.Variables;
 import me.johnnywoof.check.Check;
 import me.johnnywoof.check.CheckType;
@@ -37,7 +38,7 @@ public class NoSwingBlock extends Check{
 			
 				if(id != 0){
 					
-					String message = this.vars.noswingmes;
+					String message = Settings.noswingmes;
 					
 					message = message.replaceAll("%name%", ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN);
 					message = message.replaceAll("%vl%", id + "");

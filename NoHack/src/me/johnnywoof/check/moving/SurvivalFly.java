@@ -1,5 +1,6 @@
 package me.johnnywoof.check.moving;
 
+import me.johnnywoof.Settings;
 import me.johnnywoof.Variables;
 import me.johnnywoof.check.Check;
 import me.johnnywoof.check.CheckType;
@@ -69,7 +70,7 @@ public class SurvivalFly extends Check{
 							
 								if(id != 0){
 									
-									String message = this.vars.flymes;
+									String message = Settings.flymes;
 									
 									message = message.replaceAll("%name%", ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN);
 									message = message.replaceAll("%vl%", id + "");

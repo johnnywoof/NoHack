@@ -21,37 +21,22 @@ public class Variables {
 	//Last location of being on the ground
 	public final HashMap<String, XYZ> lastGround = new HashMap<String, XYZ>();
 	
-	public String nofallmes = "";
-	public String timermes = "";
-	public String impossiblemovemes = "";
-	public String verticalspeedmes = "";
-	public String horizontalspeedmes = "";
-	public String flymes = "";
-	public String blockvisiblebreak = "";
-	public String impossibleattack = "";
-	public String godmodemes = "";
-	public String fightspeed = "";
-	public String fightreach = "";
-	public String impossibleclick = "";
-	public String speedclick = "";
-	public String noswingmes = "";
-	
 	public void reloadConfig(FileConfiguration fc){
 		
-		this.nofallmes = fc.getString("nofall-message");
-		this.timermes = fc.getString("timer-message");
-		this.impossiblemovemes = fc.getString("impossible-move-message");
-		this.verticalspeedmes = fc.getString("vertical-speed-message");
-		this.horizontalspeedmes = fc.getString("horizontal-speed-message");
-		this.flymes = fc.getString("fly-message");
-		this.blockvisiblebreak = fc.getString("block-visible-break-message");
-		this.godmodemes = fc.getString("godmode-message");
-		this.impossibleattack = fc.getString("fight-impossible-message");
-		this.fightspeed = fc.getString("fight-speed-message");
-		this.fightreach = fc.getString("fight-reach-message");
-		this.impossibleclick = fc.getString("inventory-impossible-message");
-		this.speedclick = fc.getString("inventory-click-speed");
-		this.noswingmes = fc.getString("noswing-message");
+		Settings.nofallmes = fc.getString("nofall-message");
+		Settings.timermes = fc.getString("timer-message");
+		Settings.impossiblemovemes = fc.getString("impossible-move-message");
+		Settings.verticalspeedmes = fc.getString("vertical-speed-message");
+		Settings.horizontalspeedmes = fc.getString("horizontal-speed-message");
+		Settings.flymes = fc.getString("fly-message");
+		Settings.blockvisiblebreak = fc.getString("block-visible-break-message");
+		Settings.godmodemes = fc.getString("godmode-message");
+		Settings.impossibleattack = fc.getString("fight-impossible-message");
+		Settings.fightspeed = fc.getString("fight-speed-message");
+		Settings.fightreach = fc.getString("fight-reach-message");
+		Settings.impossibleclick = fc.getString("inventory-impossible-message");
+		Settings.speedclick = fc.getString("inventory-click-speed");
+		Settings.noswingmes = fc.getString("noswing-message");
 		
 	}
 	
