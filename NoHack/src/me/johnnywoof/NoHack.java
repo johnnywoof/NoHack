@@ -1,14 +1,24 @@
 package me.johnnywoof;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 
-import me.johnnywoof.check.BlockCheck;
-import me.johnnywoof.check.ChatCheck;
-import me.johnnywoof.check.FightCheck;
-import me.johnnywoof.check.InteractCheck;
-import me.johnnywoof.check.MovingCheck;
-import me.johnnywoof.util.MoveData;
-import me.johnnywoof.util.XYZ;
+import me.johnnywoof.check.Check;
+import me.johnnywoof.check.CheckType;
+import me.johnnywoof.check.Violation;
+import me.johnnywoof.check.block.FastBreak;
+import me.johnnywoof.check.block.NoSwingBlock;
+import me.johnnywoof.check.fight.FightImpossible;
+import me.johnnywoof.check.fight.FightReach;
+import me.johnnywoof.check.fight.FightSpeed;
+import me.johnnywoof.check.fight.GodMode;
+import me.johnnywoof.check.fight.NoSwingFight;
+import me.johnnywoof.check.interact.FastInteract;
+import me.johnnywoof.check.moving.HorizontalSpeed;
+import me.johnnywoof.check.moving.ImpossibleMoving;
+import me.johnnywoof.check.moving.NoFall;
+import me.johnnywoof.check.moving.SurvivalFly;
+import me.johnnywoof.check.moving.Timer;
+import me.johnnywoof.check.moving.VerticalSpeed;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -18,28 +28,28 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class NoHack extends JavaPlugin{
-
-	public MovingCheck mc;
-	public BlockCheck bc;
-	public InteractCheck ic;
-	public FightCheck fc;
-	public ChatCheck cc;
 	
-	final private HashMap<String, Violation> viodata = new HashMap<String, Violation>();
-	final private HashMap<String, Long> lastswong = new HashMap<String, Long>();
-	final public HashMap<String, Long> deniedlogin = new HashMap<String, Long>();
-	final private HashMap<String, MoveData> movedata = new HashMap<String, MoveData>();
-	private final HashMap<String, XYZ> currentInteracting = new HashMap<String, XYZ>();
+	/**
+	 * =====Todo List=====
+	 * Add more checks
+	 * 
+	 * */
 	
 	public static int tps = 0;
 	private long second = 0;
+	
+	public Variables vars;
+	
+	private ArrayList<Check> checks = new ArrayList<Check>();
+	//I prefer better preformance, rather than "instanceof". Since this is called a lot
+	public FastInteract fi;
 
 	public void onEnable(){
-		mc = new MovingCheck();
-		bc = new BlockCheck();
-		ic = new InteractCheck();
-		fc = new FightCheck();
-		cc = new ChatCheck();
+		
+		this.fi = new FastInteract(this.vars, CheckType.FAST_INTERACT);
+		
+		this.vars = new Variables();
+		
 		this.getServer().getPluginManager().registerEvents(new NoHackListener(this), this);
 		getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable()
 		{
@@ -70,7 +80,7 @@ public class NoHack extends JavaPlugin{
 				}
 			}
 		}, 20, 1);
-		this.reloadConfig();
+		this.reload();
 		this.getLogger().info("[NoHack] NoHack has been enabled!");
 	}
 	
@@ -79,118 +89,37 @@ public class NoHack extends JavaPlugin{
 		this.getLogger().info("[NoHack] NoHack has been disabled!");
 	}
 	
-	public void reloadConfig(){
+	public void reload(){
 		
-		
-		
-	}
-	
-	public XYZ getCurrentBlock(String n){
-		if(this.currentInteracting.containsKey(n)){
-			
-			return this.currentInteracting.get(n);
-			
-		}else{
-			
-			return null;
-			
-		}
-	}
-	
-	public void setCurrentBlock(String n, XYZ v){
-		this.currentInteracting.put(n, v);
-	}
-	
-	public MoveData getMoveData(String n){
-		if(this.movedata.containsKey(n)){
-			
-			return this.movedata.get(n);
-			
-		}else{
-			
-			return new MoveData(0, 0);
-			
-		}
-	}
-	
-	public void setMoveData(String n, MoveData v){
-		this.movedata.put(n, v);
-	}
-	
-	public void setViolation(String v, Violation vio){
-		this.viodata.put(v, vio);
-	}
-	
-	public Violation getViolation(String v){
-		
-		Violation vio = null;
-		
-		if(this.viodata.containsKey(v)){
-			
-			vio = this.viodata.get(v);
-			
-		}else{
-			
-			vio = new Violation();
-			
+		if(!getDataFolder().exists()){
+			getDataFolder().mkdir();
 		}
 		
-		return vio;
+		this.saveDefaultConfig();
 		
+		this.vars.reloadConfig(this.getConfig());
+		
+		this.checks.clear();
+		
+		//Remember! Higher = more priority
+		this.checks.add(new ImpossibleMoving(this.vars, CheckType.IMPOSSIBLE));
+		this.checks.add(new Timer(this.vars, CheckType.TIMER));
+		this.checks.add(new NoFall(this.vars, CheckType.NOFALL));
+		this.checks.add(new VerticalSpeed(this.vars, CheckType.VERTICAL_SPEED));
+		this.checks.add(new SurvivalFly(this.vars, CheckType.FLY));
+		this.checks.add(new HorizontalSpeed(this.vars, CheckType.HORIZONTAL_SPEED));
+		this.checks.add(new FastBreak(this.vars, null));//TODO Change this?
+		this.checks.add(new NoSwingBlock(this.vars, CheckType.NOSWING));
+		this.checks.add(new GodMode(this.vars, CheckType.GOD_MODE));
+		this.checks.add(new FightImpossible(this.vars, CheckType.IMPOSSIBLE));
+		this.checks.add(new FightReach(this.vars, CheckType.ATTACK_REACH));
+		this.checks.add(new FightSpeed(this.vars, CheckType.ATTACK_SPEED));
+		this.checks.add(new NoSwingFight(this.vars, CheckType.NOSWING));
+			
 	}
 	
-	public void updateLastSwong(String v){
-		this.lastswong.put(v, System.currentTimeMillis());
-	}
-	
-	public int raiseViolationLevel(String v, CheckType ct, Player p){
-		
-		Violation vio = null;
-		
-		if(this.viodata.containsKey(v)){
-			
-			vio = this.viodata.get(v);
-			
-		}else{
-			
-			vio = new Violation();
-			
-		}
-		
-		boolean non = vio.shouldNotify();
-		
-		if(vio.raiseLevel(ct, p)){//Plugin canceled it, do not notify
-			
-			non = false;
-			
-		}
-		
-		if(non){
-			
-			vio.updateNotify();
-			
-		}
-		
-		this.viodata.put(v, vio);
-		
-		if(non){
-			
-			return vio.getLevel(ct);
-			
-		}else{
-			
-			return 0;
-			
-		}
-		
-	}
-	
-	public long getLastSwong(String v){
-		if(this.lastswong.containsKey(v)){
-			return this.lastswong.get(v);
-		}else{
-			return 0;
-		}
+	public ArrayList<Check> getChecks(){
+		return this.checks;
 	}
 	
 	private void displayHelp(CommandSender sender){
@@ -253,17 +182,7 @@ public class NoHack extends JavaPlugin{
 							//sender.sendMessage(ChatColor.GREEN + t.getName() + "" + ChatColor.GOLD + "'s ping is " + Utils.getPing(t) + " milliseconds.");
 							//sender.sendMessage(ChatColor.GREEN + t.getName() + "" + ChatColor.GOLD + "'s ip is " + Utils.getIP(t) + ".");
 							sender.sendMessage(ChatColor.AQUA + "" + ChatColor.STRIKETHROUGH + "------------------------------------------");
-							Violation vio = null;
-							
-							if(this.viodata.containsKey(t.getName())){
-								
-								vio = this.viodata.get(t.getName());
-								
-							}else{
-								
-								vio = new Violation();
-								
-							}
+							Violation vio = this.vars.getViolation(t.getName());
 							
 							for(CheckType ct : CheckType.values()){
 								

@@ -1,16 +1,27 @@
 package me.johnnywoof;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.HashMap;
 
+import me.johnnywoof.check.Check;
+import me.johnnywoof.check.CheckType;
+import me.johnnywoof.check.DetectionType;
+import me.johnnywoof.event.ViolationChangedEvent;
 import me.johnnywoof.event.ViolationTriggeredEvent;
 import me.johnnywoof.util.MoveData;
 import me.johnnywoof.util.Utils;
+import me.johnnywoof.util.XYZ;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.craftbukkit.v1_7_R3.entity.CraftPlayer;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -19,7 +30,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
@@ -30,7 +40,6 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerAnimationType;
 import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerBedLeaveEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerLoginEvent.Result;
@@ -52,16 +61,26 @@ public class NoHackListener implements Listener {
 	}
 	
 	@EventHandler(ignoreCancelled = true)
-	public void onEntityInteract(PlayerInteractEntityEvent event){
+	public void onLog(ViolationChangedEvent event){
 		
-		if(event.getRightClicked() != null){
-			
-			if(nh.ic.checkEntityInteract(nh, event.getRightClicked(), event.getPlayer())){
+		File f = new File("hack_logs.txt");
+		
+		try{
+		
+			if(!f.exists()){
 				
-				event.setCancelled(true);
+				f.createNewFile();
 				
 			}
 			
+			PrintWriter w = new PrintWriter(new BufferedWriter(new FileWriter(f, true)));
+			
+			w.println(event.getPlayer().getName() + " failed " + event.getCheckType().toString() + ". VL " + event.getNewLevel() + " TPS " + NoHack.tps);
+			
+			w.close();
+		
+		}catch(IOException e){
+			e.printStackTrace();
 		}
 		
 	}
@@ -69,26 +88,26 @@ public class NoHackListener implements Listener {
 	@EventHandler(ignoreCancelled = true)
 	public void onSneak(PlayerToggleSneakEvent event){
 		
-		MoveData md = nh.getMoveData(event.getPlayer().getName());
+		MoveData md = nh.vars.getMoveData(event.getPlayer().getName());
 		
 		md.sneaktime = System.currentTimeMillis();
 		
 		md.wassneaking = !event.isSneaking();
 		
-		nh.setMoveData(event.getPlayer().getName(), md);
+		nh.vars.setMoveData(event.getPlayer().getName(), md);
 		
 	}
 	
 	@EventHandler(ignoreCancelled = true)
 	public void onSprint(PlayerToggleSprintEvent event){
 		
-		MoveData md = nh.getMoveData(event.getPlayer().getName());
+		MoveData md = nh.vars.getMoveData(event.getPlayer().getName());
 		
 		md.sprinttime = System.currentTimeMillis();
 		
 		md.wassprinting = !event.isSprinting();
 		
-		nh.setMoveData(event.getPlayer().getName(), md);
+		nh.vars.setMoveData(event.getPlayer().getName(), md);
 		
 	}
 	
@@ -99,9 +118,18 @@ public class NoHackListener implements Listener {
 			
 			Player p = (Player) event.getWhoClicked();
 			
-			if(nh.ic.checkInventoryClick(p, nh)){
+			for(Check c : nh.getChecks()){
 				
-				event.setCancelled(true);
+				if(c.getDetectType() == DetectionType.INVENTORY){
+					
+					if(c.run(p, null, null, 0, null, 0D, null, null, null, false, false, false, false, 0, 0, null) != 0){
+						
+						event.setCancelled(true);
+						break;
+						
+					}
+					
+				}
 				
 			}
 			
@@ -129,7 +157,7 @@ public class NoHackListener implements Listener {
 				
 				if(diff <= 3800){
 					
-					int id = nh.raiseViolationLevel(p.getName(), CheckType.GOD_MODE, p);
+					int id = nh.vars.raiseViolationLevel(CheckType.GOD_MODE, p);
 					
 					ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.GOD_MODE, p);
 					
@@ -161,9 +189,11 @@ public class NoHackListener implements Listener {
 		
 		if(event.getAction() != Action.PHYSICAL){
 		
-			if(nh.ic.checkInteract(nh, event, event.getPlayer())){
+			if(nh.fi.checkCustom(event, event.getPlayer())){
 				
 				event.setCancelled(true);
+				event.setUseInteractedBlock(org.bukkit.event.Event.Result.DENY);
+				event.setUseItemInHand(org.bukkit.event.Event.Result.DENY);
 				
 			}
 		
@@ -193,9 +223,9 @@ public class NoHackListener implements Listener {
 		event.getPlayer().sendMessage("񖶅񙓭");
 		event.getPlayer().sendMessage("񖶅�7");
 		
-		if(nh.deniedlogin.containsKey(Utils.getIP(event.getPlayer()))){
+		if(nh.vars.deniedlogin.containsKey(Utils.getIP(event.getPlayer()))){
 			
-			long fut = nh.deniedlogin.get(Utils.getIP(event.getPlayer()));
+			long fut = nh.vars.deniedlogin.get(Utils.getIP(event.getPlayer()));
 			
 			if(fut > System.currentTimeMillis()){
 			
@@ -203,7 +233,7 @@ public class NoHackListener implements Listener {
 			
 			}else{
 				
-				nh.deniedlogin.remove(Utils.getIP(event.getPlayer()));
+				nh.vars.deniedlogin.remove(Utils.getIP(event.getPlayer()));
 				
 			}
 			
@@ -233,10 +263,19 @@ public class NoHackListener implements Listener {
 				
 					Player p = ((Player) event.getDamager());
 					
-					if(nh.fc.check(nh, nh.getLastSwong(p.getName()), p, e, event.getDamage())){
+					for(Check c : nh.getChecks()){
 						
-						e.setNoDamageTicks(20);
-						event.setCancelled(true);
+						if(c.getDetectType() == DetectionType.FIGHT){
+							
+							if(c.run(p, null, null, nh.vars.getLastSwong(p.getName()), e, event.getDamage(), null, null, null, false, Utils.isOnLadder(p), false, Utils.inWater(p), 0, 0, nh.vars.lastGround(p)) != 0){
+								
+								e.setNoDamageTicks(20);
+								event.setCancelled(true);
+								break;
+								
+							}
+							
+						}
 						
 					}
 					
@@ -255,25 +294,24 @@ public class NoHackListener implements Listener {
 	@EventHandler(ignoreCancelled = true)
 	public void onBreak(BlockBreakEvent event){
 		
-		if(nh.bc.checkBreak(nh, nh.getLastSwong(event.getPlayer().getName()), event.getBlock(), event.getPlayer())){
+		for(Check c : nh.getChecks()){
 			
-			event.setCancelled(true);
+			if(c.getDetectType() == DetectionType.FIGHT){
+				
+				if(c.run(event.getPlayer(), null, null, nh.vars.getLastSwong(event.getPlayer().getName()), null, 0D, 
+						event.getBlock(), null, null, false, Utils.isOnLadder(event.getPlayer()), false, Utils.inWater(event.getPlayer()), 0, 0, nh.vars.lastGround(event.getPlayer())) != 0){
+					
+					event.setCancelled(true);
+					break;
+					
+				}
+				
+			}
 			
 		}
 		
 	}
-	
-	@EventHandler(ignoreCancelled = true)
-	public void onBlockPlace(BlockPlaceEvent event){
-		
-		if(nh.bc.checkPlace(nh, event.getBlock(), event.getBlockAgainst(), event.getPlayer())){
-			
-			event.setCancelled(true);
-			
-		}
-		
-	}
-	
+
 	@EventHandler(priority=EventPriority.NORMAL, ignoreCancelled = true)
 	public void onPlayerBedLeaveEvent(PlayerBedLeaveEvent event){
 		
@@ -288,11 +326,7 @@ public class NoHackListener implements Listener {
 	@EventHandler(priority=EventPriority.NORMAL, ignoreCancelled = true)
 	public void onProjectile(ProjectileLaunchEvent event){
 		
-		if(nh.ic.checkProjectile(nh, event.getEntity())){
-			
-			event.setCancelled(true);
-			
-		}
+		//TODO Add fast shoot
 		
 	}
 	
@@ -310,9 +344,19 @@ public class NoHackListener implements Listener {
 	@EventHandler(ignoreCancelled = true)
 	public void onChat(AsyncPlayerChatEvent event){
 		
-		if(nh.cc.check(nh, event.getPlayer(), event.getMessage())){
+		for(Check c : nh.getChecks()){
 			
-			event.setCancelled(true);
+			if(c.getDetectType() == DetectionType.CHAT){
+				
+				if(c.run(event.getPlayer(), null, null, nh.vars.getLastSwong(event.getPlayer().getName()), null, 0D, 
+						null, null, event.getMessage(), false, false, false, false, 0, 0, null) != 0){
+					
+					event.setCancelled(true);
+					break;
+					
+				}
+				
+			}
 			
 		}
 		
@@ -323,7 +367,7 @@ public class NoHackListener implements Listener {
 		
 		if(event.getAnimationType() == PlayerAnimationType.ARM_SWING){
 		
-			nh.updateLastSwong(event.getPlayer().getName());
+			nh.vars.updateLastSwong(event.getPlayer().getName());
 		
 		}
 		
@@ -361,7 +405,32 @@ public class NoHackListener implements Listener {
 	@EventHandler(priority=EventPriority.NORMAL, ignoreCancelled = true)
 	public void onMove(PlayerMoveEvent event){
 		
-		int id = nh.mc.checkMove(nh, event.getPlayer(), event.getFrom(), event.getTo());
+		int id = 0;
+		
+		double yd = Math.abs((event.getFrom().getY() - event.getTo().getY()));//Vertical speed
+		boolean up = ((event.getTo().getY() - event.getFrom().getY()) > 0);//Moving up?
+		double md = Utils.getXZDistance(event.getFrom().getX(), event.getTo().getX(), event.getFrom().getZ(), event.getTo().getZ());//Horizontal speed
+		boolean inwater = ((CraftPlayer) event.getPlayer()).getHandle().inWater;
+		boolean onladder = ((CraftPlayer) event.getPlayer()).getHandle().h_();//Near ladder? NMS ftw!
+		
+		XYZ lg = nh.vars.lastGround(event.getPlayer());
+		
+		for(Check c : nh.getChecks()){
+			
+			if(c.getDetectType() == DetectionType.MOVING){
+				
+				id = c.run(event.getPlayer(), event.getFrom(), event.getTo(), 0, null, 0D, 
+						null, null, null, false, onladder, up, inwater, yd, md, lg);//TODO possible block move boolean?
+				
+				if(id != 0){
+					
+					break;
+					
+				}
+				
+			}
+			
+		}
 		
 		if(id == 1){
 			
@@ -373,13 +442,13 @@ public class NoHackListener implements Listener {
 			
 		}else if(id == 3){
 			
-			event.setTo(nh.mc.lastGround.get(event.getPlayer().getName()).toLocation(event.getTo().getPitch(), event.getTo().getYaw()));
+			event.setTo(nh.vars.lastGround(event.getPlayer()).toLocation(event.getTo().getPitch(), event.getTo().getYaw()));
 			
 		}else if(id == 4){
 			
-			Location loc = nh.mc.lastGround.get(event.getPlayer().getName()).toLocation(event.getTo().getPitch(), event.getTo().getYaw());
+			Location loc = nh.vars.lastGround(event.getPlayer()).toLocation(event.getTo().getPitch(), event.getTo().getYaw());
 			
-			double md = Double.MAX_VALUE;
+			double mmd = Double.MAX_VALUE;
 			
 			for(int x = loc.getBlockX() - 5; x < loc.getBlockX() + 5; x++){
 				
@@ -395,11 +464,11 @@ public class NoHackListener implements Listener {
 								
 								double d = b.getLocation().distanceSquared(event.getFrom());
 								
-								if(d < md){
+								if(d < mmd){
 									
 									event.setTo(new Location(loc.getWorld(), x + 0.5, y + 1, z + 0.5, event.getTo().getYaw(), event.getTo().getPitch()));
 									
-									md = d;
+									mmd = d;
 								
 								}
 								

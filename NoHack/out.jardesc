@@ -11,8 +11,8 @@
         </sealing>
     </manifest>
     <selectedElements exportClassFiles="true" exportJavaFiles="false" exportOutputFolder="false">
-        <file path="/NoHack/.classpath"/>
         <file path="/NoHack/.project"/>
+        <file path="/NoHack/.classpath"/>
         <javaElement handleIdentifier="=NoHack/src"/>
     </selectedElements>
 </jardesc>

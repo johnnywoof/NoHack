@@ -1,6 +1,6 @@
 package me.johnnywoof.event;
 
-import me.johnnywoof.CheckType;
+import me.johnnywoof.check.CheckType;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;

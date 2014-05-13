@@ -1,4 +1,4 @@
-package me.johnnywoof;
+package me.johnnywoof.check;
 
 public enum CheckType {
 

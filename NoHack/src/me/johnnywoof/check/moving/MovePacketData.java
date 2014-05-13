@@ -1,4 +1,4 @@
-package me.johnnywoof.check;
+package me.johnnywoof.check.moving;
 
 import me.johnnywoof.util.XYZ;
 
