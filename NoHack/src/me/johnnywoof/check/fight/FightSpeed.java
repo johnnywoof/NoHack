@@ -2,7 +2,7 @@ package me.johnnywoof.check.fight;
 
 import java.util.HashMap;
 
-import me.johnnywoof.Settings;
+import me.johnnywoof.Setting;
 import me.johnnywoof.Variables;
 import me.johnnywoof.check.Check;
 import me.johnnywoof.check.CheckType;
@@ -47,7 +47,7 @@ public class FightSpeed extends Check{
 				
 					if(id != 0){
 						
-						String message = Settings.fightspeed;
+						String message = Setting.fightspeed;
 						
 						message = message.replaceAll("%name%", ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN);
 						message = message.replaceAll("%vl%", id + "");
@@ -61,11 +61,9 @@ public class FightSpeed extends Check{
 				
 			}
 			
-		}else{
-			
-			this.registerLastAttack(p.getName());
-			
 		}
+		
+		this.registerLastAttack(p.getName());
 		
 		return 0;
 		

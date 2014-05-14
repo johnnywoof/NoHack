@@ -2,35 +2,38 @@
 # Main config file for NoHack
 #------------------------------------------------------------------
 
+#Chat violation messages
+chat-impossible-message: .name. failed Impossible! Tried to chat in an illegal state. VL .vl.
+
 #Move violation messages
-nofall-message: %name% failed NoFall! Tried to fall while saying on the ground. VL %vl%
+nofall-message: .name. failed NoFall! Tried to fall while saying on the ground. VL .vl.
 
-timer-message: %name% failed Timer! Sent %packets% packets but expected no more than %expected%. VL %vl%
+timer-message: .name. failed Timer! Sent .packets. packets but expected no more than .expected.. VL .vl.
 
-impossible-move-message: %name% failed Impossible! Tried to move in a way which is impossible. VL %vl%
+impossible-move-message: .name. failed Impossible! Tried to move in a way which is impossible. VL .vl.
 
-vertical-speed-message: %name% failed Vertical Speed! Tried to move too fast on the y axis. VL %vl%
+vertical-speed-message: .name. failed Vertical Speed! Tried to move too fast on the y axis. VL .vl.
 
-horizontal-speed-message: %name% failed Horizontal Speed! Tried to move too fast on the xz axis. VL %vl%
+horizontal-speed-message: .name. failed Horizontal Speed! Tried to move too fast on the xz axis. VL .vl.
 
-fly-message: %name% failed Fly! Tried to fly in survival mode without permission. VL %vl%
+fly-message: .name. failed Fly! Tried to fly in survival mode without permission. VL .vl.
 
 #Block violation messages
-block-visible-break-message: %name% failed Visible! Tried to break another block than expected. VL %vl%
+block-visible-break-message: .name. failed Visible! Tried to break another block than expected. VL .vl.
 
 #Fight violation messages
-godmode-message: %name% failed GodMode! Tried to avoid taking damage. VL %vl%
+godmode-message: .name. failed GodMode! Tried to avoid taking damage. VL .vl.
 
-fight-impossible-message: %name% failed Impossible! Tried to do illegal attacks. VL %vl%
+fight-impossible-message: .name. failed Impossible! Tried to do illegal attacks. VL .vl.
 
-fight-speed-message: %name% failed Attack Speed! Tried to attack too fast. VL %vl%
+fight-speed-message: .name. failed Attack Speed! Tried to attack too fast. VL .vl.
 
-fight-reach-message: %name% failed Attack Reach! Tried to attack too far. VL %vl%
+fight-reach-message: .name. failed Attack Reach! Tried to attack too far. VL .vl.
 
 #Inventory violation messages
-inventory-impossible-message: %name% failed Impossible! Tried to do illegal inventory clicks. VL %vl%
+inventory-impossible-message: .name. failed Impossible! Tried to do illegal inventory clicks. VL .vl.
 
-inventory-click-speed: %name& failed FastClick! Clicked a container too fast. VL %vl%
+inventory-click-speed: .name. failed FastClick! Clicked a container too fast. VL .vl.
 
 #Everything else with messages
-noswing-message: %name% failed NoSwing! Did not swing arm. VL %vl%
+noswing-message: .name. failed NoSwing! Did not swing arm. VL .vl.

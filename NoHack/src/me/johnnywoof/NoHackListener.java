@@ -296,7 +296,7 @@ public class NoHackListener implements Listener {
 		
 		for(Check c : nh.getChecks()){
 			
-			if(c.getDetectType() == DetectionType.FIGHT){
+			if(c.getDetectType() == DetectionType.BREAK){
 				
 				if(c.run(event.getPlayer(), null, null, nh.vars.getLastSwong(event.getPlayer().getName()), null, 0D, 
 						event.getBlock(), null, null, false, Utils.isOnLadder(event.getPlayer()), false, Utils.inWater(event.getPlayer()), 0, 0, nh.vars.lastGround(event.getPlayer())) != 0){

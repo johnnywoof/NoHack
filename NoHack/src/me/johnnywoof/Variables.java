@@ -23,20 +23,21 @@ public class Variables {
 	
 	public void reloadConfig(FileConfiguration fc){
 		
-		Settings.nofallmes = fc.getString("nofall-message");
-		Settings.timermes = fc.getString("timer-message");
-		Settings.impossiblemovemes = fc.getString("impossible-move-message");
-		Settings.verticalspeedmes = fc.getString("vertical-speed-message");
-		Settings.horizontalspeedmes = fc.getString("horizontal-speed-message");
-		Settings.flymes = fc.getString("fly-message");
-		Settings.blockvisiblebreak = fc.getString("block-visible-break-message");
-		Settings.godmodemes = fc.getString("godmode-message");
-		Settings.impossibleattack = fc.getString("fight-impossible-message");
-		Settings.fightspeed = fc.getString("fight-speed-message");
-		Settings.fightreach = fc.getString("fight-reach-message");
-		Settings.impossibleclick = fc.getString("inventory-impossible-message");
-		Settings.speedclick = fc.getString("inventory-click-speed");
-		Settings.noswingmes = fc.getString("noswing-message");
+		Setting.nofallmessage = fc.getString("nofall-message");
+		Setting.timermes = fc.getString("timer-message");
+		Setting.impossiblemovemes = fc.getString("impossible-move-message");
+		Setting.verticalspeedmes = fc.getString("vertical-speed-message");
+		Setting.horizontalspeedmes = fc.getString("horizontal-speed-message");
+		Setting.flymes = fc.getString("fly-message");
+		Setting.blockvisiblebreak = fc.getString("block-visible-break-message");
+		Setting.godmodemes = fc.getString("godmode-message");
+		Setting.impossibleattack = fc.getString("fight-impossible-message");
+		Setting.fightspeed = fc.getString("fight-speed-message");
+		Setting.fightreach = fc.getString("fight-reach-message");
+		Setting.impossibleclick = fc.getString("inventory-impossible-message");
+		Setting.speedclick = fc.getString("inventory-click-speed");
+		Setting.noswingmes = fc.getString("noswing-message");
+		Setting.chatimpossiblemes = fc.getString("chat-impossible-message");
 		
 	}
 	

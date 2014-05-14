@@ -1,6 +1,6 @@
 package me.johnnywoof.check.moving;
 
-import me.johnnywoof.Settings;
+import me.johnnywoof.Setting;
 import me.johnnywoof.Variables;
 import me.johnnywoof.check.Check;
 import me.johnnywoof.check.CheckType;
@@ -44,7 +44,7 @@ public class HorizontalSpeed extends Check{
 				
 					if(id != 0){
 						
-						String message = Settings.horizontalspeedmes;
+						String message = Setting.horizontalspeedmes;
 						
 						message = message.replaceAll("%name%", ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN);
 						message = message.replaceAll("%vl%", id + "");
@@ -64,9 +64,9 @@ public class HorizontalSpeed extends Check{
 					
 					if(mdis > this.getMaxMD(inwater, p.isOnGround(), p, ydis, this.vars.getMoveData(p.getName()))){
 						
-						int id = this.vars.raiseViolationLevel(CheckType.FLY, p);
+						int id = this.vars.raiseViolationLevel(CheckType.GLIDE, p);
 						
-						ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.FLY, p);
+						ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.GLIDE, p);
 						
 						Bukkit.getServer().getPluginManager().callEvent(vte);
 						
@@ -74,7 +74,7 @@ public class HorizontalSpeed extends Check{
 						
 							if(id != 0){
 								
-								String message = Settings.flymes;
+								String message = Setting.flymes;
 								
 								message = message.replaceAll("%name%", ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN);
 								message = message.replaceAll("%vl%", id + "");

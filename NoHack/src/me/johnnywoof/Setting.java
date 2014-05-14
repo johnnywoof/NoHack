@@ -1,8 +1,8 @@
 package me.johnnywoof;
 
-public class Settings {
+public class Setting {
 
-	public static String nofallmes = "";
+	public static String nofallmessage = "";
 	public static String timermes = "";
 	public static String impossiblemovemes = "";
 	public static String verticalspeedmes = "";
@@ -16,5 +16,6 @@ public class Settings {
 	public static String impossibleclick = "";
 	public static String speedclick = "";
 	public static String noswingmes = "";
+	public static String chatimpossiblemes = "";
 	
 }

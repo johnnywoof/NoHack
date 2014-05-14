@@ -7,6 +7,7 @@ import me.johnnywoof.check.CheckType;
 import me.johnnywoof.check.Violation;
 import me.johnnywoof.check.block.FastBreak;
 import me.johnnywoof.check.block.NoSwingBlock;
+import me.johnnywoof.check.chat.ChatImpossible;
 import me.johnnywoof.check.fight.FightImpossible;
 import me.johnnywoof.check.fight.FightReach;
 import me.johnnywoof.check.fight.FightSpeed;
@@ -45,10 +46,6 @@ public class NoHack extends JavaPlugin{
 	public FastInteract fi;
 
 	public void onEnable(){
-		
-		this.fi = new FastInteract(this.vars, CheckType.FAST_INTERACT);
-		
-		this.vars = new Variables();
 		
 		this.getServer().getPluginManager().registerEvents(new NoHackListener(this), this);
 		getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable()
@@ -97,9 +94,13 @@ public class NoHack extends JavaPlugin{
 		
 		this.saveDefaultConfig();
 		
+		this.vars = new Variables();
+		
 		this.vars.reloadConfig(this.getConfig());
 		
 		this.checks.clear();
+		
+		this.fi = new FastInteract(this.vars, CheckType.FAST_INTERACT);
 		
 		//Remember! Higher = more priority
 		this.checks.add(new ImpossibleMoving(this.vars, CheckType.IMPOSSIBLE));
@@ -115,6 +116,7 @@ public class NoHack extends JavaPlugin{
 		this.checks.add(new FightReach(this.vars, CheckType.ATTACK_REACH));
 		this.checks.add(new FightSpeed(this.vars, CheckType.ATTACK_SPEED));
 		this.checks.add(new NoSwingFight(this.vars, CheckType.NOSWING));
+		this.checks.add(new ChatImpossible(this.vars, CheckType.IMPOSSIBLE));
 			
 	}
 	

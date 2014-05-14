@@ -1,8 +1,7 @@
 package me.johnnywoof.util;
 
-import org.bukkit.Location;
-
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 
 public class XYZ {
 
@@ -16,6 +15,12 @@ public class XYZ {
 		this.x = x;
 		this.y = y;
 		this.z = z;
+		
+	}
+	
+	public boolean equalsLoc(XYZ loc){
+		
+		return this.x == loc.x && this.y == loc.y && this.z == loc.z && this.world.equals(loc.world);
 		
 	}
 	

@@ -95,7 +95,7 @@ public class FastInteract extends Check{
 					m == Material.WORKBENCH || m == Material.WOOD_BUTTON || m == Material.NOTE_BLOCK || m == Material.STONE_BUTTON || m == Material.JUKEBOX || m == Material.HOPPER || m == Material.DRAGON_EGG || m == Material.DROPPER || m == Material.FENCE_GATE || 
 					m == Material.FURNACE || m == Material.ENCHANTMENT_TABLE){
 				
-				if(!Utils.canSee(p, event.getClickedBlock().getRelative(event.getBlockFace()).getLocation())){
+				if(!Utils.canSee(p, event.getClickedBlock().getRelative(event.getBlockFace()).getLocation()) && !new XYZ(event.getClickedBlock().getLocation()).equalsLoc(new XYZ(p.getEyeLocation().getBlock().getLocation()))){
 					
 					int id = this.vars.raiseViolationLevel(CheckType.VISIBLE, p);
 					
