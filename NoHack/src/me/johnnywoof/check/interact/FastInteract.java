@@ -62,7 +62,7 @@ public class FastInteract extends Check{
 				
 				this.lastinteractright.put(p.getName(), System.currentTimeMillis());
 				
-				if(diff <= 150){
+				if(diff <= 147){
 					
 					int id = this.vars.raiseViolationLevel(CheckType.FAST_INTERACT, p);
 					
@@ -118,8 +118,6 @@ public class FastInteract extends Check{
 			}
 		
 		}else if(event.hasBlock() && event.getAction() == Action.LEFT_CLICK_BLOCK){
-			
-			this.vars.setCurrentBlock(p.getName(), new XYZ(event.getClickedBlock().getLocation()));
 			
 			long diff = 0;
 			

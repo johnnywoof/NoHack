@@ -78,6 +78,15 @@ public class NoHack extends JavaPlugin{
 			}
 		}, 20, 1);
 		this.reload();
+		
+		if(this.getServer().getAllowFlight()){
+		
+			this.getLogger().warning("-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-");
+			this.getLogger().warning("[NoHack] Allowed flight in server.properties is true! Please set it to false for best preformance.");
+			this.getLogger().warning("-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-");
+		
+		}
+		
 		this.getLogger().info("[NoHack] NoHack has been enabled!");
 	}
 	

@@ -26,8 +26,8 @@ public class ImpossibleMoving extends Check{
 	@Override
 	public int run(Player p, Location from, Location to, long ls, LivingEntity e, double damage, Block clicked, BlockFace bf, String mes, boolean blockmove, boolean onladder, boolean up, boolean inwater, double yd, double md, XYZ lg){
 		
-		//Prevents bypass of packet sneak
-		if(p.isSneaking() && p.isSprinting()){
+		//Prevents bypass of packet sneak and enforcement of blocking
+		if((p.isSneaking() || p.isBlocking()) && p.isSprinting()){
 			
 			int id = this.vars.raiseViolationLevel(CheckType.IMPOSSIBLE, p);
 			

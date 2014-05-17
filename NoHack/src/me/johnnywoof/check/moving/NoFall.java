@@ -29,7 +29,7 @@ public class NoFall extends Check{
 	public int run(Player p, Location from, Location to, long ls, LivingEntity e, double damage, Block clicked, BlockFace bf, String mes, boolean blockmove, boolean onladder, boolean up, boolean inwater, double yd, double md, XYZ lg){
 		
 		//Start nofall & fly check
-		if(blockmove){
+		if(true){
 			
 			if(to.getBlockY() != from.getBlockY()){
 				

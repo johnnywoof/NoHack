@@ -16,7 +16,6 @@ public class Variables {
 	final private HashMap<String, Long> lastswong = new HashMap<String, Long>();
 	final public HashMap<String, Long> deniedlogin = new HashMap<String, Long>();
 	final private HashMap<String, MoveData> movedata = new HashMap<String, MoveData>();
-	private final HashMap<String, XYZ> currentInteracting = new HashMap<String, XYZ>();
 	
 	//Last location of being on the ground
 	public final HashMap<String, XYZ> lastGround = new HashMap<String, XYZ>();
@@ -97,28 +96,12 @@ public class Variables {
 		
 	}
 	
-	public XYZ getCurrentBlock(String n){
-		if(this.currentInteracting.containsKey(n)){
-			
-			return this.currentInteracting.get(n);
-			
-		}else{
-			
-			return null;
-			
-		}
-	}
-	
 	public long getLastSwong(String v){
 		if(this.lastswong.containsKey(v)){
 			return this.lastswong.get(v);
 		}else{
 			return 0;
 		}
-	}
-	
-	public void setCurrentBlock(String n, XYZ v){
-		this.currentInteracting.put(n, v);
 	}
 	
 	public MoveData getMoveData(String n){
