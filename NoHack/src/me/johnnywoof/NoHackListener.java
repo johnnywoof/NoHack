@@ -78,6 +78,17 @@ public class NoHackListener implements Listener {
 		
 	}
 	
+	@EventHandler(ignoreCancelled = true)//Permission system bypass
+	public void onViolationTriggeredEvent(ViolationTriggeredEvent event){
+		
+		if(event.getPlayer().hasPermission("nohack.bypass." + event.getCheckType().toString().toLowerCase())){
+			
+			event.setCancelled(true);
+			
+		}
+		
+	}
+	
 	@EventHandler(ignoreCancelled = true)
 	public void onLog(ViolationChangedEvent event){
 		
