@@ -253,7 +253,7 @@ public class HorizontalSpeed extends Check{
 				
 			}else if(p.isBlocking()){
 				
-				d = 0.0075;
+				d = 0.0205;
 				
 			}else{
 				

@@ -478,7 +478,8 @@ public class NoHackListener implements Listener {
 		
 		if(id == 1){
 			
-			event.getPlayer().teleport(event.getFrom());
+			//event.getPlayer().teleport(event.getFrom());
+			event.setCancelled(true);
 			
 		}else if(id == 2){
 			
