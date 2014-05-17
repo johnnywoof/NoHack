@@ -73,7 +73,7 @@ public class HorizontalSpeed extends Check{
 					
 					if(mdis > this.getMaxMD(inwater, p.isOnGround(), p, ydis, moved)){
 						
-						int id = this.vars.raiseViolationLevel(CheckType.GLIDE, p);
+						/*int id = this.vars.raiseViolationLevel(CheckType.GLIDE, p);
 						
 						ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.GLIDE, p);
 						
@@ -94,7 +94,7 @@ public class HorizontalSpeed extends Check{
 							
 							return 1;
 						
-						}
+						}*/
 						
 					}
 				
