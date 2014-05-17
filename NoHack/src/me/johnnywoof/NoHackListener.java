@@ -491,7 +491,7 @@ public class NoHackListener implements Listener {
 							
 							if(!b.getRelative(BlockFace.UP).getType().isSolid()){
 								
-								double d = b.getLocation().distanceSquared(event.getFrom());
+								double d = b.getLocation().distanceSquared(loc);
 								
 								if(d < mmd){
 									

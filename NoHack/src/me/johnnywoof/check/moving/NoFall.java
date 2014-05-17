@@ -86,14 +86,12 @@ public class NoFall extends Check{
 						
 					String message = Setting.nofallmessage;
 					
-					message = message.replaceAll("%name%", ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN);
-					message = message.replaceAll("%vl%", id + "");
+					message = message.replaceAll(".name.", ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN);
+					message = message.replaceAll(".vl.", id + "");
 
 					Utils.messageAdmins(message);
 						
 				}
-				
-				p.damage(1D);//Prevents them from abusing this check to avoid fall damage
 				
 				return 4;//More expensive to put the player back than to check it
 			
