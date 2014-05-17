@@ -45,8 +45,8 @@ public class FightReach extends Check{
 					
 					String message = Setting.fightreach;
 					
-					message = message.replaceAll("%name%", ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN);
-					message = message.replaceAll("%vl%", id + "");
+					message = message.replaceAll(".name.", ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN);
+					message = message.replaceAll(".vl.", id + "");
 
 					Utils.messageAdmins(message);
 					

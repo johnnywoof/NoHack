@@ -47,6 +47,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.event.player.PlayerToggleSprintEvent;
 import org.bukkit.event.player.PlayerVelocityEvent;
+import org.bukkit.event.vehicle.VehicleEnterEvent;
 
 public class NoHackListener implements Listener {
 
@@ -57,6 +58,23 @@ public class NoHackListener implements Listener {
 	public NoHackListener(NoHack nh){
 		
 		this.nh = nh;
+		
+	}
+	
+	@EventHandler(ignoreCancelled = true)
+	public void onMount(VehicleEnterEvent event){
+		
+		if(event.getEntered() instanceof Player){
+		
+			Player p = (Player) event.getEntered();
+			
+			MoveData md = nh.vars.getMoveData(p.getName());
+			
+			md.lastmounting = System.currentTimeMillis();
+			
+			nh.vars.setMoveData(p.getName(), md);
+		
+		}
 		
 	}
 	

@@ -44,8 +44,8 @@ public class InventoryClick extends Check{
 					
 					String message = Setting.impossibleclick;
 					
-					message = message.replaceAll("%name%", ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN);
-					message = message.replaceAll("%vl%", id + "");
+					message = message.replaceAll(".name.", ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN);
+					message = message.replaceAll(".vl.", id + "");
 
 					Utils.messageAdmins(message);
 					

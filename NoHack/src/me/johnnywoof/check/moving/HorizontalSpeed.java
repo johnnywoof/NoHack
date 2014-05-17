@@ -32,7 +32,16 @@ public class HorizontalSpeed extends Check{
 		
 		if(md != 0){
 			
-			if(md > this.getMaxHorizontal(p.isOnGround(), inwater, p, this.vars.getMoveData(p.getName()))){
+			MoveData moved = this.vars.getMoveData(p.getName());
+			
+			if((System.currentTimeMillis() - moved.lastmounting) <= 200){
+				
+				moved = null;
+				return 0;
+				
+			}
+			
+			if(md > this.getMaxHorizontal(p.isOnGround(), inwater, p, moved)){
 				
 				int id = this.vars.raiseViolationLevel(CheckType.HORIZONTAL_SPEED, p);
 				
@@ -46,8 +55,8 @@ public class HorizontalSpeed extends Check{
 						
 						String message = Setting.horizontalspeedmes;
 						
-						message = message.replaceAll("%name%", ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN);
-						message = message.replaceAll("%vl%", id + "");
+						message = message.replaceAll(".name.", ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN);
+						message = message.replaceAll(".vl.", id + "");
 
 						Utils.messageAdmins(message);
 						
@@ -62,7 +71,7 @@ public class HorizontalSpeed extends Check{
 					
 					double mdis = this.getXZDistance(to.getX(), lg.x, to.getZ(), lg.z);
 					
-					if(mdis > this.getMaxMD(inwater, p.isOnGround(), p, ydis, this.vars.getMoveData(p.getName()))){
+					if(mdis > this.getMaxMD(inwater, p.isOnGround(), p, ydis, moved)){
 						
 						int id = this.vars.raiseViolationLevel(CheckType.GLIDE, p);
 						

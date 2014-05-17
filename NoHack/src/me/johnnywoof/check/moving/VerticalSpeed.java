@@ -46,8 +46,8 @@ public class VerticalSpeed extends Check{
 							
 							String message = Setting.verticalspeedmes;
 							
-							message = message.replaceAll("%name%", ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN);
-							message = message.replaceAll("%vl%", id + "");
+							message = message.replaceAll(".name.", ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN);
+							message = message.replaceAll(".vl.", id + "");
 
 							Utils.messageAdmins(message);
 							

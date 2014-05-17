@@ -72,8 +72,8 @@ public class SurvivalFly extends Check{
 									
 									String message = Setting.flymes;
 									
-									message = message.replaceAll("%name%", ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN);
-									message = message.replaceAll("%vl%", id + "");
+									message = message.replaceAll(".name.", ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN);
+									message = message.replaceAll(".vl.", id + "");
 
 									Utils.messageAdmins(message);
 									
