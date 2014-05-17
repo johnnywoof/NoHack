@@ -290,7 +290,24 @@ public class NoHackListener implements Listener {
 				
 				if(!e.isDead()){
 				
-					Player p = ((Player) event.getDamager());
+					final Player p = ((Player) event.getDamager());
+					
+					//A fix for stupid bukkit not taking account of ctrl sprint
+					//TODO Test this with craftbukkit and not spigot
+					if(p.isSprinting()){
+						
+						nh.getServer().getScheduler().runTaskLater(this.nh, new Runnable(){
+
+							@Override
+							public void run() {
+								
+								p.setSprinting(true);
+								
+							}
+							
+						}, 1);
+					
+					}
 					
 					for(Check c : nh.getChecks()){
 						
@@ -307,8 +324,6 @@ public class NoHackListener implements Listener {
 						}
 						
 					}
-					
-					p = null;
 				
 				}
 				

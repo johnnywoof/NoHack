@@ -73,7 +73,7 @@ public class HorizontalSpeed extends Check{
 					
 					if(mdis > this.getMaxMD(inwater, p.isOnGround(), p, ydis, moved)){
 						
-						int id = this.vars.raiseViolationLevel(CheckType.GLIDE, p);
+						/*int id = this.vars.raiseViolationLevel(CheckType.GLIDE, p);
 						
 						ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.GLIDE, p);
 						
@@ -85,15 +85,15 @@ public class HorizontalSpeed extends Check{
 								
 								String message = Setting.flymes;
 								
-								message = message.replaceAll("%name%", ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN);
-								message = message.replaceAll("%vl%", id + "");
+								message = message.replaceAll(".name.", ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN);
+								message = message.replaceAll(".vl.", id + "");
 
 								Utils.messageAdmins(message);
 								
 							}
 							return 1;
 						
-						}
+						}*/
 						
 					}
 				
