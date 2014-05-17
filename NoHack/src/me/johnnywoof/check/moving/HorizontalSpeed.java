@@ -91,6 +91,7 @@ public class HorizontalSpeed extends Check{
 								Utils.messageAdmins(message);
 								
 							}
+							
 							return 1;
 						
 						}
