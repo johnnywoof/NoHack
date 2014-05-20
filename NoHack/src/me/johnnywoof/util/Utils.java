@@ -1,8 +1,5 @@
 package me.johnnywoof.util;
 
-import java.util.HashSet;
-import java.util.Iterator;
-
 import me.johnnywoof.NoHack;
 import net.minecraft.server.v1_7_R3.Vec3D;
 
@@ -24,10 +21,20 @@ public class Utils {
     	return ((CraftWorld) player.getLocation().getWorld()).getHandle().a(Vec3D.a(player.getLocation().getX(), player.getLocation().getY() + player.getEyeHeight(), player.getLocation().getZ()), Vec3D.a(loc2.getX(), loc2.getY(), loc2.getZ())) == null;
     }
     
+    public static boolean instantBreak(Material m){
+    	
+    	return m == Material.TORCH || m == Material.FLOWER_POT || m == Material.RED_ROSE || m == Material.YELLOW_FLOWER || m == Material.LONG_GRASS
+    			|| m == Material.RED_MUSHROOM || m == Material.BROWN_MUSHROOM || m == Material.TRIPWIRE || m == Material.TRIPWIRE_HOOK ||
+    			m == Material.DEAD_BUSH || m == Material.DIODE_BLOCK_OFF || m == Material.DIODE_BLOCK_ON || m == Material.REDSTONE_COMPARATOR_OFF
+    			|| m == Material.REDSTONE_COMPARATOR_OFF || m == Material.REDSTONE_WIRE || m == Material.REDSTONE_TORCH_OFF ||
+    			m == Material.REDSTONE_TORCH_ON;
+    	
+    }
+    
     @SuppressWarnings("deprecation")//Depercated for "magic value" :/
 	public static boolean canSeeBlock(Player p, Block b){
     	
-    	HashSet<Byte> igb = new HashSet<Byte>();
+    	/*HashSet<Byte> igb = new HashSet<Byte>();
     			
     	igb.add((byte) Material.TORCH.getId());
     	igb.add((byte) Material.AIR.getId());
@@ -99,13 +106,19 @@ public class Utils {
     			/*new LocationIterator(p.getWorld(), p.getLocation().toVector(), 
     			new Vector(b.getX()-p.getLocation().getBlockX(), b.getY()-p.getLocation().getBlockY(),
     					b.getZ()-p.getLocation().getBlockZ()), 0, ((p.getGameMode() == GameMode.CREATIVE) ? 8 : 6));
-    	//new BlockIterator(p.getEyeLocation(), ((p.getGameMode() == GameMode.CREATIVE) ? 8 : 6));*/
+    	//new BlockIterator(p.getEyeLocation(), ((p.getGameMode() == GameMode.CREATIVE) ? 8 : 6));
     	
     	Block s = p.getTargetBlock(igb, ((p.getGameMode() == GameMode.CREATIVE) ? 8 : 6));
     		
     	//Pretty sure it's the one :3
+    	*/
+    	
+    	RayTrace rt = RayTrace.eyeTrace(p, ((p.getGameMode() == GameMode.CREATIVE) ? 8 : 6));
+    	
+    	Block s = rt.getBlock();
+    	
     	if(s.getX() == b.getX() && s.getY() == b.getY() && s.getZ() == b.getZ() && s.getType() == b.getType() && s.getData() == b.getData()){
-    			
+			
     		return true;
     			
     	}

@@ -6,13 +6,13 @@ import me.johnnywoof.Variables;
 import me.johnnywoof.check.Check;
 import me.johnnywoof.check.CheckType;
 import me.johnnywoof.check.DetectionType;
-import me.johnnywoof.check.Violation;
 import me.johnnywoof.event.ViolationTriggeredEvent;
 import me.johnnywoof.util.Utils;
 import me.johnnywoof.util.XYZ;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -30,43 +30,46 @@ public class FastBreak extends Check{
 		
 		//Start better block visible check
 		
-		//TODO Make this less sensitive somehow
-		if(!Utils.canSeeBlock(p, b)){
+		//TODO Account for blocks that can be broken instantly
+		
+		if(Utils.instantBreak(b.getType())){
 			
-			int id = this.vars.raiseViolationLevel(CheckType.VISIBLE, p);
 			
-			ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.VISIBLE, p);
 			
-			Bukkit.getServer().getPluginManager().callEvent(vte);
-			
-			if(!vte.isCancelled()){
+		}else{
+		
+			if(!Utils.canSeeBlock(p, b)){
 				
-				if(id != 0){
+				int id = this.vars.raiseViolationLevel(CheckType.VISIBLE, p);
+				
+				ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.VISIBLE, p);
+				
+				Bukkit.getServer().getPluginManager().callEvent(vte);
+				
+				if(!vte.isCancelled()){
 					
-					String message = Setting.blockvisiblebreak;
-					
-					message = message.replaceAll(".name.", ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN);
-					message = message.replaceAll(".vl.", id + "");
-					
-					if(NoHack.tps <= 17 && id > 50){
+					if(id > 50 && NoHack.tps <= 17 && p.getGameMode() == GameMode.CREATIVE){
 						
-						Violation vio = this.vars.getViolation(p.getName());
-						
-						vio.resetLevel(CheckType.VISIBLE, p);
-						
-						this.vars.setViolation(p.getName(), vio);
-						
-						p.kickPlayer(ChatColor.RED + "Block breaking out of sync!");
+						p.kickPlayer(ChatColor.RED + "Block breaking is out of sync!");
 						
 					}
+				
+					if(id != 0){
+						
+						String message = Setting.blockvisiblebreak;
+						
+						message = message.replaceAll(".name.", ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN);
+						message = message.replaceAll(".vl.", id + "");
 
-					Utils.messageAdmins(message);
-					
+						Utils.messageAdmins(message);
+						
+					}
+					return 4;
+				
 				}
-				return 1;
-			
+				
 			}
-			
+		
 		}
 		
 		//End
