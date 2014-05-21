@@ -37,6 +37,7 @@ public class Variables {
 		Setting.speedclick = fc.getString("inventory-click-speed");
 		Setting.noswingmes = fc.getString("noswing-message");
 		Setting.chatimpossiblemes = fc.getString("chat-impossible-message");
+		Setting.fightvisiblemes = fc.getString("fight-visible-message");
 		
 	}
 	

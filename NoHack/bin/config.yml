@@ -26,6 +26,8 @@ godmode-message: .name. failed GodMode! Tried to avoid taking damage. VL .vl.
 
 fight-impossible-message: .name. failed Impossible! Tried to do illegal attacks. VL .vl.
 
+fight-visible-message: .name. failed Visible! Tried to do attack a target without looking at it. VL .vl.
+
 fight-speed-message: .name. failed Attack Speed! Tried to attack too fast. VL .vl.
 
 fight-reach-message: .name. failed Attack Reach! Tried to attack too far. VL .vl.

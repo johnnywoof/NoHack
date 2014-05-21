@@ -28,6 +28,10 @@ public class FastBreak extends Check{
 	@Override
 	public int run(Player p, Location from, Location to, long ls, LivingEntity e, double damage, Block b, BlockFace bf, String mes, boolean blockmove, boolean onladder, boolean up, boolean inwater, double yd, double md, XYZ lg){
 		
+		if(p == null || b == null){
+			return 0;
+		}
+		
 		//Start better block visible check
 		
 		//TODO Account for blocks that can be broken instantly

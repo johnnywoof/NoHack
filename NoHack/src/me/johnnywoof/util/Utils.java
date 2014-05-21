@@ -1,5 +1,8 @@
 package me.johnnywoof.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import me.johnnywoof.NoHack;
 import net.minecraft.server.v1_7_R3.Vec3D;
 
@@ -11,14 +14,61 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.v1_7_R3.CraftWorld;
 import org.bukkit.craftbukkit.v1_7_R3.entity.CraftPlayer;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.util.BlockIterator;
 
 public class Utils {
 
     public static boolean canSee(Player player, Location loc2) {
     	return ((CraftWorld) player.getLocation().getWorld()).getHandle().a(Vec3D.a(player.getLocation().getX(), player.getLocation().getY() + player.getEyeHeight(), player.getLocation().getZ()), Vec3D.a(loc2.getX(), loc2.getY(), loc2.getZ())) == null;
+    }
+    
+    public static LivingEntity getTarget(Player player) {
+    int range = 60;
+    List<Entity> nearbyE = player.getNearbyEntities(range, range, range);
+    ArrayList<LivingEntity> livingE = new ArrayList<LivingEntity>();
+     
+    for (Entity e : nearbyE) {
+    if (e instanceof LivingEntity) {
+    livingE.add((LivingEntity) e);
+    }
+    }
+     
+    LivingEntity target = null;
+    BlockIterator bItr = new BlockIterator(player, range);
+    Block block;
+    Location loc;
+    int bx, by, bz;
+    double ex, ey, ez;
+    // loop through player's line of sight
+    while (bItr.hasNext()) {
+    block = bItr.next();
+    bx = block.getX();
+    by = block.getY();
+    bz = block.getZ();
+    // check for entities near this block in the line of sight
+    for (LivingEntity e : livingE) {
+    loc = e.getLocation();
+    ex = loc.getX();
+    ey = loc.getY();
+    ez = loc.getZ();
+    if ((bx - .75 <= ex && ex <= bx + 1.75)
+    && (bz - .75 <= ez && ez <= bz + 1.75)
+    && (by - 1 <= ey && ey <= by + 2.5)) {
+    // entity is close enough, set target and stop
+    target = e;
+    break;
+    }
+    }
+    }
+    nearbyE.clear();
+    livingE.clear();
+    return target;
+     
     }
     
     public static boolean instantBreak(Material m){
@@ -27,7 +77,7 @@ public class Utils {
     			|| m == Material.RED_MUSHROOM || m == Material.BROWN_MUSHROOM || m == Material.TRIPWIRE || m == Material.TRIPWIRE_HOOK ||
     			m == Material.DEAD_BUSH || m == Material.DIODE_BLOCK_OFF || m == Material.DIODE_BLOCK_ON || m == Material.REDSTONE_COMPARATOR_OFF
     			|| m == Material.REDSTONE_COMPARATOR_OFF || m == Material.REDSTONE_WIRE || m == Material.REDSTONE_TORCH_OFF ||
-    			m == Material.REDSTONE_TORCH_ON;
+    			m == Material.REDSTONE_TORCH_ON || m == Material.DOUBLE_PLANT;
     	
     }
     

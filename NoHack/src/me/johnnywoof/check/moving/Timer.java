@@ -74,7 +74,16 @@ public class Timer extends Check{
 						Utils.messageAdmins(message);
 							
 					}
-					p.teleport(mpd.lastloc.toLocation(p.getLocation().getPitch(), p.getLocation().getYaw()), TeleportCause.PLUGIN);
+					
+					if(p.isInsideVehicle()){
+						
+						p.getVehicle().teleport(mpd.lastloc.toLocation(p.getLocation().getPitch(), p.getLocation().getYaw()), TeleportCause.PLUGIN);
+						
+					}else{
+					
+						p.teleport(mpd.lastloc.toLocation(p.getLocation().getPitch(), p.getLocation().getYaw()), TeleportCause.PLUGIN);
+					
+					}
 					mpd.reset(new XYZ(p.getLocation()));
 					return 0;
 				

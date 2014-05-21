@@ -482,7 +482,15 @@ public class NoHackListener implements Listener {
 			
 			//event.getPlayer().teleport(event.getFrom());
 			event.setCancelled(true);
-			event.getPlayer().teleport(new Location(event.getFrom().getWorld(), event.getFrom().getX(), event.getFrom().getY(), event.getFrom().getZ(), event.getTo().getYaw(), event.getTo().getPitch()));
+			if(event.getPlayer().isInsideVehicle()){
+				
+				event.getPlayer().getVehicle().teleport(new Location(event.getFrom().getWorld(), event.getFrom().getX(), event.getFrom().getY(), event.getFrom().getZ(), event.getTo().getYaw(), event.getTo().getPitch()));
+				
+			}else{
+				
+				event.getPlayer().teleport(new Location(event.getFrom().getWorld(), event.getFrom().getX(), event.getFrom().getY(), event.getFrom().getZ(), event.getTo().getYaw(), event.getTo().getPitch()));
+				
+			}
 			
 		}else if(id == 2){
 			

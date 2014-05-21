@@ -17,5 +17,6 @@ public class Setting {
 	public static String speedclick = "";
 	public static String noswingmes = "";
 	public static String chatimpossiblemes = "";
+	public static String fightvisiblemes = "";
 	
 }
