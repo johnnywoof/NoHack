@@ -2,6 +2,9 @@
 # Main config file for NoHack
 #------------------------------------------------------------------
 
+#Should we not check npcs for hacks?
+ignore-citizens-npc: true
+
 #Chat violation messages
 chat-impossible-message: .name. failed Impossible! Tried to chat in an illegal state. VL .vl.
 

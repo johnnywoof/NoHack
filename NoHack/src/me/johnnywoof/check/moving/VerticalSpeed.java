@@ -25,6 +25,8 @@ public class VerticalSpeed extends Check{
 		super(vars, ct, DetectionType.MOVING);
 	}
 
+	double high = 0;
+	
 	@Override
 	public int run(Player p, Location from, Location to, long ls, LivingEntity e, double damage, Block clicked, BlockFace bf, String mes, boolean blockmove, boolean onladder, boolean up, boolean inwater, double yd, double md, XYZ lg){
 		
@@ -62,7 +64,7 @@ public class VerticalSpeed extends Check{
 			
 			if(up){
 				
-				if(yd > this.getMaxVertical(p)){//Moving up only
+				if(yd > this.getMaxVertical(p, inwater, up)){//Moving up only
 					
 					int id = this.vars.raiseViolationLevel(CheckType.VERTICAL_SPEED, p);
 					
@@ -96,13 +98,27 @@ public class VerticalSpeed extends Check{
 		
 	}
 	
-	private double getMaxVertical(Player p){
+	private double getMaxVertical(Player p, boolean inwater, boolean up){
 		
 		double d = 0.5;
 		
 		if(p.hasPotionEffect(PotionEffectType.JUMP)){
 			
 			d = d + ((this.getPotionEffectLevel(p, PotionEffectType.JUMP)) * 0.11);
+			
+		}
+		
+		if(inwater){
+			
+			if(up){
+				
+				d = 0.3401;
+				
+			}else{
+				
+				d = Math.abs(p.getVelocity().getY());
+				
+			}
 			
 		}
 		

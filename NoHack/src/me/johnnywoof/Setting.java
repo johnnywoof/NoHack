@@ -18,5 +18,6 @@ public class Setting {
 	public static String noswingmes = "";
 	public static String chatimpossiblemes = "";
 	public static String fightvisiblemes = "";
+	public static boolean ignorenpc = true;
 	
 }

@@ -81,6 +81,16 @@ public class NoHackListener implements Listener {
 	@EventHandler(ignoreCancelled = true)//Permission system bypass
 	public void onViolationTriggeredEvent(ViolationTriggeredEvent event){
 		
+		if(Setting.ignorenpc){
+			
+			if(event.getPlayer().hasMetadata("NPC")){
+				
+				event.setCancelled(true);
+				
+			}
+			
+		}
+		
 		if(event.getPlayer().hasPermission("nohack.bypass." + event.getCheckType().toString().toLowerCase())){
 			
 			event.setCancelled(true);
@@ -286,7 +296,7 @@ public class NoHackListener implements Listener {
 			
 			if(event.getEntity() instanceof LivingEntity){
 				
-				LivingEntity e = ((LivingEntity) event.getEntity());
+				final LivingEntity e = ((LivingEntity) event.getEntity());
 				
 				if((e.getHealth() > 0)){
 				
@@ -329,7 +339,7 @@ public class NoHackListener implements Listener {
 				
 				}
 				
-				e = null;
+				//e = null;
 				
 			}
 			

@@ -127,7 +127,7 @@ public class FastInteract extends Check{
 				
 				this.lastinteractleft.put(p.getName(), System.nanoTime());
 				
-				if(diff <= 190000){		
+				if(diff <= 180000){		
 					
 					int id = this.vars.raiseViolationLevel(CheckType.FAST_INTERACT, p);
 					

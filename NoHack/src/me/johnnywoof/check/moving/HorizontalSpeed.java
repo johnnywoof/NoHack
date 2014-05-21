@@ -23,7 +23,7 @@ public class HorizontalSpeed extends Check{
 	public HorizontalSpeed(Variables vars, CheckType ct) {
 		super(vars, ct, DetectionType.MOVING);
 	}
-
+	
 	@SuppressWarnings("deprecation")
 	@Override
 	public int run(Player p, Location from, Location to, long ls, LivingEntity e, double damage, Block clicked, BlockFace bf, String mes, boolean blockmove, boolean onladder, boolean up, boolean inwater, double yd, double md, XYZ lg){
@@ -261,6 +261,12 @@ public class HorizontalSpeed extends Check{
 			
 			}
 		
+		}
+		
+		if(inwater){
+			
+			d = 0.0774;
+			
 		}
 		
 		double cd = ((p.getVelocity().getX() + p.getVelocity().getZ()) * 5);

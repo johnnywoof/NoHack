@@ -1,5 +1,6 @@
 package me.johnnywoof.event;
 
+import me.johnnywoof.NoHack;
 import me.johnnywoof.check.CheckType;
 
 import org.bukkit.entity.Player;
@@ -13,17 +14,27 @@ public final class ViolationTriggeredEvent extends Event implements Cancellable 
     private int nl;
     private CheckType ct;
     private boolean cancelled;
+    private int tps;
  
     public ViolationTriggeredEvent(int newlevel, CheckType ct, Player p){
         this.p = p;
         this.ct = ct;
         this.nl = newlevel;
+        this.tps = NoHack.tps;
     }
  
     /**Returns the current new violation level
      * @return The new violation level*/
     public int getNewLevel(){
     	return this.nl;
+    }
+    
+    /**Returns the tps (ticks per second) of the server when this check triggered
+     * @return The tps*/
+    public int getTPS(){
+    	
+    	return this.tps;
+    	
     }
     
     /**Returns the type of check the violation level changed for

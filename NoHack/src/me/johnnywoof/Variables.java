@@ -38,6 +38,7 @@ public class Variables {
 		Setting.noswingmes = fc.getString("noswing-message");
 		Setting.chatimpossiblemes = fc.getString("chat-impossible-message");
 		Setting.fightvisiblemes = fc.getString("fight-visible-message");
+		Setting.ignorenpc = fc.getBoolean("ignore-citizens-npc");
 		
 	}
 	

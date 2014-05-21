@@ -167,10 +167,14 @@ public class Utils {
     	
     	Block s = rt.getBlock();
     	
-    	if(s.getX() == b.getX() && s.getY() == b.getY() && s.getZ() == b.getZ() && s.getType() == b.getType() && s.getData() == b.getData()){
-			
-    		return true;
-    			
+    	if(s != null){
+    	
+	    	if(s.getX() == b.getX() && s.getY() == b.getY() && s.getZ() == b.getZ() && s.getType() == b.getType() && s.getData() == b.getData()){
+				
+	    		return true;
+	    			
+	    	}
+    	
     	}
     	
     	return false;
