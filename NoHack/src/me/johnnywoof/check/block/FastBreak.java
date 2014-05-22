@@ -1,6 +1,5 @@
 package me.johnnywoof.check.block;
 
-import me.johnnywoof.NoHack;
 import me.johnnywoof.Setting;
 import me.johnnywoof.Variables;
 import me.johnnywoof.check.Check;
@@ -12,7 +11,6 @@ import me.johnnywoof.util.XYZ;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -51,12 +49,6 @@ public class FastBreak extends Check{
 				Bukkit.getServer().getPluginManager().callEvent(vte);
 				
 				if(!vte.isCancelled()){
-					
-					if(id > 50 && NoHack.tps <= 17 && p.getGameMode() == GameMode.CREATIVE){
-						
-						p.kickPlayer(ChatColor.RED + "Block breaking is out of sync!");
-						
-					}
 				
 					if(id != 0){
 						

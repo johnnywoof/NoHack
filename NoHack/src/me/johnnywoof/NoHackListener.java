@@ -54,6 +54,7 @@ public class NoHackListener implements Listener {
 	private NoHack nh;
 	
 	private final HashMap<String, Long> lastHealhed = new HashMap<String, Long>();
+	private final HashMap<String, Long> lastViolation = new HashMap<String, Long>();
 	
 	public NoHackListener(NoHack nh){
 		
@@ -94,6 +95,26 @@ public class NoHackListener implements Listener {
 		if(event.getPlayer().hasPermission("nohack.bypass." + event.getCheckType().toString().toLowerCase())){
 			
 			event.setCancelled(true);
+			
+		}else{
+			
+			//Prevents abuse of checks to slow down server
+			if(event.getCheckType() == CheckType.FAST_INTERACT){
+			
+				long diff = 0;
+				if(this.lastViolation.containsKey(event.getPlayer().getName())){
+					diff = System.currentTimeMillis() - this.lastViolation.get(event.getPlayer().getName());
+				}
+				
+				if(diff <= 5 && event.getNewLevel() > 50){
+					
+					event.getPlayer().kickPlayer(ChatColor.RED + "Detected illegal activity! Are you lagging?");
+					
+				}
+				
+				this.lastViolation.put(event.getPlayer().getName(), System.currentTimeMillis());
+			
+			}
 			
 		}
 		
