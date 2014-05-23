@@ -1,5 +1,6 @@
 package me.johnnywoof.event;
 
+import me.johnnywoof.NoHack;
 import me.johnnywoof.check.CheckType;
 
 import org.bukkit.entity.Player;
@@ -10,7 +11,7 @@ import org.bukkit.event.HandlerList;
 public final class ViolationChangedEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
     private Player p;
-    private int ol, nl;
+    private int ol, nl, tps;
     private CheckType ct;
     private boolean cancelled;
  
@@ -24,6 +25,7 @@ public final class ViolationChangedEvent extends Event implements Cancellable {
         this.ct = ct;
         this.ol = oldlevel;
         this.nl = newlevel;
+        this.tps = NoHack.tps;
     }
  
     /**Returns the current new violation level
@@ -60,6 +62,14 @@ public final class ViolationChangedEvent extends Event implements Cancellable {
      * @return If canceled*/
     public boolean isCancelled() {
         return cancelled;
+    }
+    
+    /**Returns the tps (ticks per second) of the server when this check triggered
+     * @return The tps*/
+    public int getTPS(){
+    	
+    	return this.tps;
+    	
     }
  
     /**If canceled, the violation level will not increase and not notify admins

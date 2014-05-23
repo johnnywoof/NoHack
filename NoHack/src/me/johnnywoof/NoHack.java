@@ -43,10 +43,23 @@ public class NoHack extends JavaPlugin{
 	public Variables vars;
 	
 	private ArrayList<Check> checks = new ArrayList<Check>();
-	//I prefer better preformance, rather than "instanceof". Since this is called a lot
+	//I prefer better performance, rather than "instanceof". Since this is called a lot
 	public FastInteract fi;
 
 	public void onEnable(){
+		
+		String ver = this.getServer().getVersion();
+		
+		if(!ver.contains("1.7.9") && !ver.contains("1.7.8") && !ver.contains("1.7.7") && !ver.contains("1.7.6")){
+			
+			this.getLogger().severe("-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*");
+			this.getLogger().severe("[NoHack] THIS PLUGIN IS DESIGNED FOR");
+			this.getLogger().severe("[NoHack] 1.7.6, 1.7.7, 1.7.8, AND 1.7.9");
+			this.getLogger().severe("[NoHack] DETECTED VERSION: " + ver);
+			this.getLogger().severe("[NoHack] NOHACK WILL TRY TO RUN, BUT MAY NOT WORK PROPERLY");
+			this.getLogger().severe("-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*");
+			
+		}
 		
 		this.getServer().getPluginManager().registerEvents(new NoHackListener(this), this);
 		getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable()
@@ -82,9 +95,10 @@ public class NoHack extends JavaPlugin{
 		
 		if(this.getServer().getAllowFlight()){
 		
-			this.getLogger().warning("-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-");
-			this.getLogger().warning("[NoHack] Allowed flight in server.properties is true! Please set it to false for best preformance.");
-			this.getLogger().warning("-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-");
+			this.getLogger().warning("-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*");
+			this.getLogger().warning("[NoHack] Allowed flight in server.properties is true!");
+			this.getLogger().warning("[NoHack] Please set it to false for best preformance!");
+			this.getLogger().warning("-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*");
 		
 		}
 		
