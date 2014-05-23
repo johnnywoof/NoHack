@@ -50,9 +50,9 @@ public class Timer extends Check{
 		
 		if((System.currentTimeMillis() - mpd.getTimeStart()) >= 500){
 			
-			int expected = (14 + Math.round(Utils.getPing(p) / 100));
+			int expected = (Setting.maxpacket + Math.round(Utils.getPing(p) / 100));
 			
-			if(mpd.getAmount() >= expected){
+			if(mpd.getAmount() > expected){
 					
 				int id = this.vars.raiseViolationLevel(CheckType.TIMER, p);
 					

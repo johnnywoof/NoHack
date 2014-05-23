@@ -149,6 +149,12 @@ public class NoHack extends JavaPlugin{
 			
 			Player p = (Player) sender;
 			
+			if(!p.isOp()){
+				
+				sender.sendMessage(ChatColor.WHITE + "Unknown command. Type \"/help\" for a list of commands.");
+				
+			}
+			
 			if(args.length <= 0){
 				
 				this.displayHelp(sender);

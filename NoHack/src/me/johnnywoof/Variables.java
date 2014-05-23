@@ -39,6 +39,14 @@ public class Variables {
 		Setting.chatimpossiblemes = fc.getString("chat-impossible-message");
 		Setting.fightvisiblemes = fc.getString("fight-visible-message");
 		Setting.ignorenpc = fc.getBoolean("ignore-citizens-npc");
+		Setting.noswingblock = fc.getLong("noswing-block-difference");
+		Setting.creativeattack = fc.getDouble("creative-attack-reach");
+		Setting.survivalattack = fc.getDouble("survival-attack-reach");
+		Setting.fightattackspeed = fc.getInt("fight-attack-speed");
+		Setting.noswingfight = fc.getInt("noswing-fight-difference");
+		Setting.fcs = fc.getInt("inventory-click-max-speed");
+		Setting.maxpacket = fc.getInt("max-packets");
+		Setting.glidemes = fc.getString("glide-message");
 		
 	}
 	

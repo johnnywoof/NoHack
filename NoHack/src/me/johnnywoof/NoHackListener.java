@@ -94,7 +94,7 @@ public class NoHackListener implements Listener {
 		
 		if(event.getPlayer().hasPermission("nohack.bypass." + event.getCheckType().toString().toLowerCase())){
 			
-			event.setCancelled(true);
+			//event.setCancelled(true);
 			
 		}else{
 			
@@ -109,6 +109,8 @@ public class NoHackListener implements Listener {
 				if(diff <= 5 && event.getNewLevel() > 50){
 					
 					event.getPlayer().kickPlayer(ChatColor.RED + "Detected illegal activity! Are you lagging?");
+					
+					event.setNewLevel(0);
 					
 				}
 				

@@ -31,7 +31,7 @@ public class FightReach extends Check{
 		
 		//reach check
 		
-		if(d > ((p.getGameMode() == GameMode.CREATIVE) ? 27.5 : 14)){
+		if(d > ((p.getGameMode() == GameMode.CREATIVE) ? Setting.creativeattack : Setting.survivalattack)){
 			
 			int id = this.vars.raiseViolationLevel(CheckType.ATTACK_REACH, p);
 			

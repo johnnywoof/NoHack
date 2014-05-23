@@ -34,7 +34,7 @@ public class FightSpeed extends Check{
 			
 			long diff = (System.currentTimeMillis() - this.lastAttack.get(p.getName()));
 			
-			if(diff <= 90){
+			if(diff <= Setting.fightattackspeed){
 				
 				this.registerLastAttack(p.getName());
 				int id = this.vars.raiseViolationLevel(CheckType.ATTACK_SPEED, p);

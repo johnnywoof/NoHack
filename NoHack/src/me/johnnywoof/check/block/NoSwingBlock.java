@@ -26,7 +26,7 @@ public class NoSwingBlock extends Check{
 	@Override
 	public int run(Player p, Location from, Location to, long ls, LivingEntity e, double damage, Block b, BlockFace bf, String mes, boolean blockmove, boolean onladder, boolean up, boolean inwater, double yd, double md, XYZ lg){
 		
-		if((System.currentTimeMillis() - ls) >= 2500){
+		if((System.currentTimeMillis() - ls) >= Setting.noswingblock){
 			
 			int id = this.vars.raiseViolationLevel(CheckType.NOSWING, p);
 			

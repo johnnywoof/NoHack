@@ -83,7 +83,7 @@ public class HorizontalSpeed extends Check{
 						
 							if(id != 0){
 								
-								String message = Setting.flymes;
+								String message = Setting.glidemes;
 								
 								message = message.replaceAll(".name.", ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN);
 								message = message.replaceAll(".vl.", id + "");

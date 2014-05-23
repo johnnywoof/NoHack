@@ -2,7 +2,7 @@
 # Main config file for NoHack
 #------------------------------------------------------------------
 
-#Should we not check npcs for hacks?
+#Should we not check citizens 2 npcs for hacks?
 ignore-citizens-npc: true
 
 #Chat violation messages
@@ -20,6 +20,8 @@ vertical-speed-message: .name. failed Vertical Speed! Tried to move too fast on 
 horizontal-speed-message: .name. failed Horizontal Speed! Tried to move too fast on the xz axis. VL .vl.
 
 fly-message: .name. failed Fly! Tried to fly in survival mode without permission. VL .vl.
+
+glide-message: .name. failed Glide! Tried to float to an unexpected location. VL .vl.
 
 #Block violation messages
 block-visible-break-message: .name. failed Visible! Tried to break another block than expected. VL .vl.
@@ -42,3 +44,22 @@ inventory-click-speed: .name. failed FastClick! Clicked a container too fast. VL
 
 #Everything else with messages
 noswing-message: .name. failed NoSwing! Did not swing arm. VL .vl.
+
+###############################################################
+#    Notice: Below, this changes how the plugin works
+#    Only modify if you know what you are doing!
+###############################################################
+
+noswing-block-difference: 2500
+
+noswing-fight-difference: 10
+
+creative-attack-reach: 29.5
+
+survival-attack-reach: 16.0
+
+fight-attack-speed: 90
+
+inventory-click-max-speed: 50
+
+max-packets: 14

@@ -58,7 +58,7 @@ public class InventoryClick extends Check{
 		
 		long diff = (System.currentTimeMillis() - this.getLastClicked(p.getName()));
 		
-		if(diff <= 50){
+		if(diff <= Setting.fcs){
 			
 			int id = this.vars.raiseViolationLevel(CheckType.FASTCLICK, p);
 			
