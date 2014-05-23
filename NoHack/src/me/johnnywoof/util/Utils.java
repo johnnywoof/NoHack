@@ -1,7 +1,6 @@
 package me.johnnywoof.util;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import me.johnnywoof.NoHack;
 import net.minecraft.server.v1_7_R3.Vec3D;
@@ -15,6 +14,7 @@ import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.v1_7_R3.CraftWorld;
 import org.bukkit.craftbukkit.v1_7_R3.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
@@ -28,11 +28,10 @@ public class Utils {
     }
     
     public static LivingEntity getTarget(Player player) {
-    int range = 60;
-    List<Entity> nearbyE = player.getNearbyEntities(range, range, range);
+    int range = 8;
     ArrayList<LivingEntity> livingE = new ArrayList<LivingEntity>();
      
-    for (Entity e : nearbyE) {
+    for (Entity e : player.getNearbyEntities(range, range, range)) {
     if (e instanceof LivingEntity) {
     livingE.add((LivingEntity) e);
     }
@@ -43,7 +42,7 @@ public class Utils {
     Block block;
     Location loc;
     int bx, by, bz;
-    double ex, ey, ez;
+    double ex, ey, ez, md = Double.MAX_VALUE, d;
     // loop through player's line of sight
     while (bItr.hasNext()) {
     block = bItr.next();
@@ -56,16 +55,31 @@ public class Utils {
     ex = loc.getX();
     ey = loc.getY();
     ez = loc.getZ();
-    if ((bx - .75 <= ex && ex <= bx + 1.75)
-    && (bz - .75 <= ez && ez <= bz + 1.75)
-    && (by - 1 <= ey && ey <= by + 2.5)) {
-    // entity is close enough, set target and stop
-    target = e;
-    break;
+    d = loc.distanceSquared(player.getLocation());
+    if(e.getType() == EntityType.HORSE){
+    	
+    	if ((bx - 1.2 <= ex && ex <= bx + 2.2)
+    		    && (bz - 1.2 <= ez && ez <= bz + 2.2)
+    		    && (by - 2.5 <= ey && ey <= by + 4.5)) {
+    		if(d < md){
+    			md = d;
+    		    target = e;
+    		}
+    		    
+    	}
+    	
+    }else{
+    if ((bx - .80 <= ex && ex <= bx + 1.85)
+    && (bz - .80 <= ez && ez <= bz + 1.85)
+    && (by - 2.5 <= ey && ey <= by + 4.5)) {
+    	if(d < md){
+			md = d;
+		    target = e;
+		}
     }
     }
     }
-    nearbyE.clear();
+    }
     livingE.clear();
     return target;
      
@@ -77,7 +91,7 @@ public class Utils {
     			|| m == Material.RED_MUSHROOM || m == Material.BROWN_MUSHROOM || m == Material.TRIPWIRE || m == Material.TRIPWIRE_HOOK ||
     			m == Material.DEAD_BUSH || m == Material.DIODE_BLOCK_OFF || m == Material.DIODE_BLOCK_ON || m == Material.REDSTONE_COMPARATOR_OFF
     			|| m == Material.REDSTONE_COMPARATOR_OFF || m == Material.REDSTONE_WIRE || m == Material.REDSTONE_TORCH_OFF ||
-    			m == Material.REDSTONE_TORCH_ON || m == Material.DOUBLE_PLANT;
+    			m == Material.REDSTONE_TORCH_ON || m == Material.DOUBLE_PLANT || m == Material.SUGAR_CANE_BLOCK;
     	
     }
     

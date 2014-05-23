@@ -11,7 +11,7 @@ chat-impossible-message: .name. failed Impossible! Tried to chat in an illegal s
 #Move violation messages
 nofall-message: .name. failed NoFall! Tried to fall while saying on the ground. VL .vl.
 
-timer-message: .name. failed Timer! Sent .packets. packets but expected no more than .expected.. VL .vl.
+timer-message: .name. failed Timer! Sent .packets-sent. packets but expected no more than .expected-packets.. VL .vl.
 
 impossible-move-message: .name. failed Impossible! Tried to move in a way which is impossible. VL .vl.
 
@@ -54,11 +54,11 @@ noswing-block-difference: 2500
 
 noswing-fight-difference: 10
 
-creative-attack-reach: 29.5
+creative-attack-reach: 30
 
-survival-attack-reach: 16.0
+survival-attack-reach: 16.5
 
-fight-attack-speed: 90
+fight-attack-speed: 75
 
 inventory-click-max-speed: 50
 

@@ -12,7 +12,6 @@ import me.johnnywoof.util.XYZ;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.LivingEntity;
@@ -27,7 +26,7 @@ public class NoFall extends Check{
 	@SuppressWarnings("deprecation")
 	@Override
 	public int run(Player p, Location from, Location to, long ls, LivingEntity e, double damage, Block clicked, BlockFace bf, String mes, boolean blockmove, boolean onladder, boolean up, boolean inwater, double yd, double md, XYZ lg){
-		
+
 		//Start nofall & fly check
 		if(!p.getAllowFlight()){//Ignore nofall+fly if allowed to fly
 			
@@ -35,34 +34,29 @@ public class NoFall extends Check{
 				
 				if(up && p.isOnGround() && !inwater){
 					
-					if(to.getY() % 1 != 0){
-					
-						if(to.getBlock().getRelative(BlockFace.DOWN).getType() == Material.AIR){
+					if(p.getVelocity().getY() < 0){//Moving up when velocity says to go down...seems legit
 							
-							int id = this.vars.raiseViolationLevel(CheckType.NOFALL, p);
+						int id = this.vars.raiseViolationLevel(CheckType.NOFALL, p);
 							
-							ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.NOFALL, p);
+						ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.NOFALL, p);
 							
-							Bukkit.getServer().getPluginManager().callEvent(vte);
+						Bukkit.getServer().getPluginManager().callEvent(vte);
 							
-							if(!vte.isCancelled()){
+						if(!vte.isCancelled()){
 							
-								if(id != 0){
+							if(id != 0){
 									
-									String message = Setting.nofallmessage;
+								String message = Setting.nofallmessage;
 									
-									message = message.replaceAll(".name.", ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN);
-									message = message.replaceAll(".vl.", id + "");
+								message = message.replaceAll(".name.", ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN);
+								message = message.replaceAll(".vl.", id + "");
 
-									Utils.messageAdmins(message);
+								Utils.messageAdmins(message);
 									
-								}
-								return 4;
-							
 							}
+							return 4;
 							
 						}
-						
 					}
 					
 				}
@@ -83,7 +77,7 @@ public class NoFall extends Check{
 			if(!vte.isCancelled()){
 			
 				if(id != 0){
-						
+					
 					String message = Setting.nofallmessage;
 					
 					message = message.replaceAll(".name.", ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN);

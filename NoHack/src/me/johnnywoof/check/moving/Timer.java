@@ -68,8 +68,8 @@ public class Timer extends Check{
 						
 						message = message.replaceAll(".name.", ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN);
 						message = message.replaceAll(".vl.", id + "");
-						message = message.replaceAll(".packets.", mpd.getAmount() + "");
-						message = message.replaceAll(".expected.", expected + "");
+						message = message.replaceAll(".packets-sent.", mpd.getAmount() + "");
+						message = message.replaceAll(".expected-packets.", expected + "");
 
 						Utils.messageAdmins(message);
 							

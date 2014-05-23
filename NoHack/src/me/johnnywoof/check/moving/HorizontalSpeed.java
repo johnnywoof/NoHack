@@ -177,6 +177,12 @@ public class HorizontalSpeed extends Check{
 			
 		}
 		
+		if(md.mda != 0 && (System.currentTimeMillis() - md.lastvel) <= 10000){
+			
+			d = d + md.mda;
+			
+		}
+		
 		return d;
 		
 	}

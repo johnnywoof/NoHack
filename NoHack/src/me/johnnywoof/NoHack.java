@@ -27,6 +27,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.util.Vector;
 
 public class NoHack extends JavaPlugin{
 	
@@ -121,9 +122,9 @@ public class NoHack extends JavaPlugin{
 		this.checks.add(new FastBreak(this.vars, null));//TODO Change this?
 		this.checks.add(new NoSwingBlock(this.vars, CheckType.NOSWING));
 		this.checks.add(new GodMode(this.vars, CheckType.GOD_MODE));
-		this.checks.add(new FightImpossible(this.vars, CheckType.IMPOSSIBLE));
 		this.checks.add(new FightReach(this.vars, CheckType.ATTACK_REACH));
 		this.checks.add(new FightSpeed(this.vars, CheckType.ATTACK_SPEED));
+		this.checks.add(new FightImpossible(this.vars, CheckType.IMPOSSIBLE));
 		this.checks.add(new NoSwingFight(this.vars, CheckType.NOSWING));
 		this.checks.add(new ChatImpossible(this.vars, CheckType.IMPOSSIBLE));
 			
@@ -151,7 +152,7 @@ public class NoHack extends JavaPlugin{
 			
 			if(!p.isOp()){
 				
-				sender.sendMessage(ChatColor.WHITE + "Unknown command. Type \"/help\" for a list of commands.");
+				//sender.sendMessage(ChatColor.WHITE + "Unknown command. Type \"/help\" for a list of commands.");
 				
 			}
 			
@@ -184,7 +185,14 @@ public class NoHack extends JavaPlugin{
 					
 				}else if(args[0].equalsIgnoreCase("test")){
 					
-					p.setVelocity(p.getVelocity().setX(4));
+					final int a = Integer.parseInt(args[1]);
+					
+					Vector vec = p.getVelocity();
+					
+					vec.setX(a);
+					vec.setY(a);
+					
+					p.setVelocity(vec);
 					
 				}else if(args[0].equalsIgnoreCase("info")){
 					

@@ -79,6 +79,23 @@ public class NoHackListener implements Listener {
 		
 	}
 	
+	@EventHandler(priority=EventPriority.HIGH, ignoreCancelled = true)
+	public void onVelocity(PlayerVelocityEvent event){
+		
+		if(event.getVelocity().getX() != 0 || event.getVelocity().getY() != 0 || event.getVelocity().getZ() != 0){
+		
+			MoveData md = nh.vars.getMoveData(event.getPlayer().getName());
+			
+			md.mda = Math.abs(event.getVelocity().getX()) + Math.abs(event.getVelocity().getZ());
+			
+			md.lastvel = System.currentTimeMillis();
+			
+			nh.vars.setMoveData(event.getPlayer().getName(), md);
+		
+		}
+		
+	}
+	
 	@EventHandler(ignoreCancelled = true)//Permission system bypass
 	public void onViolationTriggeredEvent(ViolationTriggeredEvent event){
 		
@@ -106,7 +123,7 @@ public class NoHackListener implements Listener {
 					diff = System.currentTimeMillis() - this.lastViolation.get(event.getPlayer().getName());
 				}
 				
-				if(diff <= 5 && event.getNewLevel() > 50){
+				if(diff <= 15 && event.getNewLevel() > 40){
 					
 					event.getPlayer().kickPlayer(ChatColor.RED + "Detected illegal activity! Are you lagging?");
 					
@@ -124,6 +141,8 @@ public class NoHackListener implements Listener {
 	
 	@EventHandler(ignoreCancelled = true)
 	public void onLog(ViolationChangedEvent event){
+		
+		//TODO Configurable logging
 		
 		File f = new File("hack_logs.txt");
 		
@@ -204,7 +223,7 @@ public class NoHackListener implements Listener {
 	@EventHandler(ignoreCancelled = true)
 	public void onEntityRegainHealthEvent(EntityRegainHealthEvent event){
 		
-		if(event.getRegainReason() != RegainReason.CUSTOM){
+		if(event.getRegainReason() == RegainReason.SATIATED){
 			
 			if(event.getEntity() instanceof Player){
 			

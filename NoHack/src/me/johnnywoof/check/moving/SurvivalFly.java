@@ -46,7 +46,7 @@ public class SurvivalFly extends Check{
 			
 			//Start survival fly check
 			
-			if(p.isOnGround() || inwater || p.isFlying() || onladder){
+			if(p.isOnGround() || p.isInsideVehicle() || inwater || p.isFlying() || onladder){
 				
 				this.vars.lastGround.put(p.getName(), new XYZ(from));
 				
@@ -157,6 +157,12 @@ public class SurvivalFly extends Check{
 				d = (level) + 1;
 				
 			}
+			
+		}
+		
+		if(p.getVelocity().getY() > -0.3){
+			
+			d = d + ((Math.abs(p.getVelocity().getY()) * 80));
 			
 		}
 		

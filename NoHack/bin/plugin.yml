@@ -5,3 +5,4 @@ commands:
     nohack:
         description: NoHack command
         usage: /nohack
+        aliases: [nh]
