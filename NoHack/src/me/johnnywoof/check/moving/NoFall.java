@@ -27,8 +27,15 @@ public class NoFall extends Check{
 	@Override
 	public int run(Player p, Location from, Location to, long ls, LivingEntity e, double damage, Block clicked, BlockFace bf, String mes, boolean blockmove, boolean onladder, boolean up, boolean inwater, double yd, double md, XYZ lg){
 
+		//If flying, ignore this check
+		if(p.isFlying()){
+			
+			return 0;
+			
+		}
+		
 		//Start nofall & fly check
-		if(!p.getAllowFlight()){//Ignore nofall+fly if allowed to fly
+		if(!p.getAllowFlight()){
 			
 			if(to.getBlockY() != from.getBlockY()){
 				

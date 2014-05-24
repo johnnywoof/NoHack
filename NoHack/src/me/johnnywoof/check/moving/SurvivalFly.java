@@ -6,6 +6,7 @@ import me.johnnywoof.check.Check;
 import me.johnnywoof.check.CheckType;
 import me.johnnywoof.check.DetectionType;
 import me.johnnywoof.event.ViolationTriggeredEvent;
+import me.johnnywoof.util.MoveData;
 import me.johnnywoof.util.Utils;
 import me.johnnywoof.util.XYZ;
 
@@ -58,7 +59,7 @@ public class SurvivalFly extends Check{
 						
 						double ydis = Math.abs(lg.y - to.getY());
 						
-						if(ydis > this.getMaxHight(p)){
+						if(ydis > this.getMaxHight(p, this.vars.getMoveData(p.getName()))){
 							
 							int id = this.vars.raiseViolationLevel(CheckType.FLY, p);
 							
@@ -104,9 +105,9 @@ public class SurvivalFly extends Check{
 		
 	}
 	
-	private double getMaxHight(Player p){
+	private double getMaxHight(Player p, MoveData md){
 		
-		double d = 1.35;
+		double d = 0;
 		
 		if(p.hasPotionEffect(PotionEffectType.JUMP)){
 			
@@ -158,11 +159,17 @@ public class SurvivalFly extends Check{
 				
 			}
 			
+			d = d + 1.35;
+			
+		}else{
+			
+			d = 1.35;
+			
 		}
 		
-		if(p.getVelocity().getY() > -0.3){
+		if(md.yda != 0 && (System.currentTimeMillis() < md.velexpirey)){
 			
-			d = d + ((Math.abs(p.getVelocity().getY()) * 80));
+			d = d + md.yda;
 			
 		}
 		

@@ -86,9 +86,17 @@ public class NoHackListener implements Listener {
 		
 			MoveData md = nh.vars.getMoveData(event.getPlayer().getName());
 			
-			md.mda = Math.abs(event.getVelocity().getX()) + Math.abs(event.getVelocity().getZ());
+			double vy = Math.abs(event.getVelocity().getY());
+			double vx = Math.abs(event.getVelocity().getX());
+			double vz = Math.abs(event.getVelocity().getZ());
 			
-			md.lastvel = System.currentTimeMillis();
+			md.yda = (((vy * 20)));
+				
+			md.velexpirey = (long) (System.currentTimeMillis() + (md.yda * 50));
+			
+			md.velexpirex = (long) (System.currentTimeMillis() + ((((md.mda == 0) ? 1 : md.mda) * (md.yda * 4)) * 110));
+			
+			md.mda = (vx + vz);
 			
 			nh.vars.setMoveData(event.getPlayer().getName(), md);
 		
@@ -125,7 +133,7 @@ public class NoHackListener implements Listener {
 				
 				if(diff <= 15 && event.getNewLevel() > 40){
 					
-					event.getPlayer().kickPlayer(ChatColor.RED + "Detected illegal activity! Are you lagging?");
+					event.getPlayer().kickPlayer(ChatColor.RED + "Detected illegal activity! Are you hacking?");
 					
 					event.setNewLevel(0);
 					

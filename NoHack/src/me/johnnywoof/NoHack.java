@@ -8,6 +8,7 @@ import me.johnnywoof.check.Violation;
 import me.johnnywoof.check.block.FastBreak;
 import me.johnnywoof.check.block.NoSwingBlock;
 import me.johnnywoof.check.chat.ChatImpossible;
+import me.johnnywoof.check.chat.ChatSpam;
 import me.johnnywoof.check.fight.FightImpossible;
 import me.johnnywoof.check.fight.FightReach;
 import me.johnnywoof.check.fight.FightSpeed;
@@ -141,6 +142,7 @@ public class NoHack extends JavaPlugin{
 		this.checks.add(new FightImpossible(this.vars, CheckType.IMPOSSIBLE));
 		this.checks.add(new NoSwingFight(this.vars, CheckType.NOSWING));
 		this.checks.add(new ChatImpossible(this.vars, CheckType.IMPOSSIBLE));
+		this.checks.add(new ChatSpam(this.vars, CheckType.SPAM));
 			
 	}
 	

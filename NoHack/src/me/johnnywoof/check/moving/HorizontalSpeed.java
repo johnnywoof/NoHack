@@ -153,7 +153,7 @@ public class HorizontalSpeed extends Check{
 		
 		if(p.isFlying()){
 		
-			d = 1.25;
+			d = 1.30;
 			
 		}else if(csprint){
 			
@@ -177,7 +177,7 @@ public class HorizontalSpeed extends Check{
 			
 		}
 		
-		if(md.mda != 0 && (System.currentTimeMillis() - md.lastvel) <= 10000){
+		if(md.mda != 0 && (System.currentTimeMillis() < md.velexpirex)){
 			
 			d = d + md.mda;
 			
