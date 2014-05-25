@@ -7,14 +7,9 @@ import me.johnnywoof.Variables;
 import me.johnnywoof.check.Check;
 import me.johnnywoof.check.CheckType;
 import me.johnnywoof.check.DetectionType;
-import me.johnnywoof.util.XYZ;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
 public class ChatSpam extends Check{
@@ -27,7 +22,7 @@ public class ChatSpam extends Check{
 	}
 	
 	@Override
-	public int run(Player p, Location from, Location to, long ls, LivingEntity e, double damage, Block b, BlockFace bf, String mes, boolean blockmove, boolean onladder, boolean up, boolean inwater, double yd, double md, XYZ lg){
+	public int runChatCheck(Player p, String message){
 		
 		if(this.isMuted(p.getUniqueId())){
 			
@@ -63,7 +58,7 @@ public class ChatSpam extends Check{
 			
 			p.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "You are now muted for one minute because of spamming.");
 			
-			Bukkit.getLogger().info("[NoHack] Muted player " + p.getName() + " for spamming. Difference was " + diff + ". Said the message \"" + mes + "\"");
+			Bukkit.getLogger().info("[NoHack] Muted player " + p.getName() + " for spamming. Difference was " + diff + ". Said the message \"" + message + "\"");
 			
 			this.muted.put(p.getUniqueId(), (System.currentTimeMillis() + 60000));
 			

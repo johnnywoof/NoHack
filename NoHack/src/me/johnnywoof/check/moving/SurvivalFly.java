@@ -13,9 +13,6 @@ import me.johnnywoof.util.XYZ;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffectType;
 
@@ -27,23 +24,7 @@ public class SurvivalFly extends Check{
 	
 	@SuppressWarnings("deprecation")
 	@Override
-	public int run(Player p, Location from, Location to, long ls, LivingEntity e, double damage, Block clicked, BlockFace bf, String mes, boolean blockmove, boolean onladder, boolean up, boolean inwater, double yd, double md, XYZ lg){
-		
-		if(from.getX() != to.getX() || from.getY() != to.getY() || from.getZ() != to.getZ()){
-			
-			//Start block move detection
-			if(blockmove){
-				
-				int id = this.checkBlockMove(p, from, to);
-				
-				if(id != 0){
-					
-					return id;
-					
-				}
-				
-			}
-			//End block move detection
+	public int runMoveCheck(Player p, Location to, Location from, double yd, double md, MoveData movedata, boolean up, boolean inwater, boolean onladder, XYZ lg){
 			
 			//Start survival fly check
 			
@@ -92,14 +73,6 @@ public class SurvivalFly extends Check{
 			}
 			
 			//End survival fly check
-			
-		}
-		
-		return 0;
-		
-	}
-	
-	private int checkBlockMove(Player p, Location from, Location to){
 		
 		return 0;
 		

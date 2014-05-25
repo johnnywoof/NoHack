@@ -15,6 +15,7 @@ import me.johnnywoof.check.fight.FightSpeed;
 import me.johnnywoof.check.fight.GodMode;
 import me.johnnywoof.check.fight.NoSwingFight;
 import me.johnnywoof.check.interact.FastInteract;
+import me.johnnywoof.check.interact.InventoryClick;
 import me.johnnywoof.check.moving.HorizontalSpeed;
 import me.johnnywoof.check.moving.ImpossibleMoving;
 import me.johnnywoof.check.moving.NoFall;
@@ -44,8 +45,6 @@ public class NoHack extends JavaPlugin{
 	public Variables vars;
 	
 	private ArrayList<Check> checks = new ArrayList<Check>();
-	//I prefer better performance, rather than "instanceof". Since this is called a lot
-	public FastInteract fi;
 
 	public void onEnable(){
 		
@@ -125,8 +124,6 @@ public class NoHack extends JavaPlugin{
 		
 		this.checks.clear();
 		
-		this.fi = new FastInteract(this.vars, CheckType.FAST_INTERACT);
-		
 		//Remember! Higher = more priority
 		this.checks.add(new ImpossibleMoving(this.vars, CheckType.IMPOSSIBLE));
 		this.checks.add(new Timer(this.vars, CheckType.TIMER));
@@ -143,6 +140,8 @@ public class NoHack extends JavaPlugin{
 		this.checks.add(new NoSwingFight(this.vars, CheckType.NOSWING));
 		this.checks.add(new ChatImpossible(this.vars, CheckType.IMPOSSIBLE));
 		this.checks.add(new ChatSpam(this.vars, CheckType.SPAM));
+		this.checks.add(new InventoryClick(this.vars, CheckType.FASTCLICK));
+		this.checks.add(new FastInteract(this.vars, CheckType.FAST_INTERACT));
 			
 	}
 	

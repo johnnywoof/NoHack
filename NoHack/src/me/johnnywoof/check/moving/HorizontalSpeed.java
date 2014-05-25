@@ -13,9 +13,6 @@ import me.johnnywoof.util.XYZ;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
 public class HorizontalSpeed extends Check{
@@ -26,7 +23,7 @@ public class HorizontalSpeed extends Check{
 	
 	@SuppressWarnings("deprecation")
 	@Override
-	public int run(Player p, Location from, Location to, long ls, LivingEntity e, double damage, Block clicked, BlockFace bf, String mes, boolean blockmove, boolean onladder, boolean up, boolean inwater, double yd, double md, XYZ lg){
+	public int runMoveCheck(Player p, Location to, Location from, double yd, double md, MoveData movedata, boolean up, boolean inwater, boolean onladder, XYZ lg){
 		
 		double ydis = Math.abs(lg.y - to.getY());
 		

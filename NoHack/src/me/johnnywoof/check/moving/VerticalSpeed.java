@@ -6,15 +6,13 @@ import me.johnnywoof.check.Check;
 import me.johnnywoof.check.CheckType;
 import me.johnnywoof.check.DetectionType;
 import me.johnnywoof.event.ViolationTriggeredEvent;
+import me.johnnywoof.util.MoveData;
 import me.johnnywoof.util.Utils;
 import me.johnnywoof.util.XYZ;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -24,11 +22,9 @@ public class VerticalSpeed extends Check{
 	public VerticalSpeed(Variables vars, CheckType ct) {
 		super(vars, ct, DetectionType.MOVING);
 	}
-
-	double high = 0;
 	
 	@Override
-	public int run(Player p, Location from, Location to, long ls, LivingEntity e, double damage, Block clicked, BlockFace bf, String mes, boolean blockmove, boolean onladder, boolean up, boolean inwater, double yd, double md, XYZ lg){
+	public int runMoveCheck(Player p, Location to, Location from, double yd, double md, MoveData movedata, boolean up, boolean inwater, boolean onladder, XYZ lg){
 		
 		if(yd != 0){//Actually move on the y axis
 			

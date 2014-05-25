@@ -1,13 +1,5 @@
 package me.johnnywoof.check.chat;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-
 import me.johnnywoof.Setting;
 import me.johnnywoof.Variables;
 import me.johnnywoof.check.Check;
@@ -15,7 +7,10 @@ import me.johnnywoof.check.CheckType;
 import me.johnnywoof.check.DetectionType;
 import me.johnnywoof.event.ViolationTriggeredEvent;
 import me.johnnywoof.util.Utils;
-import me.johnnywoof.util.XYZ;
+
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 
 public class ChatImpossible extends Check{
 
@@ -24,9 +19,9 @@ public class ChatImpossible extends Check{
 	}
 	
 	@Override
-	public int run(Player p, Location from, Location to, long ls, LivingEntity e, double damage, Block b, BlockFace bf, String mes, boolean blockmove, boolean onladder, boolean up, boolean inwater, double yd, double md, XYZ lg){
+	public int runChatCheck(Player p, String message){
 		
-		if(p.isSneaking() || p.isBlocking() || p.isSprinting() || p.isDead() || mes.toString().contains(ChatColor.COLOR_CHAR + "")){
+		if(p.isSneaking() || p.isBlocking() || p.isSprinting() || p.isDead() || message.toString().contains(ChatColor.COLOR_CHAR + "")){
 			
 			int id = this.vars.raiseViolationLevel(CheckType.IMPOSSIBLE, p);
 			
@@ -38,12 +33,12 @@ public class ChatImpossible extends Check{
 				
 				if(id != 0){
 					
-					String message = Setting.chatimpossiblemes;
+					String mes = Setting.chatimpossiblemes;
 					
-					message = message.replaceAll(".name.", ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN);
-					message = message.replaceAll(".vl.", id + "");
+					mes = mes.replaceAll(".name.", ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN);
+					mes = mes.replaceAll(".vl.", id + "");
 
-					Utils.messageAdmins(message);
+					Utils.messageAdmins(mes);
 					
 				}
 				return 1;

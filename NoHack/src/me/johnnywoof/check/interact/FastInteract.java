@@ -12,11 +12,7 @@ import me.johnnywoof.util.XYZ;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -31,7 +27,8 @@ public class FastInteract extends Check{
 		super(vars, ct, DetectionType.INVENTORY);
 	}
 	
-	public boolean checkCustom(PlayerInteractEvent event, Player p){
+	@Override
+	public int runInteractCheck(Player p, PlayerInteractEvent event){
 		
 		if(event.hasBlock() && event.getAction() == Action.RIGHT_CLICK_BLOCK){
 			
@@ -47,7 +44,7 @@ public class FastInteract extends Check{
 							m == Material.BOAT || m == Material.STORAGE_MINECART || m == Material.POWERED_MINECART ||
 							m == Material.EXPLOSIVE_MINECART || m == Material.BOAT){
 						
-						return false;
+						return 0;
 						
 					}
 					
@@ -77,7 +74,7 @@ public class FastInteract extends Check{
 							Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed Fast Interact! Diff " + diff + ". VL " + id);
 							
 						}
-						return true;
+						return 1;
 					
 					}
 					
@@ -109,7 +106,7 @@ public class FastInteract extends Check{
 							
 							Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed Visible! Tried to interact with a block out of sight. VL " + id);					
 						}
-						return true;
+						return 1;
 					
 					}
 					
@@ -144,7 +141,7 @@ public class FastInteract extends Check{
 							Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed Fast Interact! Diff " + diff + ". VL " + id);
 							
 						}
-						return true;
+						return 1;
 					
 					}
 					
@@ -156,14 +153,6 @@ public class FastInteract extends Check{
 			}
 			
 		}
-		
-		return false;
-		
-	}
-	
-	@Override
-	@Deprecated
-	public int run(Player p, Location from, Location to, long ls, LivingEntity e, double damage, Block b, BlockFace bf, String mes, boolean blockmove, boolean onladder, boolean up, boolean inwater, double yd, double md, XYZ lg){
 		
 		return 0;
 		
