@@ -45,6 +45,7 @@ import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerLoginEvent.Result;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.event.player.PlayerToggleSprintEvent;
 import org.bukkit.event.player.PlayerVelocityEvent;
@@ -91,13 +92,13 @@ public class NoHackListener implements Listener {
 			double vx = Math.abs(event.getVelocity().getX());
 			double vz = Math.abs(event.getVelocity().getZ());
 			
-			md.yda = (((vy * 20)));
+			md.yda = (((vy * 24.4)));
 				
-			md.velexpirey = (long) (System.currentTimeMillis() + (md.yda * 50));
+			md.velexpirey = (long) (System.currentTimeMillis() + (md.yda * 51));
 			
-			md.velexpirex = (long) (System.currentTimeMillis() + ((((md.mda == 0) ? 1 : md.mda) * (md.yda * 4)) * 110));
+			md.velexpirex = (long) (System.currentTimeMillis() + ((((md.mda == 0) ? 1 : md.mda) * (md.yda * 4)) * 115) * 2.5);
 			
-			md.mda = (vx + vz);
+			md.mda = (vx + vz) * 16;
 			
 			nh.vars.setMoveData(event.getPlayer().getName(), md);
 		
@@ -523,18 +524,22 @@ public class NoHackListener implements Listener {
 	@EventHandler(priority=EventPriority.HIGH, ignoreCancelled = true)
 	public void onTeleport(PlayerTeleportEvent event){
 		
-		MoveData md = this.nh.vars.getMoveData(event.getPlayer().getName());
+		if(event.getCause() == TeleportCause.END_PORTAL || event.getCause() == TeleportCause.NETHER_PORTAL || event.getCause() == TeleportCause.ENDER_PEARL || event.getCause() == TeleportCause.COMMAND){
 		
-		md.tptime = System.currentTimeMillis();
+			MoveData md = this.nh.vars.getMoveData(event.getPlayer().getName());
+			
+			md.tptime = System.currentTimeMillis();
+			
+			this.nh.vars.setMoveData(event.getPlayer().getName(), md);
 		
-		this.nh.vars.setMoveData(event.getPlayer().getName(), md);
+		}
 		
 	}
 	
 	@EventHandler(priority=EventPriority.NORMAL, ignoreCancelled = true)
 	public void onMove(PlayerMoveEvent event){
 		
-		if(event.getFrom().getX() == event.getTo().getX() && event.getFrom().getY() == event.getTo().getY() && event.getFrom().getZ() == event.getTo().getZ()){
+		if(event.getPlayer().isInsideVehicle() || (event.getFrom().getX() == event.getTo().getX() && event.getFrom().getY() == event.getTo().getY() && event.getFrom().getZ() == event.getTo().getZ())){
 			
 			return;
 			
@@ -550,8 +555,26 @@ public class NoHackListener implements Listener {
 		
 		int id = 0;
 		
+		double vd = (event.getTo().getY() - event.getFrom().getY());
+		
 		double yd = Math.abs((event.getFrom().getY() - event.getTo().getY()));//Vertical speed
-		boolean up = ((event.getTo().getY() - event.getFrom().getY()) > 0);//Moving up?
+		boolean up = (vd > 0);//Moving up?
+		
+		if(!up){
+			
+			if(vd < 0){
+				
+				//Anti weepcraft
+				if(String.valueOf(vd).length() <= 5){
+					
+					up = true;
+					
+				}
+				
+			}
+			
+		}
+		
 		double md = Utils.getXZDistance(event.getFrom().getX(), event.getTo().getX(), event.getFrom().getZ(), event.getTo().getZ());//Horizontal speed
 		boolean inwater = ((CraftPlayer) event.getPlayer()).getHandle().inWater;
 		boolean onladder = ((CraftPlayer) event.getPlayer()).getHandle().h_();//Near ladder? NMS ftw!
@@ -564,7 +587,7 @@ public class NoHackListener implements Listener {
 				
 				id = c.runMoveCheck(event.getPlayer(), event.getTo(), event.getFrom(), yd, md, mdd, up, inwater, onladder, lg);
 				
-				if(id != 0){
+				if(id > 0){
 					
 					break;
 					
@@ -574,9 +597,8 @@ public class NoHackListener implements Listener {
 			
 		}
 		
-		if(id == 1){
+		if(id == 1 || id == 2){
 			
-			//event.getPlayer().teleport(event.getFrom());
 			event.setCancelled(true);
 			if(event.getPlayer().isInsideVehicle()){
 				
@@ -587,10 +609,6 @@ public class NoHackListener implements Listener {
 				event.getPlayer().teleport(new Location(event.getFrom().getWorld(), event.getFrom().getX(), event.getFrom().getY(), event.getFrom().getZ(), event.getTo().getYaw(), event.getTo().getPitch()));
 				
 			}
-			
-		}else if(id == 2){
-			
-			event.setCancelled(true);
 			
 		}else if(id == 3){
 			

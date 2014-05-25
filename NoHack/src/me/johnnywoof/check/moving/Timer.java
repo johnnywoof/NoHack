@@ -31,6 +31,12 @@ public class Timer extends Check{
 			
 		}
 		
+		if((System.currentTimeMillis() - movedata.tptime) <= 2500){
+			
+			return 0;
+			
+		}
+		
 		movedata.setAmount(movedata.getAmount() + 1);
 		
 		if((System.nanoTime() - movedata.getTimeStart()) >= 500000000){//Must be precise!

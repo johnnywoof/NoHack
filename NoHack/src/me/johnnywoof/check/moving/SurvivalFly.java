@@ -25,10 +25,9 @@ public class SurvivalFly extends Check{
 	@SuppressWarnings("deprecation")
 	@Override
 	public int runMoveCheck(Player p, Location to, Location from, double yd, double md, MoveData movedata, boolean up, boolean inwater, boolean onladder, XYZ lg){
-			
+		
 			//Start survival fly check
-			
-			if(p.isOnGround() || p.isInsideVehicle() || inwater || p.isFlying() || onladder){
+			if(p.isOnGround() || p.isInsideVehicle() || inwater || (p.isFlying()) || onladder){
 				
 				this.vars.lastGround.put(p.getName(), new XYZ(from));
 				
@@ -40,7 +39,7 @@ public class SurvivalFly extends Check{
 						
 						double ydis = Math.abs(lg.y - to.getY());
 						
-						if(ydis > this.getMaxHight(p, this.vars.getMoveData(p.getName()))){
+						if(ydis > this.getMaxHight(p, movedata)){
 							
 							int id = this.vars.raiseViolationLevel(CheckType.FLY, p);
 							

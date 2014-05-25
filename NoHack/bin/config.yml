@@ -52,7 +52,7 @@ noswing-message: .name. failed NoSwing! Did not swing arm. VL .vl.
 
 noswing-block-difference: 2500
 
-noswing-fight-difference: 10
+noswing-fight-difference: 60
 
 creative-attack-reach: 30
 
@@ -62,4 +62,4 @@ fight-attack-speed: 75
 
 inventory-click-max-speed: 50
 
-max-packets: 14
+max-packets: 15

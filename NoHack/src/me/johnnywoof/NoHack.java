@@ -134,10 +134,10 @@ public class NoHack extends JavaPlugin{
 		this.checks.add(new FastBreak(this.vars, null));//TODO Change this?
 		this.checks.add(new NoSwingBlock(this.vars, CheckType.NOSWING));
 		this.checks.add(new GodMode(this.vars, CheckType.GOD_MODE));
+		this.checks.add(new NoSwingFight(this.vars, CheckType.NOSWING));
 		this.checks.add(new FightReach(this.vars, CheckType.ATTACK_REACH));
 		this.checks.add(new FightSpeed(this.vars, CheckType.ATTACK_SPEED));
 		this.checks.add(new FightImpossible(this.vars, CheckType.IMPOSSIBLE));
-		this.checks.add(new NoSwingFight(this.vars, CheckType.NOSWING));
 		this.checks.add(new ChatImpossible(this.vars, CheckType.IMPOSSIBLE));
 		this.checks.add(new ChatSpam(this.vars, CheckType.SPAM));
 		this.checks.add(new InventoryClick(this.vars, CheckType.FASTCLICK));

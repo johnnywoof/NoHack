@@ -272,13 +272,7 @@ public class HorizontalSpeed extends Check{
 			
 		}
 		
-		double cd = ((p.getVelocity().getX() + p.getVelocity().getZ()) * 5);
-		
-		if(cd > 0){
-		
-			d = cd + d;
-		
-		}
+		d = d + Math.abs((p.getVelocity().getX() + p.getVelocity().getZ()) * 7.5);
 		
 		return d;
 		
