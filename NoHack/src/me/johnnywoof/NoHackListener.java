@@ -555,13 +555,77 @@ public class NoHackListener implements Listener {
 	@EventHandler(priority=EventPriority.NORMAL, ignoreCancelled = true)
 	public void onMove(PlayerMoveEvent event){
 		
+		MoveData mdd = nh.vars.getMoveData(event.getPlayer().getName());
+		
+		if(mdd.lastloc == null){
+			
+			mdd.lastloc = new XYZ(event.getPlayer().getLocation());
+			
+		}
+		
+		if((System.currentTimeMillis() - mdd.tptime) > 700){
+			
+			mdd.setAmount(mdd.getAmount() + 1);
+			
+			if((System.currentTimeMillis() - mdd.getTimeStart()) >= 1000){
+				
+				int expected = (20 - NoHack.tps) + Setting.maxpacket + (Math.round(Math.abs(Utils.getPing(event.getPlayer()) / 100)));
+				
+				if(mdd.getAmount() > expected){
+						
+					int id = this.nh.vars.raiseViolationLevel(CheckType.TIMER, event.getPlayer());
+						
+					ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.TIMER, event.getPlayer());
+					
+					Bukkit.getServer().getPluginManager().callEvent(vte);
+					
+					if(!vte.isCancelled()){
+					
+						if(id != 0){
+								
+							String message = Setting.timermes;
+							
+							message = message.replaceAll(".name.", ChatColor.YELLOW + "" + event.getPlayer().getName() + "" + ChatColor.GREEN);
+							message = message.replaceAll(".vl.", id + "");
+							message = message.replaceAll(".packets-sent.", mdd.getAmount() + "");
+							message = message.replaceAll(".expected-packets.", expected + "");
+
+							Utils.messageAdmins(message);
+								
+						}
+						
+						if(event.getPlayer().isInsideVehicle()){
+							
+							event.getPlayer().getVehicle().teleport(mdd.lastloc.toLocation(event.getPlayer().getLocation().getPitch(), event.getPlayer().getLocation().getYaw()), TeleportCause.UNKNOWN);
+							
+						}else{
+						
+							event.setTo(mdd.lastloc.toLocation(event.getPlayer().getLocation().getPitch(), event.getPlayer().getLocation().getYaw()));
+						
+						}
+						mdd.reset(new XYZ(event.getPlayer().getLocation()));
+						this.nh.vars.setMoveData(event.getPlayer().getName(), mdd);
+						return;
+					
+					}
+					
+				}else{
+					
+					mdd.reset(new XYZ(event.getPlayer().getLocation()));
+					
+				}
+				
+			}
+			
+			this.nh.vars.setMoveData(event.getPlayer().getName(), mdd);
+			
+		}
+		
 		if(event.getPlayer().isInsideVehicle() || (event.getFrom().getX() == event.getTo().getX() && event.getFrom().getY() == event.getTo().getY() && event.getFrom().getZ() == event.getTo().getZ())){
 			
 			return;
 			
 		}
-		
-		MoveData mdd = nh.vars.getMoveData(event.getPlayer().getName());
 		
 		if((System.currentTimeMillis() - mdd.tptime) <= 1000){//Player teleported, don't check it
 			

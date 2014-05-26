@@ -20,7 +20,6 @@ import me.johnnywoof.check.moving.HorizontalSpeed;
 import me.johnnywoof.check.moving.ImpossibleMoving;
 import me.johnnywoof.check.moving.NoFall;
 import me.johnnywoof.check.moving.SurvivalFly;
-import me.johnnywoof.check.moving.Timer;
 import me.johnnywoof.check.moving.VerticalSpeed;
 
 import org.bukkit.ChatColor;
@@ -126,7 +125,6 @@ public class NoHack extends JavaPlugin{
 		
 		//Remember! Higher = more priority
 		this.checks.add(new ImpossibleMoving(this.vars, CheckType.IMPOSSIBLE));
-		this.checks.add(new Timer(this.vars, CheckType.TIMER));
 		this.checks.add(new VerticalSpeed(this.vars, CheckType.VERTICAL_SPEED));
 		this.checks.add(new NoFall(this.vars, CheckType.NOFALL));
 		this.checks.add(new SurvivalFly(this.vars, CheckType.FLY));

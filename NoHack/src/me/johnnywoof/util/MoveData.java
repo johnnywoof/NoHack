@@ -32,7 +32,7 @@ public class MoveData {
 	}
 	
 	public void reset(XYZ now){
-		this.setTimeStart(System.nanoTime());
+		this.setTimeStart(System.currentTimeMillis());
 		this.setAmount(0);
 		this.lastamount = -1;
 		this.lastloc = now;
