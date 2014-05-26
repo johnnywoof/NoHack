@@ -68,11 +68,11 @@ public class Timer extends Check{
 					
 					if(p.isInsideVehicle()){
 						
-						p.getVehicle().teleport(movedata.lastloc.toLocation(p.getLocation().getPitch(), p.getLocation().getYaw()), TeleportCause.PLUGIN);
+						p.getVehicle().teleport(movedata.lastloc.toLocation(p.getLocation().getPitch(), p.getLocation().getYaw()), TeleportCause.UNKNOWN);
 						
 					}else{
 					
-						p.teleport(movedata.lastloc.toLocation(p.getLocation().getPitch(), p.getLocation().getYaw()), TeleportCause.PLUGIN);
+						p.teleport(movedata.lastloc.toLocation(p.getLocation().getPitch(), p.getLocation().getYaw()), TeleportCause.UNKNOWN);
 					
 					}
 					movedata.reset(new XYZ(p.getLocation()));

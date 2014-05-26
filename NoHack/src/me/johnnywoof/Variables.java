@@ -1,6 +1,7 @@
 package me.johnnywoof;
 
 import java.util.HashMap;
+import java.util.UUID;
 
 import me.johnnywoof.check.CheckType;
 import me.johnnywoof.check.Violation;
@@ -14,7 +15,7 @@ public class Variables {
 
 	final private HashMap<String, Violation> viodata = new HashMap<String, Violation>();
 	final private HashMap<String, Long> lastswong = new HashMap<String, Long>();
-	final public HashMap<String, Long> deniedlogin = new HashMap<String, Long>();
+	final public HashMap<UUID, Long> deniedlogin = new HashMap<UUID, Long>();
 	final private HashMap<String, MoveData> movedata = new HashMap<String, MoveData>();
 	
 	//Last location of being on the ground

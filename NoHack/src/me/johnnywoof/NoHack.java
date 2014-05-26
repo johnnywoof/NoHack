@@ -127,8 +127,8 @@ public class NoHack extends JavaPlugin{
 		//Remember! Higher = more priority
 		this.checks.add(new ImpossibleMoving(this.vars, CheckType.IMPOSSIBLE));
 		this.checks.add(new Timer(this.vars, CheckType.TIMER));
-		this.checks.add(new NoFall(this.vars, CheckType.NOFALL));
 		this.checks.add(new VerticalSpeed(this.vars, CheckType.VERTICAL_SPEED));
+		this.checks.add(new NoFall(this.vars, CheckType.NOFALL));
 		this.checks.add(new SurvivalFly(this.vars, CheckType.FLY));
 		this.checks.add(new HorizontalSpeed(this.vars, CheckType.HORIZONTAL_SPEED));
 		this.checks.add(new FastBreak(this.vars, null));//TODO Change this?

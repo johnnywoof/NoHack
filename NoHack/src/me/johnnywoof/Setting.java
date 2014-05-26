@@ -27,5 +27,6 @@ public class Setting {
 	public static int noswingfight = 10;
 	public static int fcs = 50;
 	public static int maxpacket = 14;
+	public static boolean debug = true;
 	
 }

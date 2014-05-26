@@ -45,6 +45,13 @@ inventory-click-speed: .name. failed FastClick! Clicked a container too fast. VL
 #Everything else with messages
 noswing-message: .name. failed NoSwing! Did not swing arm. VL .vl.
 
+#####Everything else#####
+
+#If true, the player defined in "Debug-player" will get spammed with messages.
+debug: true
+
+debug-player: johnnywoof
+
 ###############################################################
 #    Notice: Below, this changes how the plugin works
 #    Only modify if you know what you are doing!

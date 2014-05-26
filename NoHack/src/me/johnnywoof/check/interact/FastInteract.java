@@ -24,7 +24,7 @@ public class FastInteract extends Check{
 	private final HashMap<String, Long> lastinteractleft = new HashMap<String, Long>();
 	
 	public FastInteract(Variables vars, CheckType ct) {
-		super(vars, ct, DetectionType.INVENTORY);
+		super(vars, ct, DetectionType.INTERACT);
 	}
 	
 	@Override
@@ -57,9 +57,21 @@ public class FastInteract extends Check{
 			if(this.lastinteractright.containsKey(p.getName())){
 				diff = (System.currentTimeMillis() - this.lastinteractright.get(p.getName()));
 				
+				int am = 145;
+				
 				this.lastinteractright.put(p.getName(), System.currentTimeMillis());
 				
-				if(diff <= 147){
+				if(this.lastinteractleft.containsKey(p.getName())){
+					
+					if((System.nanoTime() - this.lastinteractleft.get(p.getName())) <= 100000000){
+						
+						am = 90;
+						
+					}
+					
+				}
+				
+				if(diff <= am){
 					
 					int id = this.vars.raiseViolationLevel(CheckType.FAST_INTERACT, p);
 					
