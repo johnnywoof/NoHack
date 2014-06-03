@@ -249,7 +249,7 @@ public class Violation {
 	
 	public boolean shouldNotify(){
 		
-		return (System.currentTimeMillis() - this.lastnotification) >= 4000;
+		return (System.currentTimeMillis() - this.lastnotification) >= 5000;
 		
 	}
 	

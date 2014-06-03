@@ -15,7 +15,8 @@ public class Variables {
 
 	final private HashMap<String, Violation> viodata = new HashMap<String, Violation>();
 	final private HashMap<String, Long> lastswong = new HashMap<String, Long>();
-	final public HashMap<UUID, Long> deniedlogin = new HashMap<UUID, Long>();
+	//A string is used to parse the data
+	final private HashMap<UUID, String> deniedlogin = new HashMap<UUID, String>();
 	final private HashMap<String, MoveData> movedata = new HashMap<String, MoveData>();
 	
 	//Last location of being on the ground
@@ -48,6 +49,27 @@ public class Variables {
 		Setting.fcs = fc.getInt("inventory-click-max-speed");
 		Setting.maxpacket = fc.getInt("max-packets");
 		Setting.glidemes = fc.getString("glide-message");
+		Setting.autoban = fc.getBoolean("autoban-players");
+		Setting.autobantime = fc.getInt("autoban-time");
+		Setting.autosoupmes = fc.getString("autosoup-message");
+		
+	}
+	
+	public void removeDeniedLogin(UUID uuid){
+		this.deniedlogin.remove(uuid);
+	}
+	
+	public String[] getDeniedData(Player p){
+		
+		if(this.deniedlogin.containsKey(p.getUniqueId())){
+			
+			return this.deniedlogin.get(p.getUniqueId()).split(".:.");
+			
+		}else{
+			
+			return null;
+			
+		}
 		
 	}
 	
@@ -90,6 +112,12 @@ public class Variables {
 			return 0;
 			
 		}
+		
+	}
+	
+	public void setDeniedLogin(Player p, long future, String reason){
+		
+		this.deniedlogin.put(p.getUniqueId(), String.valueOf(future) + ".:." + reason);
 		
 	}
 	

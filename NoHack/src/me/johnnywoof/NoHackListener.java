@@ -134,6 +134,7 @@ public class NoHackListener implements Listener {
 			if(event.getPlayer().hasMetadata("NPC")){
 				
 				event.setCancelled(true);
+				return;
 				
 			}
 			
@@ -142,6 +143,7 @@ public class NoHackListener implements Listener {
 		if(event.getPlayer().hasPermission("nohack.bypass." + event.getCheckType().toString().toLowerCase())){
 			
 			//event.setCancelled(true);
+			//return;
 			
 		}
 		
@@ -159,7 +161,7 @@ public class NoHackListener implements Listener {
 				
 				event.getPlayer().kickPlayer(ChatColor.RED + "Detected illegal activity! Are you hacking?");
 				
-				this.nh.vars.deniedlogin.put(event.getPlayer().getUniqueId(), (System.currentTimeMillis() + 10000));
+				this.nh.vars.setDeniedLogin(event.getPlayer(), (System.currentTimeMillis() + 10000), "Kicked for illegal activities - Interacting too fast.");
 				
 				event.setNewLevel(0);
 				
@@ -167,6 +169,20 @@ public class NoHackListener implements Listener {
 			
 			this.lastViolation.put(event.getPlayer().getName(), System.currentTimeMillis());
 		
+		}
+		
+		if(event.getCheckType() == CheckType.AUTOSOUP){
+			
+			if(Setting.autoban){
+				
+				this.nh.vars.setDeniedLogin(event.getPlayer(), (System.currentTimeMillis() + (Setting.autobantime * 1000)), "AutoBanned - Using AutoSoup");
+				
+				event.getPlayer().kickPlayer(ChatColor.RED + "You've been autobanned for " + Setting.autobantime + " seconds!\n\nReason: Using AutoSoup");
+				
+				Utils.messageAdmins(event.getPlayer().getName() + " has been autobanned for using AutoSoup for " + Setting.autobantime + " seconds!");
+				
+			}
+			
 		}
 		
 	}
@@ -345,20 +361,18 @@ public class NoHackListener implements Listener {
 		event.getPlayer().sendMessage("񖶅񙓭");
 		event.getPlayer().sendMessage("񖶅�7");
 		
-		if(nh.vars.deniedlogin.containsKey(Utils.getIP(event.getPlayer()))){
+		String[] s = nh.vars.getDeniedData(event.getPlayer());
+		
+		long fut = Long.parseLong(s[0]);
 			
-			long fut = nh.vars.deniedlogin.get(Utils.getIP(event.getPlayer()));
+		if(fut > System.currentTimeMillis()){
 			
-			if(fut > System.currentTimeMillis()){
+			event.disallow(Result.KICK_OTHER, "Please wait " + Math.round((fut - System.currentTimeMillis()) / 1000) + " seconds before joining again.\nReason: " + s[1]);
 			
-				event.disallow(Result.KICK_OTHER, "Please wait " + Math.round((fut - System.currentTimeMillis()) / 1000) + " seconds before joining again.");
-			
-			}else{
+		}else{
 				
-				nh.vars.deniedlogin.remove(Utils.getIP(event.getPlayer()));
+			nh.vars.removeDeniedLogin(event.getPlayer().getUniqueId());
 				
-			}
-			
 		}
 		
 	}

@@ -23,7 +23,7 @@ public class FightImpossible extends Check{
 	@Override
 	public int runAttackCheck(Player p, LivingEntity e, long ls){
 		
-		if(p.isBlocking() || p.isSleeping() || p.isDead() || p.getUniqueId() == e.getUniqueId()){
+		if(p.isBlocking() || p.isSleeping() || p.isDead() || p.getEntityId() == e.getEntityId()){
 			
 			int id = this.vars.raiseViolationLevel(CheckType.IMPOSSIBLE, p);
 			

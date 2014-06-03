@@ -17,6 +17,7 @@ public class Setting {
 	public static String glidemes = "";
 	public static String speedclick = "";
 	public static String noswingmes = "";
+	public static String autosoupmes = "";
 	public static String chatimpossiblemes = "";
 	public static String fightvisiblemes = "";
 	public static boolean ignorenpc = true;
@@ -28,5 +29,7 @@ public class Setting {
 	public static int fcs = 50;
 	public static int maxpacket = 14;
 	public static boolean debug = true;
+	public static boolean autoban = true;
+	public static int autobantime = 60;
 	
 }

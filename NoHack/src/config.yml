@@ -2,6 +2,12 @@
 # Main config file for NoHack
 #------------------------------------------------------------------
 
+#Autoban players if hacks are detected?
+autoban-players: true
+
+#How long should the autoban last? In seconds
+autoban-time: 60
+
 #Should we not check citizens 2 npcs for hacks?
 ignore-citizens-npc: true
 
@@ -37,6 +43,8 @@ fight-speed-message: .name. failed Attack Speed! Tried to attack too fast. VL .v
 
 fight-reach-message: .name. failed Attack Reach! Tried to attack too far. VL .vl.
 
+autosoup-message: .name. failed AutoSoup! Tried to soup while attacking! VL .vl.
+
 #Inventory violation messages
 inventory-impossible-message: .name. failed Impossible! Tried to do illegal inventory clicks. VL .vl.
 
@@ -61,12 +69,12 @@ noswing-block-difference: 2500
 
 noswing-fight-difference: 60
 
-creative-attack-reach: 30
+creative-attack-reach: 31
 
-survival-attack-reach: 16.5
+survival-attack-reach: 17.5
 
 fight-attack-speed: 75
 
 inventory-click-max-speed: 50
 
-max-packets: 23
+max-packets: 26

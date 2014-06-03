@@ -11,6 +11,7 @@ import me.johnnywoof.util.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
@@ -22,6 +23,10 @@ public class FightReach extends Check{
 	
 	@Override
 	public int runAttackCheck(Player p, LivingEntity e, long ls){
+		
+		if(e.getType() == EntityType.WITHER){
+			return 0;
+		}
 		
 		double d = p.getEyeLocation().distanceSquared(e.getEyeLocation());
 		
