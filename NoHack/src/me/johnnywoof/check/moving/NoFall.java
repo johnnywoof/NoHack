@@ -44,7 +44,7 @@ public class NoFall extends Check{
 							
 						Material m = from.getBlock().getType();
 						
-						if(m != Material.CHEST && m != Material.TRAPPED_CHEST){
+						if(m == Material.CHEST || m == Material.TRAPPED_CHEST){
 							
 							return 0;
 							
