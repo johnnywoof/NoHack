@@ -13,6 +13,7 @@ import me.johnnywoof.util.XYZ;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 public class NoFall extends Check{
@@ -41,6 +42,14 @@ public class NoFall extends Check{
 					
 					if(p.getVelocity().getY() < 0){//Moving up when velocity says to go down...seems legit
 							
+						Material m = from.getBlock().getType();
+						
+						if(m != Material.CHEST && m != Material.TRAPPED_CHEST){
+							
+							return 0;
+							
+						}
+						
 						int id = this.vars.raiseViolationLevel(CheckType.NOFALL, p);
 							
 						ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.NOFALL, p);

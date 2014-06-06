@@ -251,7 +251,7 @@ public class NoHackListener implements Listener {
 				
 				if(c.getDetectType() == DetectionType.INVENTORY){
 					
-					if(c.runInventoryCheck(p) != 0){
+					if(c.runInventoryCheck(p, event.getInventory(), event.getAction()) != 0){
 						
 						event.setCancelled(true);
 						break;

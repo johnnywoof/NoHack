@@ -12,7 +12,11 @@ import me.johnnywoof.util.Utils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryAction;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.Inventory;
 
 public class InventoryClick extends Check{
 
@@ -23,7 +27,7 @@ public class InventoryClick extends Check{
 	}
 	
 	@Override
-	public int runInventoryCheck(Player p){
+	public int runInventoryCheck(Player p, Inventory inv, InventoryAction ia){
 		
 		if(p.isBlocking() || p.isSneaking() || p.isSprinting() || p.isSleeping()){
 			
@@ -48,6 +52,22 @@ public class InventoryClick extends Check{
 				return 1;
 			
 			}
+			
+		}
+		
+		if(p.getGameMode() == GameMode.CREATIVE){
+			
+			if(inv.getType() == InventoryType.CREATIVE){
+				
+				//TODO Prevent false fastclick check in creative
+				
+			}
+			
+		}
+		
+		if(Setting.debug){
+			
+			Bukkit.broadcastMessage("Type: " + inv.getType() + "; Action: " + ia.toString().toLowerCase());
 			
 		}
 		

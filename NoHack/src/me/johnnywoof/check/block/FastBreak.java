@@ -10,6 +10,7 @@ import me.johnnywoof.util.Utils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
@@ -31,7 +32,7 @@ public class FastBreak extends Check{
 		
 		//TODO Account for blocks that can be broken instantly
 		
-		if(Utils.instantBreak(b.getType())){
+		if(Utils.instantBreak(b.getType()) || p.getGameMode() == GameMode.CREATIVE){
 			
 			
 			
