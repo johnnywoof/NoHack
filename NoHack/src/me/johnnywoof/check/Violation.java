@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 
 public class Violation {
 
-	private int fly, vs, hs, impossible, sb, ns, gm, crit, fr, fspeed, abl, fp, timer, spam, fc, as, v, nf, is, gl, fb, nkb;
+	private int fly, vs, hs, impossible, sb, ns, fbow, gm, crit, fr, fspeed, abl, fp, timer, spam, fc, as, v, nf, is, gl, fb, nkb;
 	private long lastnotification = 0;
 	
 	public boolean resetLevel(CheckType ct, Player p){
@@ -90,6 +90,9 @@ public class Violation {
 		case NOKNOCKBACK:
 			this.nkb = vce.getNewLevel();
 			break;
+		case FAST_BOW:
+			this.fbow = vce.getNewLevel();
+			break;
 		default:
 			break;
 	}
@@ -147,6 +150,8 @@ public class Violation {
 				return this.fb;
 			case NOKNOCKBACK:
 				return this.nkb;
+			case FAST_BOW:
+				return this.fbow;
 			default:
 				break;
 		}
@@ -235,6 +240,8 @@ public class Violation {
 			case NOKNOCKBACK:
 				this.nkb = vce.getNewLevel();
 				break;
+			case FAST_BOW:
+				this.fbow = vce.getNewLevel();
 			default:
 				break;
 		}
