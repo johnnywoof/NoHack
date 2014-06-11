@@ -9,6 +9,7 @@ import java.util.HashMap;
 
 import me.johnnywoof.check.Check;
 import me.johnnywoof.check.CheckType;
+import me.johnnywoof.check.CustomCheck;
 import me.johnnywoof.check.DetectionType;
 import me.johnnywoof.event.ViolationChangedEvent;
 import me.johnnywoof.event.ViolationTriggeredEvent;
@@ -34,6 +35,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
+import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -58,12 +60,15 @@ public class NoHackListener implements Listener {
 
 	private NoHack nh;
 	
+	private CustomCheck cc;
+	
 	private final HashMap<String, Long> lastHealhed = new HashMap<String, Long>();
 	private final HashMap<String, Long> lastViolation = new HashMap<String, Long>();
 	
 	public NoHackListener(NoHack nh){
 		
 		this.nh = nh;
+		this.cc = new CustomCheck();
 		
 	}
 	
@@ -313,8 +318,24 @@ public class NoHackListener implements Listener {
 		
 	}
 	
-	@EventHandler(ignoreCancelled = true)
+	@EventHandler
 	public void onInteract(PlayerInteractEvent event){
+		
+		if(event.hasItem()){
+			
+			if(event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK){
+				
+				Material m = event.getItem().getType();
+				
+				if(m == Material.BOW){
+					
+					cc.onStartingShoot(event.getPlayer());
+					
+				}//TODO Add fasteat
+				
+			}
+			
+		}
 		
 		if(event.getAction() != Action.PHYSICAL){
 		
@@ -399,6 +420,24 @@ public class NoHackListener implements Listener {
 				
 					final Player p = ((Player) event.getDamager());
 					
+					long ls = nh.vars.getLastSwong(p.getName());
+					
+					for(Check c : nh.getChecks()){
+						
+						if(c.getDetectType() == DetectionType.FIGHT){
+							
+							if(c.runAttackCheck(p, e, ls) != 0){
+								
+								e.setNoDamageTicks(20);
+								event.setCancelled(true);
+								break;
+								
+							}
+							
+						}
+						
+					}
+					
 					//A fix for stupid bukkit not taking account of ctrl sprint
 					//TODO Test this with craftbukkit and not spigot
 					if(p.isSprinting()){
@@ -416,24 +455,6 @@ public class NoHackListener implements Listener {
 							
 						}, 1);
 					
-					}
-					
-					long ls = nh.vars.getLastSwong(p.getName());
-					
-					for(Check c : nh.getChecks()){
-						
-						if(c.getDetectType() == DetectionType.FIGHT){
-							
-							if(c.runAttackCheck(p, e, ls) != 0){
-								
-								e.setNoDamageTicks(20);
-								event.setCancelled(true);
-								break;
-								
-							}
-							
-						}
-						
 					}
 				
 				}
@@ -479,10 +500,75 @@ public class NoHackListener implements Listener {
 		
 	}
 	
-	@EventHandler(priority=EventPriority.NORMAL, ignoreCancelled = true)
+	@EventHandler(ignoreCancelled = true)
+	public void onBow(EntityShootBowEvent event){
+		
+		if(event.getEntity() instanceof Player){
+			
+			Player p = (Player) event.getEntity();
+			
+			if(cc.onShoot(p, event.getForce())){
+
+				int id = nh.vars.raiseViolationLevel(CheckType.FAST_BOW, p);
+				
+				ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.FAST_BOW, p);
+				
+				Bukkit.getServer().getPluginManager().callEvent(vte);
+				
+				if(!vte.isCancelled()){
+				
+					if(id != 0){
+						
+						Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed Fast Bow! Tried to fire a bow too fast. VL " + id);
+						
+					}
+					event.setCancelled(true);
+				
+				}
+				
+			}
+			
+			p = null;
+			
+		}
+		
+	}
+	
+	@EventHandler(ignoreCancelled = true)
 	public void onProjectile(ProjectileLaunchEvent event){
 		
-		//TODO Add fast shoot
+		if(event.getEntity().getShooter() != null){
+			
+			if(event.getEntity().getShooter() instanceof Player){
+					
+				Player p = (Player) event.getEntity().getShooter();
+					
+				if(cc.checkFastShoot(p)){
+					
+					int id = nh.vars.raiseViolationLevel(CheckType.FAST_THROW, p);
+					
+					ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.FAST_THROW, p);
+					
+					Bukkit.getServer().getPluginManager().callEvent(vte);
+					
+					if(!vte.isCancelled()){
+					
+						if(id != 0){
+							
+							Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed Fast Throw! Tried to throw a projectile too fast. VL " + id);
+							
+						}
+						event.setCancelled(true);
+					
+					}
+					
+				}
+					
+				p = null;
+				
+			}
+			
+		}
 		
 	}
 	
