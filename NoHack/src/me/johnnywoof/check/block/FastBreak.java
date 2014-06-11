@@ -44,7 +44,7 @@ public class FastBreak extends Check{
 			
 			if(p.getGameMode() == GameMode.CREATIVE){
 				
-				if(diff <= 200){
+				if(diff < 95){
 					
 					if(Setting.debug){
 						

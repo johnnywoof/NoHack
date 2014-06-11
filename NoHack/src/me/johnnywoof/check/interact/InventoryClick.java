@@ -69,17 +69,13 @@ public class InventoryClick extends Check{
 		if(p.getGameMode() == GameMode.CREATIVE){
 			
 			if(inv.getType() == InventoryType.PLAYER || inv.getType() == InventoryType.CREATIVE){
-				
-				if(ia == InventoryAction.PLACE_ALL){
 					
-					if(event.getSlotType() != SlotType.OUTSIDE){//We want to check for fastdrops which in turn = lag
+				if(event.getSlotType() != SlotType.OUTSIDE){//We want to check for fastdrops which in turn = lag
 						
-						this.lastviolation.put(p.getName(), System.currentTimeMillis());
+					this.lastviolation.put(p.getName(), System.currentTimeMillis());
 						
-						return 0;
+					return 0;
 						
-					}
-					
 				}
 				
 			}

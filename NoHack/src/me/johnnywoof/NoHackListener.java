@@ -384,16 +384,20 @@ public class NoHackListener implements Listener {
 		
 		String[] s = nh.vars.getDeniedData(event.getPlayer());
 		
-		long fut = Long.parseLong(s[0]);
-			
-		if(fut > System.currentTimeMillis()){
-			
-			event.disallow(Result.KICK_OTHER, "Please wait " + Math.round((fut - System.currentTimeMillis()) / 1000) + " seconds before joining again.\nReason: " + s[1]);
-			
-		}else{
+		if(s != null){
+		
+			long fut = Long.parseLong(s[0]);
 				
-			nh.vars.removeDeniedLogin(event.getPlayer().getUniqueId());
+			if(fut > System.currentTimeMillis()){
 				
+				event.disallow(Result.KICK_OTHER, "Please wait " + Math.round((fut - System.currentTimeMillis()) / 1000) + " seconds before joining again.\nReason: " + s[1]);
+				
+			}else{
+					
+				nh.vars.removeDeniedLogin(event.getPlayer().getUniqueId());
+					
+			}
+		
 		}
 		
 	}

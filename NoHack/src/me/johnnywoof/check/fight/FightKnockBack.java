@@ -4,9 +4,8 @@ import me.johnnywoof.Variables;
 import me.johnnywoof.check.Check;
 import me.johnnywoof.check.CheckType;
 import me.johnnywoof.check.DetectionType;
-import me.johnnywoof.util.MoveData;
 
-import org.bukkit.Bukkit;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
@@ -19,11 +18,21 @@ public class FightKnockBack extends Check{
 	@Override
 	public int runAttackCheck(Player p, LivingEntity e, long ls){
 		
-		MoveData md = vars.getMoveData(p.getName());
+		if(p.getItemInHand() != null){
+			
+			if(p.getItemInHand().containsEnchantment(Enchantment.KNOCKBACK)){
+				
+				return 0;
+				
+			}
+			
+		}
 		
-		long diff = (System.currentTimeMillis() - md.sprinttime);
+		//MoveData md = vars.getMoveData(p.getName());
 		
-		Bukkit.broadcastMessage(diff + "");
+		//long diff = (System.currentTimeMillis() - md.sprinttime);
+		
+		//Bukkit.broadcastMessage(diff + "");
 		
 		return 0;
 		

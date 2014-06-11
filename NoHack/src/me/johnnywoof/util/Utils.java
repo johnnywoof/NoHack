@@ -27,6 +27,56 @@ public class Utils {
     	return ((CraftWorld) player.getLocation().getWorld()).getHandle().a(Vec3D.a(player.getLocation().getX(), player.getLocation().getY() + player.getEyeHeight(), player.getLocation().getZ()), Vec3D.a(loc2.getX(), loc2.getY(), loc2.getZ())) == null;
     }
     
+    public static boolean canReallySeeEntity(Player p, LivingEntity e){
+    	
+    	BlockIterator bl = new BlockIterator(p, 7);
+    	
+    	boolean found = false;
+    	
+    	double md = 1;
+    	
+    	if(e.getType() == EntityType.WITHER){//Withers are a bit trippy on distance calculations
+    		
+    		md = 9;
+    		
+    	}else{
+    		
+    		md = md + e.getEyeHeight();
+    		
+    	}
+    	
+    	while(bl.hasNext()){
+    		
+    		found = true;
+    		
+    		double d = bl.next().getLocation().distanceSquared(e.getLocation());
+    		
+    		if(d <= md){
+    			
+    			return true;
+    			
+    		}
+    		
+    	}
+    	
+    	bl = null;
+    	
+    	if(!found){
+    		
+    		return true;//So close to the entity block paths were not generated!
+    		
+    	}
+    	
+    	return false;
+    	
+    }
+    
+    /**
+     * 
+     * @deprecated Inaccurate on some entities
+     * 
+     * */
+    @Deprecated
     public static LivingEntity getTarget(Player player) {
     int range = 8;
     ArrayList<LivingEntity> livingE = new ArrayList<LivingEntity>();

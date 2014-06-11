@@ -52,7 +52,33 @@ public class FightImpossible extends Check{
 			//Kind of performance heavy, only check it when they get the damage
 			if(((CraftLivingEntity) e).getHandle().hurtTicks <= 3){
 				
-				LivingEntity t = Utils.getTarget(p);
+				if(!Utils.canReallySeeEntity(p, e)){
+					
+					int id = this.vars.raiseViolationLevel(CheckType.VISIBLE, p);
+					
+					ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.VISIBLE, p);
+					
+					Bukkit.getServer().getPluginManager().callEvent(vte);
+					
+					if(!vte.isCancelled()){
+						
+						if(id != 0){
+							
+							String message = Setting.fightvisiblemes;
+							
+							message = message.replaceAll(".name.", ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN);
+							message = message.replaceAll(".vl.", id + "");
+
+							Utils.messageAdmins(message);
+							
+						}
+						return 1;
+					
+					}
+					
+				}
+				
+				/*LivingEntity t = Utils.getTarget(p);
 				
 				if((t == null) ? true : t.getUniqueId() != e.getUniqueId()){
 					
@@ -80,7 +106,7 @@ public class FightImpossible extends Check{
 					
 				}
 				
-				t = null;
+				t = null;*/
 				
 			}
 			

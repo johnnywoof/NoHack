@@ -36,7 +36,7 @@ import org.bukkit.util.BlockVector;
 import org.bukkit.util.Vector;
  
 public class RayTrace {
-public static final double RAY_LENGTH_LIMIT = 200;
+public static final double RAY_LENGTH_LIMIT = 100;
 private static Vec3D toVec3D( Vector vec ){
 return Vec3D.a(vec.getX(), vec.getY(), vec.getZ());
 }
