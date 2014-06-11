@@ -266,7 +266,7 @@ public class HorizontalSpeed extends Check{
 		
 		}
 		
-		if(inwater){
+		if(inwater && !p.getAllowFlight()){
 			
 			d = 0.0774;
 			

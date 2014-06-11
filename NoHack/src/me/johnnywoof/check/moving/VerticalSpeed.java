@@ -104,7 +104,7 @@ public class VerticalSpeed extends Check{
 			
 		}
 		
-		if(inwater){
+		if(inwater && !p.getAllowFlight()){
 			
 			if(up){
 				

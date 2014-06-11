@@ -150,7 +150,7 @@ public class NoHackListener implements Listener {
 		//TODO Re-add this back to the }else{ thingy
 		
 		//Prevents abuse of checks to slow down server
-		if(event.getCheckType() == CheckType.FAST_INTERACT){
+		if(event.getCheckType() == CheckType.FAST_INTERACT || event.getCheckType() == CheckType.SPEED_BREAK){
 		
 			long diff = 0;
 			if(this.lastViolation.containsKey(event.getPlayer().getName())){

@@ -46,6 +46,12 @@ public class FastBreak extends Check{
 				
 				if(diff <= 200){
 					
+					if(Setting.debug){
+						
+						Bukkit.broadcastMessage("Diff: " + diff);
+						
+					}
+					
 					int id = this.vars.raiseViolationLevel(CheckType.SPEED_BREAK, p);
 					
 					ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.SPEED_BREAK, p);
