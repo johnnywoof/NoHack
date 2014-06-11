@@ -15,19 +15,22 @@ import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryAction;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.inventory.InventoryType.SlotType;
 import org.bukkit.inventory.Inventory;
 
 public class InventoryClick extends Check{
 
 	private final HashMap<String, Long> lastclick = new HashMap<String, Long>();
+	private final HashMap<String, Long> lastviolation = new HashMap<String, Long>();
 	
 	public InventoryClick(Variables vars, CheckType ct) {
 		super(vars, ct, DetectionType.INVENTORY);
 	}
 	
 	@Override
-	public int runInventoryCheck(Player p, Inventory inv, InventoryAction ia){
+	public int runInventoryCheck(Player p, Inventory inv, InventoryAction ia, InventoryClickEvent event){
 		
 		if(p.isBlocking() || p.isSneaking() || p.isSprinting() || p.isSleeping()){
 			
@@ -55,11 +58,29 @@ public class InventoryClick extends Check{
 			
 		}
 		
+		long rdif = (System.currentTimeMillis() - this.getLastViolation(p.getName()));
+		
+		if(rdif <= 2000){
+			
+			return 1;//Prevent abuse to bypass check
+			
+		}
+		
 		if(p.getGameMode() == GameMode.CREATIVE){
 			
-			if(inv.getType() == InventoryType.CREATIVE){
+			if(inv.getType() == InventoryType.PLAYER || inv.getType() == InventoryType.CREATIVE){
 				
-				//TODO Prevent false fastclick check in creative
+				if(ia == InventoryAction.PLACE_ALL){
+					
+					if(event.getSlotType() != SlotType.OUTSIDE){//We want to check for fastdrops which in turn = lag
+						
+						this.lastviolation.put(p.getName(), System.currentTimeMillis());
+						
+						return 0;
+						
+					}
+					
+				}
 				
 			}
 			
@@ -84,6 +105,8 @@ public class InventoryClick extends Check{
 			this.lastclick.put(p.getName(), System.currentTimeMillis());
 			
 			if(!vte.isCancelled()){
+				
+				this.lastviolation.put(p.getName(), System.currentTimeMillis());
 			
 				if(id != 0){
 					
@@ -100,6 +123,20 @@ public class InventoryClick extends Check{
 		this.lastclick.put(p.getName(), System.currentTimeMillis());
 		
 		return 0;
+		
+	}
+	
+	private long getLastViolation(String v){
+		
+		if(this.lastviolation.containsKey(v)){
+			
+			return this.lastviolation.get(v);
+			
+		}else{
+			
+			return 0;
+			
+		}
 		
 	}
 	
