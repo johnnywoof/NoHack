@@ -32,6 +32,8 @@ glide-message: .name. failed Glide! Tried to float to an unexpected location. VL
 #Block violation messages
 block-visible-break-message: .name. failed Visible! Tried to break another block than expected. VL .vl.
 
+speed-break-message: .name. failed SpeedBreak! Broke blocks faster than usal. VL .vl.
+
 #Fight violation messages
 godmode-message: .name. failed GodMode! Tried to avoid taking damage. VL .vl.
 

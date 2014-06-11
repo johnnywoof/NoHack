@@ -1,5 +1,7 @@
 package me.johnnywoof.check.block;
 
+import java.util.HashMap;
+
 import me.johnnywoof.Setting;
 import me.johnnywoof.Variables;
 import me.johnnywoof.check.Check;
@@ -17,6 +19,8 @@ import org.bukkit.entity.Player;
 
 public class FastBreak extends Check{
 
+	private final HashMap<String, Long> lastBreak = new HashMap<String, Long>();
+	
 	public FastBreak(Variables vars, CheckType ct) {
 		super(vars, ct, DetectionType.BLOCK);
 	}
@@ -28,13 +32,45 @@ public class FastBreak extends Check{
 			return 0;
 		}
 		
+		long diff = (System.currentTimeMillis() - this.getLastBreak(p.getName()));
+		
+		this.lastBreak.put(p.getName(), System.currentTimeMillis());
+		
 		//Start better block visible check
 		
 		//TODO Account for blocks that can be broken instantly
 		
 		if(Utils.instantBreak(b.getType()) || p.getGameMode() == GameMode.CREATIVE){
 			
-			
+			if(p.getGameMode() == GameMode.CREATIVE){
+				
+				if(diff <= 200){
+					
+					int id = this.vars.raiseViolationLevel(CheckType.SPEED_BREAK, p);
+					
+					ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.SPEED_BREAK, p);
+					
+					Bukkit.getServer().getPluginManager().callEvent(vte);
+					
+					if(!vte.isCancelled()){
+					
+						if(id != 0){
+							
+							String message = Setting.speedbreakmes;
+							
+							message = message.replaceAll(".name.", ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN);
+							message = message.replaceAll(".vl.", id + "");
+
+							Utils.messageAdmins(message);
+							
+						}
+						return 1;
+					
+					}
+					
+				}
+				
+			}
 			
 		}else{
 		
@@ -69,6 +105,20 @@ public class FastBreak extends Check{
 		//End
 		
 		return 0;
+		
+	}
+	
+	private long getLastBreak(String v){
+		
+		if(this.lastBreak.containsKey(v)){
+			
+			return this.lastBreak.get(v);
+			
+		}else{
+			
+			return 0;
+			
+		}
 		
 	}
 	

@@ -19,6 +19,7 @@ public class Setting {
 	public static String noswingmes = "";
 	public static String autosoupmes = "";
 	public static String chatimpossiblemes = "";
+	public static String speedbreakmes = "";
 	public static String fightvisiblemes = "";
 	public static boolean ignorenpc = true;
 	public static long noswingblock = 2500;
