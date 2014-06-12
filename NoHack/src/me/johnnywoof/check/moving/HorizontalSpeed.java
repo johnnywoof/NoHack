@@ -111,8 +111,19 @@ public class HorizontalSpeed extends Check{
 		
 		boolean csneak = p.isSneaking();
 		boolean csprint = p.isSprinting();
+		boolean cblock = p.isBlocking();
 		
 		long now = System.currentTimeMillis();
+		
+		if(cblock){
+			
+			if((now - md.blocktime) <= 1500){
+				
+				cblock = false;
+				
+			}
+			
+		}
 		
 		if(!csneak){
 			
@@ -167,6 +178,10 @@ public class HorizontalSpeed extends Check{
 				d = 0.67;
 				
 			}
+			
+		}else if(cblock){
+			
+			d = 0.015;
 			
 		}else{
 			

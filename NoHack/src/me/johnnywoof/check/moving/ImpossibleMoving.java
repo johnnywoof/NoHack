@@ -27,6 +27,16 @@ public class ImpossibleMoving extends Check{
 		//Prevents bypass of packet sneak and enforcement of blocking
 		if((p.isSneaking() || p.isBlocking()) && p.isSprinting()){
 			
+			if(p.isBlocking() && p.isSprinting()){
+				
+				if((System.currentTimeMillis() - movedata.blocktime) <= 150){
+					
+					return 0;
+					
+				}
+				
+			}
+			
 			int id = this.vars.raiseViolationLevel(CheckType.IMPOSSIBLE, p);
 			
 			ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.IMPOSSIBLE, p);

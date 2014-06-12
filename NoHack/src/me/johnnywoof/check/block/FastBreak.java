@@ -16,6 +16,7 @@ import org.bukkit.GameMode;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
+import org.bukkit.util.BlockIterator;
 
 public class FastBreak extends Check{
 
@@ -42,9 +43,9 @@ public class FastBreak extends Check{
 		
 		if(Utils.instantBreak(b.getType()) || p.getGameMode() == GameMode.CREATIVE){
 			
-			if(p.getGameMode() == GameMode.CREATIVE){
+			if(true){
 				
-				if(diff < 95){
+				if(diff < (p.getGameMode() == GameMode.CREATIVE ? 95 : 45)){
 					
 					if(Setting.debug){
 						
@@ -77,6 +78,53 @@ public class FastBreak extends Check{
 				}
 				
 			}
+			
+	    	BlockIterator bl = new BlockIterator(p, 8);
+	    	
+	    	double md = 1;
+	    	
+	    	boolean goodie = false;
+	    	
+	    	while(bl.hasNext()){
+	    		
+	    		double d = bl.next().getLocation().distanceSquared(b.getLocation());
+	    		
+	    		if(d <= md){
+	    			
+	    			goodie = true;
+	    			break;
+	    			
+	    		}
+	    		
+	    	}
+	    	
+	    	bl = null;
+	    	
+	    	if(!goodie){
+	    		
+	    		int id = this.vars.raiseViolationLevel(CheckType.VISIBLE, p);
+				
+				ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.VISIBLE, p);
+				
+				Bukkit.getServer().getPluginManager().callEvent(vte);
+				
+				if(!vte.isCancelled()){
+				
+					if(id != 0){
+						
+						String message = Setting.blockvisiblebreak;
+						
+						message = message.replaceAll(".name.", ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN);
+						message = message.replaceAll(".vl.", id + "");
+
+						Utils.messageAdmins(message);
+						
+					}
+					return 4;
+				
+				}
+	    		
+	    	}
 			
 		}else{
 		

@@ -39,6 +39,10 @@ public class Utils {
     		
     		md = 9;
     		
+    	}else if(e.getType() == EntityType.ENDERMAN){
+    		
+    		md = 5;
+    		
     	}else{
     		
     		md = md + e.getEyeHeight();

@@ -15,6 +15,12 @@ public class CustomCheck {
 		
 	}
 	
+	public boolean checkFastEat(Player p){
+		
+		return false;
+		
+	}
+	
 	public boolean onShoot(Player p, float force){
 		
 		int ticks = (int) ((((System.currentTimeMillis() - startBow.get(p.getName())) * 20) / 1000) + 3);

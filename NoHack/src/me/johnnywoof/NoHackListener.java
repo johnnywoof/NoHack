@@ -45,6 +45,7 @@ import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerBedLeaveEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerLoginEvent.Result;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -318,6 +319,17 @@ public class NoHackListener implements Listener {
 		
 	}
 	
+	@EventHandler(ignoreCancelled = true)
+	public void onPlayerItemConsumeEvent(PlayerItemConsumeEvent event){
+		
+		if(cc.checkFastEat(event.getPlayer())){
+			
+			event.setCancelled(true);
+			
+		}
+		
+	}
+	
 	@EventHandler
 	public void onInteract(PlayerInteractEvent event){
 		
@@ -331,7 +343,17 @@ public class NoHackListener implements Listener {
 					
 					cc.onStartingShoot(event.getPlayer());
 					
-				}//TODO Add fasteat
+				}else if(m == Material.WOOD_SWORD || m == Material.STONE_SWORD || m == Material.GOLD_SWORD || m == Material.IRON_SWORD || m == Material.DIAMOND_SWORD){
+					
+					MoveData md = nh.vars.getMoveData(event.getPlayer().getName());
+					
+					md.blocktime = System.currentTimeMillis();
+					
+					nh.vars.setMoveData(event.getPlayer().getName(), md);
+					
+				}
+				
+				//TODO Add fasteat
 				
 			}
 			
