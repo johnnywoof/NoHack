@@ -64,7 +64,7 @@ public class NoHackListener implements Listener {
 	private CustomCheck cc;
 	
 	private final HashMap<String, Long> lastHealhed = new HashMap<String, Long>();
-	private final HashMap<String, Long> lastViolation = new HashMap<String, Long>();
+	private final HashMap<String, String> lastViolation = new HashMap<String, String>();
 	
 	public NoHackListener(NoHack nh){
 		
@@ -107,7 +107,7 @@ public class NoHackListener implements Listener {
 		
 	}
 	
-	@EventHandler(priority=EventPriority.HIGH, ignoreCancelled = true)
+	@EventHandler(priority=EventPriority.MONITOR, ignoreCancelled = true)//Better make sure it's not canceled!
 	public void onVelocity(PlayerVelocityEvent event){
 		
 		if(event.getVelocity().getX() != 0 || event.getVelocity().getY() != 0 || event.getVelocity().getZ() != 0){
@@ -155,14 +155,42 @@ public class NoHackListener implements Listener {
 		
 		//TODO Re-add this back to the }else{ thingy
 		
+		long diff = 0;
+		
+		CheckType lf = null;
+		
+		if(this.lastViolation.containsKey(event.getPlayer().getName())){
+			
+			String[] s = this.lastViolation.get(event.getPlayer().getName()).split(":");
+			
+			diff = System.currentTimeMillis() - Long.parseLong(s[1]);
+			
+			lf = CheckType.valueOf(s[0]);
+			
+		}
+		
+		if(event.getCheckType() != CheckType.VERTICAL_SPEED && event.getCheckType() != CheckType.AUTOSOUP){
+			
+			if(lf == null){
+				
+				event.setCancelled(true);
+				
+			}else{
+			
+				if(diff > 1000){
+					
+					//"Forgive" the player
+					event.setCancelled(true);
+					
+				}
+			
+			}
+			
+		}
+		
 		//Prevents abuse of checks to slow down server
 		if(event.getCheckType() == CheckType.FAST_INTERACT || event.getCheckType() == CheckType.SPEED_BREAK){
 		
-			long diff = 0;
-			if(this.lastViolation.containsKey(event.getPlayer().getName())){
-				diff = System.currentTimeMillis() - this.lastViolation.get(event.getPlayer().getName());
-			}
-			
 			if(diff <= 2000 && event.getNewLevel() > 35){
 				
 				event.getPlayer().kickPlayer(ChatColor.RED + "Detected illegal activity! Are you hacking?");
@@ -173,11 +201,7 @@ public class NoHackListener implements Listener {
 				
 			}
 			
-			this.lastViolation.put(event.getPlayer().getName(), System.currentTimeMillis());
-		
-		}
-		
-		if(event.getCheckType() == CheckType.AUTOSOUP){
+		}else if(event.getCheckType() == CheckType.AUTOSOUP){
 			
 			if(Setting.autoban){
 				
@@ -190,6 +214,8 @@ public class NoHackListener implements Listener {
 			}
 			
 		}
+		
+		this.lastViolation.put(event.getPlayer().getName(), event.getCheckType().toString() + ":" + System.currentTimeMillis());
 		
 	}
 	
@@ -681,6 +707,12 @@ public class NoHackListener implements Listener {
 	@EventHandler(priority=EventPriority.NORMAL, ignoreCancelled = true)
 	public void onMove(PlayerMoveEvent event){
 		
+		if(event.getPlayer().isInsideVehicle() || event.getPlayer().isDead() || (event.getFrom().getX() == event.getTo().getX() && event.getFrom().getY() == event.getTo().getY() && event.getFrom().getZ() == event.getTo().getZ())){
+			
+			return;
+			
+		}
+		
 		MoveData mdd = nh.vars.getMoveData(event.getPlayer().getName());
 		
 		if(mdd.lastloc == null){
@@ -689,9 +721,9 @@ public class NoHackListener implements Listener {
 			
 		}
 		
-		if((System.currentTimeMillis() - mdd.tptime) > 700){
+		if((System.currentTimeMillis() - mdd.tptime) > 1000){
 			
-			mdd.setAmount(mdd.getAmount() + 1);
+			/*mdd.setAmount(mdd.getAmount() + 1);
 			
 			if((System.currentTimeMillis() - mdd.getTimeStart()) >= 1000){
 				
@@ -743,13 +775,7 @@ public class NoHackListener implements Listener {
 				
 			}
 			
-			this.nh.vars.setMoveData(event.getPlayer().getName(), mdd);
-			
-		}
-		
-		if(event.getPlayer().isInsideVehicle() || (event.getFrom().getX() == event.getTo().getX() && event.getFrom().getY() == event.getTo().getY() && event.getFrom().getZ() == event.getTo().getZ())){
-			
-			return;
+			this.nh.vars.setMoveData(event.getPlayer().getName(), mdd);*/
 			
 		}
 		

@@ -66,6 +66,12 @@ public class InventoryClick extends Check{
 			
 		}
 		
+		if(ia == InventoryAction.NOTHING){//Who was the idiot that added this -_-
+			
+			return 0;
+			
+		}
+		
 		if(p.getGameMode() == GameMode.CREATIVE){
 			
 			if(inv.getType() == InventoryType.PLAYER || inv.getType() == InventoryType.CREATIVE){

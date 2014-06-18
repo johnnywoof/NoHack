@@ -69,13 +69,13 @@ debug-player: johnnywoof
 
 noswing-block-difference: 2500
 
-noswing-fight-difference: 60
+noswing-fight-difference: 100
 
-creative-attack-reach: 31
+creative-attack-reach: 31.5
 
-survival-attack-reach: 17.5
+survival-attack-reach: 18
 
-fight-attack-speed: 75
+fight-attack-speed: 60
 
 inventory-click-max-speed: 50
 

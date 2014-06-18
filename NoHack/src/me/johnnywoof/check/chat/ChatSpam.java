@@ -38,8 +38,6 @@ public class ChatSpam extends Check{
 		
 		boolean spam = this.isConstantSpam(p.getUniqueId());
 		
-		Bukkit.broadcastMessage(spam + "");
-		
 		if((diff <= 1500 && diff > 1000) || spam){
 			
 			p.sendMessage(ChatColor.YELLOW + "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*");
@@ -92,6 +90,12 @@ public class ChatSpam extends Check{
 	}
 	
 	private boolean isConstantSpam(UUID uuid){
+		
+		if(uuid != null){
+			
+			return false;
+			
+		}
 		
 		int ss = 0;
 		

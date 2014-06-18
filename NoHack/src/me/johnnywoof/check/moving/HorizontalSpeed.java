@@ -14,6 +14,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffectType;
 
 public class HorizontalSpeed extends Check{
 
@@ -284,6 +285,14 @@ public class HorizontalSpeed extends Check{
 		if(inwater && !p.getAllowFlight()){
 			
 			d = 0.0774;
+			
+		}
+		
+		if(p.hasPotionEffect(PotionEffectType.SPEED)){
+			
+			int level = Utils.getPotionEffectLevel(p, PotionEffectType.SPEED);
+			
+			d = (0.0812) * ((0.5 * level) + 1);
 			
 		}
 		
