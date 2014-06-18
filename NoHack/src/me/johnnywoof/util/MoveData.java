@@ -2,7 +2,7 @@ package me.johnnywoof.util;
 
 public class MoveData {
 
-	public long sneaktime, sprinttime, blocktime, lastmounting, velexpirey, velexpirex, tptime;
+	public long sneaktime, sprinttime, blocktime, lastmounting, velexpirex, velexpirey, tptime;
 	public double mda, yda;
 	public boolean wassneaking = false, wassprinting = false, wasblocking = false;
 	private long timestart;

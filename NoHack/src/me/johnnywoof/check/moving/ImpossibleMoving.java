@@ -37,6 +37,12 @@ public class ImpossibleMoving extends Check{
 				
 			}
 			
+			if((System.currentTimeMillis() - movedata.tptime) < 1000){
+				
+				return 0;
+				
+			}
+			
 			int id = this.vars.raiseViolationLevel(CheckType.IMPOSSIBLE, p);
 			
 			ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.IMPOSSIBLE, p);
