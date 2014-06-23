@@ -36,7 +36,6 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 import org.bukkit.event.entity.EntityShootBowEvent;
-import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -169,7 +168,7 @@ public class NoHackListener implements Listener {
 			
 		}
 		
-		if(event.getCheckType() != CheckType.VERTICAL_SPEED && event.getCheckType() != CheckType.AUTOSOUP){
+		if(event.getCheckType() != CheckType.FAST_EAT && event.getCheckType() != CheckType.VERTICAL_SPEED && event.getCheckType() != CheckType.AUTOSOUP){
 			
 			if(lf == null){
 				
@@ -350,7 +349,27 @@ public class NoHackListener implements Listener {
 		
 		if(cc.checkFastEat(event.getPlayer())){
 			
-			event.setCancelled(true);
+			int id = this.nh.vars.raiseViolationLevel(CheckType.FAST_EAT, event.getPlayer());
+			
+			ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.FAST_EAT, event.getPlayer());
+			
+			Bukkit.getServer().getPluginManager().callEvent(vte);
+			
+			if(!vte.isCancelled()){
+				
+				if(id != 0){
+					
+					String message = Setting.fasteatmes;
+					
+					message = message.replaceAll(".name.", ChatColor.YELLOW + "" + event.getPlayer().getName() + "" + ChatColor.GREEN);
+					message = message.replaceAll(".vl.", id + "");
+
+					Utils.messageAdmins(message);
+					
+				}
+				event.setCancelled(true);
+			
+			}
 			
 		}
 		
@@ -377,9 +396,11 @@ public class NoHackListener implements Listener {
 					
 					nh.vars.setMoveData(event.getPlayer().getName(), md);
 					
+				}else if(Utils.isFood(m)){
+					
+					this.cc.onStartEat(event.getPlayer());
+					
 				}
-				
-				//TODO Add fasteat
 				
 			}
 			
@@ -447,15 +468,6 @@ public class NoHackListener implements Listener {
 			}
 		
 		}
-		
-	}
-	
-	@EventHandler(priority=EventPriority.NORMAL, ignoreCancelled = true)
-	public void onFood(FoodLevelChangeEvent event){
-		
-		//TODO Remove this.....
-		event.setFoodLevel(20);
-		((Player) event.getEntity()).setSaturation(20);
 		
 	}
 	

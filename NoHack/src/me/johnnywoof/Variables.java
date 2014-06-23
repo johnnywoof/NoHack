@@ -52,6 +52,7 @@ public class Variables {
 		Setting.autoban = fc.getBoolean("autoban-players");
 		Setting.autobantime = fc.getInt("autoban-time");
 		Setting.autosoupmes = fc.getString("autosoup-message");
+		Setting.fasteatmes = fc.getString("fast-eat-message");
 		Setting.speedbreakmes = fc.getString("speed-break-message");
 		
 	}

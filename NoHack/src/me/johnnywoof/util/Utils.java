@@ -27,6 +27,17 @@ public class Utils {
     	return ((CraftWorld) player.getLocation().getWorld()).getHandle().a(Vec3D.a(player.getLocation().getX(), player.getLocation().getY() + player.getEyeHeight(), player.getLocation().getZ()), Vec3D.a(loc2.getX(), loc2.getY(), loc2.getZ())) == null;
     }
     
+    public static boolean isFood(Material m){
+    	
+    	return (m == Material.COOKED_BEEF || m == Material.COOKED_CHICKEN || m == Material.COOKED_FISH
+    			|| m == Material.GRILLED_PORK || m == Material.PORK || m == Material.MUSHROOM_SOUP
+    			|| m == Material.RAW_BEEF || m == Material.RAW_CHICKEN || m == Material.RAW_FISH
+    			|| m == Material.APPLE || m == Material.GOLDEN_APPLE || m == Material.MELON
+    			|| m == Material.COOKIE || m == Material.BREAD || m == Material.SPIDER_EYE
+    			|| m == Material.ROTTEN_FLESH || m == Material.POTATO_ITEM);
+    	
+    }
+    
     public static boolean canReallySeeEntity(Player p, LivingEntity e){
     	
     	BlockIterator bl = new BlockIterator(p, 7);

@@ -55,6 +55,8 @@ inventory-click-speed: .name. failed FastClick! Clicked a container too fast. VL
 #Everything else with messages
 noswing-message: .name. failed NoSwing! Did not swing arm. VL .vl.
 
+fast-eat-message: .name. failed Fast Eat! Ate a food item too fast. VL .vl.
+
 #####Everything else#####
 
 #If true, the player defined in "Debug-player" will get spammed with messages.

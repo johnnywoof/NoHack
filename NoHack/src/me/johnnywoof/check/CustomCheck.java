@@ -8,6 +8,7 @@ public class CustomCheck {
 
 	private final HashMap<String, Long> startBow = new HashMap<String, Long>();
 	private final HashMap<String, Long> lastShot = new HashMap<String, Long>();
+	private final HashMap<String, Long> startEat = new HashMap<String, Long>();
 	
 	public void onStartingShoot(Player p){
 		
@@ -15,7 +16,25 @@ public class CustomCheck {
 		
 	}
 	
+	public void onStartEat(Player p){
+		
+		this.startEat.put(p.getName(), System.currentTimeMillis());
+		
+	}
+	
 	public boolean checkFastEat(Player p){
+		
+		if(this.startEat.containsKey(p.getName())){
+			
+			long diff = (System.currentTimeMillis() - this.startEat.get(p.getName()));
+			
+			if(diff <= 1200){
+				
+				return true;
+				
+			}
+			
+		}
 		
 		return false;
 		
