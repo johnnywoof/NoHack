@@ -39,7 +39,7 @@ public class HorizontalSpeed extends Check{
 				
 			}
 			
-			if(md > this.getMaxHorizontal(p.isOnGround(), inwater, p, moved)){
+			if(md > this.getMaxHorizontal(p.isOnGround(), inwater, p, moved, ydis)){
 				
 				int id = this.vars.raiseViolationLevel(CheckType.HORIZONTAL_SPEED, p);
 				
@@ -48,6 +48,12 @@ public class HorizontalSpeed extends Check{
 				Bukkit.getServer().getPluginManager().callEvent(vte);
 				
 				if(!vte.isCancelled()){
+					
+					if(Setting.debug){
+						
+						Bukkit.broadcastMessage("Speed: " + md);
+						
+					}
 				
 					if(id != 0){
 						
@@ -208,7 +214,8 @@ public class HorizontalSpeed extends Check{
 		
 	}
 	
-	private double getMaxHorizontal(boolean onground, boolean inwater, Player p, MoveData md){
+	//TODO Make this more accurate
+	private double getMaxHorizontal(boolean onground, boolean inwater, Player p, MoveData md, double ydis){
 		
 		double d = 0;
 		
@@ -244,7 +251,7 @@ public class HorizontalSpeed extends Check{
 			
 			if(csprint){
 				
-				d = 0.788;
+				d = 0.79;
 				
 			}else if(csneak){
 				
@@ -276,7 +283,15 @@ public class HorizontalSpeed extends Check{
 				
 			}else{
 				
-				d = 0.049;
+				if(onground){
+				
+					d = 0.05;
+				
+				}else{
+					
+					d = 0.81;
+					
+				}
 			
 			}
 		
