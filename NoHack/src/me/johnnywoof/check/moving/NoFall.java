@@ -33,7 +33,7 @@ public class NoFall extends Check{
 			
 		}
 		
-		//Prevent bypassing fly checks horizontally
+		//Prevent bypassing fly checks when moving in an horiztonal motion
 		if(p.isOnGround() && !inwater){
 			
 			if(to.getBlockX() != from.getBlockX() || to.getBlockZ() != from.getBlockZ()){
