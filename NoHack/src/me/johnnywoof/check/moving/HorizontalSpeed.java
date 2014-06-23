@@ -238,7 +238,7 @@ public class HorizontalSpeed extends Check{
 		
 		if(p.isFlying()){
 		
-			d = 0.305;
+			d = 0.310;
 			
 		}else{
 			
@@ -250,7 +250,7 @@ public class HorizontalSpeed extends Check{
 				
 				if(p.getAllowFlight()){
 					
-					d = 0.305;
+					d = 0.310;
 					
 				}else{
 					
@@ -260,11 +260,11 @@ public class HorizontalSpeed extends Check{
 					
 					}else if(onground){
 						
-						d = 0.467;
+						d = 0.049;
 						
 					}else if(!onground && p.isSneaking()){
 						
-						d = 0.467;
+						d = 0.049;
 						
 					}
 				
@@ -276,7 +276,7 @@ public class HorizontalSpeed extends Check{
 				
 			}else{
 				
-				d = 0.467;
+				d = 0.049;
 			
 			}
 		
@@ -292,11 +292,13 @@ public class HorizontalSpeed extends Check{
 			
 			int level = Utils.getPotionEffectLevel(p, PotionEffectType.SPEED);
 			
-			d = (0.0812) * ((0.5 * level) + 1);
+			if(level > 0){
+			
+				d = (0.0812) * ((0.5 * level) + 1);
+			
+			}
 			
 		}
-		
-		d = d + Math.abs((p.getVelocity().getX() + p.getVelocity().getZ()) * 7.5);
 		
 		return d;
 		

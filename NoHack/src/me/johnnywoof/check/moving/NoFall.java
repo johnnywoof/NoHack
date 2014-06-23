@@ -27,9 +27,66 @@ public class NoFall extends Check{
 	public int runMoveCheck(Player p, Location to, Location from, double yd, double md, MoveData movedata, boolean up, boolean inwater, boolean onladder, XYZ lg){
 
 		//If flying, ignore this check
-		if(p.isFlying()){
+		if(p.isFlying() && p.getAllowFlight()){
 			
 			return 0;
+			
+		}
+		
+		//Prevent bypassing fly checks horizontally
+		if(p.isOnGround() && !inwater){
+			
+			if(to.getBlockX() != from.getBlockX() || to.getBlockZ() != from.getBlockZ()){
+				
+				int by = to.getBlockY();
+				
+				int oy = by;
+				
+				while(true){
+					
+					by--;
+					
+					if(to.getBlock().getRelative(0, ((oy - by) * -1), 0).getType().isSolid()){
+						
+						break;
+						
+					}
+					
+					if(by < 0){
+						
+						break;//Safe check for flying over bedrock...which should be impossible
+						
+					}
+					
+				}
+				
+				if((oy - by) > 2){
+					
+					int id = this.vars.raiseViolationLevel(CheckType.FLY, p);
+					
+					ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.FLY, p);
+						
+					Bukkit.getServer().getPluginManager().callEvent(vte);
+						
+					if(!vte.isCancelled()){
+						
+						if(id != 0){
+								
+							String message = Setting.flymes;
+								
+							message = message.replaceAll(".name.", ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN);
+							message = message.replaceAll(".vl.", id + "");
+
+							Utils.messageAdmins(message);
+								
+						}
+						return 1;
+						
+					}
+					
+				}
+				
+			}
 			
 		}
 		

@@ -122,9 +122,9 @@ public class NoHackListener implements Listener {
 				
 			md.velexpirey = (long) (System.currentTimeMillis() + (md.yda * 51) * 2);
 			
-			md.velexpirex = (long) (System.currentTimeMillis() + ((((md.mda == 0) ? 1 : md.mda) * (md.yda * 4)) * 140) * 6);
+			md.velexpirex = (long) (System.currentTimeMillis() + ((((md.mda == 0) ? 1 : md.mda) * (md.yda * 4)) * 140) * 10);
 			
-			md.mda = (vx + vz) * 40;
+			md.mda = (vx + vz) * 50;
 			
 			nh.vars.setMoveData(event.getPlayer().getName(), md);
 		
