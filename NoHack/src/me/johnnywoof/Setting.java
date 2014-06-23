@@ -32,6 +32,9 @@ public class Setting {
 	public static int maxpacket = 14;
 	public static boolean debug = true;
 	public static boolean autoban = true;
+	public static int killmode = 1;
+	public static boolean useplib = true;
+	public static boolean killban = false;
 	public static int autobantime = 60;
 	
 }

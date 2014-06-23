@@ -24,12 +24,27 @@ public class XYZ {
 		
 	}
 	
+	public double getDistanceSqrd(XYZ loc){
+		
+		double a1 = (this.x - loc.x), a2 = (this.z - loc.z);
+		
+		return ((a1 * (a1)) + (a2 * a2));
+		
+	}
+	
 	public XYZ(Location loc){
 		
 		this.world = loc.getWorld().getName();
 		this.x = loc.getX();
 		this.y = loc.getY();
 		this.z = loc.getZ();
+		
+	}
+	
+	@Override
+	public String toString(){
+		
+		return "[" + this.world + ", " + Math.floor(this.x) + ", " + Math.floor(this.y) + ", " + Math.floor(this.z) + "]";
 		
 	}
 	

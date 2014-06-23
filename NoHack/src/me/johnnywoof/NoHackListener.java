@@ -126,6 +126,8 @@ public class NoHackListener implements Listener {
 			md.mda = (vx + vz) * 50;
 			
 			nh.vars.setMoveData(event.getPlayer().getName(), md);
+			
+			//this.cc.doAntiKnockBackCheck(this.nh, event);
 		
 		}
 		

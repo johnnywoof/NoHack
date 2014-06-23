@@ -57,6 +57,26 @@ noswing-message: .name. failed NoSwing! Did not swing arm. VL .vl.
 
 fast-eat-message: .name. failed Fast Eat! Ate a food item too fast. VL .vl.
 
+#####ProtocolLib Config#####
+
+#If true, NoHack will use ProtocolLib, if installed, for more accurate results
+use-protocollib: true
+
+check-killaura: true
+
+#//TODO FIX SPELLING!
+#1 means pure randomness, however players might get annoyed
+#2 means the npc will spawn in a location where only hacked clients can detect
+#however once they "evovled" the mode may become obsolete
+killaura-mode: 2
+
+#Should NPCs be invisible? Keep in mind some hacked clients do not attack invisible players
+killaura-invisible: false
+
+#What should be done when it detects a possible player using forcefield?
+#Options: notify or ban
+killaura-detect: notify
+
 #####Everything else#####
 
 #If true, the player defined in "Debug-player" will get spammed with messages.

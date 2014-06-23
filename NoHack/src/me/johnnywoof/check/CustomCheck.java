@@ -1,8 +1,15 @@
 package me.johnnywoof.check;
 
 import java.util.HashMap;
+import java.util.UUID;
 
+import me.johnnywoof.NoHack;
+import me.johnnywoof.Setting;
+import me.johnnywoof.util.XYZ;
+
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerVelocityEvent;
 
 public class CustomCheck {
 
@@ -13,6 +20,42 @@ public class CustomCheck {
 	public void onStartingShoot(Player p){
 		
 		startBow.put(p.getName(), System.currentTimeMillis());
+		
+	}
+	
+	public void doAntiKnockBackCheck(NoHack nh, PlayerVelocityEvent event){
+		
+		final UUID uuid = event.getPlayer().getUniqueId();
+		
+		final XYZ old = new XYZ(event.getPlayer().getLocation());
+		
+		final XYZ expected = new XYZ(event.getPlayer().getLocation());
+		
+		nh.getServer().getScheduler().runTaskLater(nh, new Runnable(){
+
+			@Override
+			public void run() {
+				
+				Player p = Bukkit.getPlayer(uuid);
+				
+				if(p != null){
+				
+					if(Setting.debug){
+	
+						p.sendMessage("Old Location: " + old.toString());
+						p.sendMessage("New Location: " + new XYZ(p.getLocation()).toString());
+						p.sendMessage("Expected Location: " + expected.toString());
+						p.sendMessage("Distance (NEW): " + old.getDistanceSqrd(new XYZ(p.getLocation())));
+					
+					}
+				
+				}
+				
+				p = null;
+				
+			}
+			
+		}, 10);
 		
 	}
 	

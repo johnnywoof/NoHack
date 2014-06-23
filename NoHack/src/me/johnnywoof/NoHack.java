@@ -22,6 +22,7 @@ import me.johnnywoof.check.moving.ImpossibleMoving;
 import me.johnnywoof.check.moving.NoFall;
 import me.johnnywoof.check.moving.SurvivalFly;
 import me.johnnywoof.check.moving.VerticalSpeed;
+import me.johnnywoof.protocollib.HackChecker;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -53,10 +54,10 @@ public class NoHack extends JavaPlugin{
 		if(!ver.contains("1.7.9") && !ver.contains("1.7.8") && !ver.contains("1.7.7") && !ver.contains("1.7.6")){
 			
 			this.getLogger().severe("-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*");
-			this.getLogger().severe("[NoHack] THIS PLUGIN IS DESIGNED FOR");
-			this.getLogger().severe("[NoHack] 1.7.6, 1.7.7, 1.7.8, AND 1.7.9");
-			this.getLogger().severe("[NoHack] DETECTED VERSION: " + ver);
-			this.getLogger().severe("[NoHack] NOHACK WILL TRY TO RUN, BUT MAY NOT WORK PROPERLY");
+			this.getLogger().severe("THIS PLUGIN IS DESIGNED FOR");
+			this.getLogger().severe("1.7.6 - 1.7.x");
+			this.getLogger().severe("DETECTED VERSION: " + ver);
+			this.getLogger().severe("NOHACK WILL TRY TO RUN, BUT MAY NOT WORK PROPERLY");
 			this.getLogger().severe("-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*");
 			
 		}
@@ -100,6 +101,14 @@ public class NoHack extends JavaPlugin{
 			this.getLogger().warning("[NoHack] Please set it to false for best preformance!");
 			this.getLogger().warning("-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*");
 		
+		}
+		
+		if(this.getServer().getPluginManager().getPlugin("ProtocolLib") != null){
+			
+			this.getLogger().info("Found ProtocolLib! Using it for auto banning system!");
+			
+			new HackChecker(this);
+			
 		}
 		
 		this.getLogger().info("[NoHack] NoHack has been enabled!");

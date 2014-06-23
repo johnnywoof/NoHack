@@ -8,6 +8,7 @@ import me.johnnywoof.check.Violation;
 import me.johnnywoof.util.MoveData;
 import me.johnnywoof.util.XYZ;
 
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
@@ -21,6 +22,8 @@ public class Variables {
 	
 	//Last location of being on the ground
 	public final HashMap<String, XYZ> lastGround = new HashMap<String, XYZ>();
+	
+	public boolean usingprolib = false;
 	
 	public void reloadConfig(FileConfiguration fc){
 		
@@ -54,6 +57,15 @@ public class Variables {
 		Setting.autosoupmes = fc.getString("autosoup-message");
 		Setting.fasteatmes = fc.getString("fast-eat-message");
 		Setting.speedbreakmes = fc.getString("speed-break-message");
+		Setting.useplib = fc.getBoolean("use-protocollib");
+		Setting.killmode = fc.getInt("killaura-mode");
+		Setting.killban = fc.getBoolean("killaura-detect");
+		
+		if(Setting.useplib){
+			
+			this.usingprolib = Bukkit.getPluginManager().getPlugin("ProtocolLib") != null;
+			
+		}
 		
 	}
 	

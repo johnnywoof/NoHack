@@ -1,6 +1,7 @@
 name: NoHack
 version: 1.0
 main: me.johnnywoof.NoHack
+softdepend: [ProtocolLib]
 commands:
     nohack:
         description: NoHack command

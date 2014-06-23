@@ -18,6 +18,7 @@ public class FightKnockBack extends Check{
 	@Override
 	public int runAttackCheck(Player p, LivingEntity e, long ls){
 		
+		//Start dealing more knockback than it should
 		if(p.getItemInHand() != null){
 			
 			if(p.getItemInHand().containsEnchantment(Enchantment.KNOCKBACK)){
