@@ -71,11 +71,16 @@ check-killaura: true
 killaura-mode: 2
 
 #Should NPCs be invisible? Keep in mind some hacked clients do not attack invisible players
-killaura-invisible: false
+#Options: false, true, and random meaning true & false at random times
+killaura-invisible: random
 
-#What should be done when it detects a possible player using forcefield?
-#Options: notify or ban
-killaura-detect: notify
+#What commands should be done when it detects a possible player using forcefield/kill aura?
+#Note: when you type the text "notify" as a command it will alert anyone with the
+#nohack.notification.killaura permission!
+killaura-detect:
+- notify
+- ban %name Hacking, using kill aura
+- say %name has been banned for hacking!
 
 #####Everything else#####
 

@@ -59,7 +59,7 @@ public class Variables {
 		Setting.speedbreakmes = fc.getString("speed-break-message");
 		Setting.useplib = fc.getBoolean("use-protocollib");
 		Setting.killmode = fc.getInt("killaura-mode");
-		Setting.killban = fc.getBoolean("killaura-detect");
+		Setting.killcmds = fc.getStringList("killaura-detect");
 		
 		if(Setting.useplib){
 			

@@ -22,6 +22,8 @@ public class FastBreak extends Check{
 
 	private final HashMap<String, Long> lastBreak = new HashMap<String, Long>();
 	
+	long s = Long.MAX_VALUE;
+	
 	public FastBreak(Variables vars, CheckType ct) {
 		super(vars, ct, DetectionType.BLOCK);
 	}
@@ -33,9 +35,9 @@ public class FastBreak extends Check{
 			return 0;
 		}
 		
-		long diff = (System.currentTimeMillis() - this.getLastBreak(p.getName()));
+		long diff = (System.nanoTime() - this.getLastBreak(p.getName()));
 		
-		this.lastBreak.put(p.getName(), System.currentTimeMillis());
+		this.lastBreak.put(p.getName(), System.nanoTime());
 		
 		//Start FastBreak
 		
@@ -55,7 +57,7 @@ public class FastBreak extends Check{
 			
 			if(true){
 				
-				if(diff < (p.getGameMode() == GameMode.CREATIVE ? 95 : 45)){
+				if(diff < 360000){
 					
 					if(Setting.debug){
 						

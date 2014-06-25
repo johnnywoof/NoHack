@@ -1,5 +1,7 @@
 package me.johnnywoof;
 
+import java.util.List;
+
 public class Setting {
 
 	public static String nofallmessage = "";
@@ -33,8 +35,10 @@ public class Setting {
 	public static boolean debug = true;
 	public static boolean autoban = true;
 	public static int killmode = 1;
+	/**0 = true, 1 = false, and 2 = random*/
+	public static int invismode = 2;
 	public static boolean useplib = true;
-	public static boolean killban = false;
+	public static List<String> killcmds = null;
 	public static int autobantime = 60;
 	
 }

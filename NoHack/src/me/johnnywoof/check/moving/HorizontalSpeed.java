@@ -34,9 +34,9 @@ public class HorizontalSpeed extends Check{
 		
 		double ydis = Math.abs(lg.y - to.getY());
 		
-		boolean wg = movedata.wasonground;
+		if(xs > 0 || zs > 0){
 		
-		if(xs != 0){
+			boolean wg = movedata.wasonground;
 			
 			double mxs = Double.MAX_VALUE;
 			
@@ -64,9 +64,21 @@ public class HorizontalSpeed extends Check{
 				
 			}
 			
-			if(p.isFlying()){
+			boolean cfly = p.isFlying();
+			
+			if(!cfly){
 				
-				mxs = 0.544202;
+				if((System.currentTimeMillis() - movedata.flytime) <= 2000){
+					
+					cfly = true;
+					
+				}
+				
+			}
+			
+			if(cfly){
+				
+				mxs = 0.5443;
 				
 			}else if(csneak){
 				
@@ -110,9 +122,17 @@ public class HorizontalSpeed extends Check{
 					
 				}
 				
-			}else if(inwater && !p.isFlying()){
+			}else if(inwater){
 				
-				mxs = 0.0774;
+				if((System.currentTimeMillis() - movedata.groundtime) <= 1200){
+					
+					mxs = 0.3;
+					
+				}else{
+				
+					mxs = 0.13;
+				
+				}
 				
 			}else{
 				
@@ -140,44 +160,38 @@ public class HorizontalSpeed extends Check{
 				
 			}
 			
-			if(xs > mxs){
-				
+			if(xs > mxs || zs > mxs){
+					
 				int id = this.vars.raiseViolationLevel(CheckType.HORIZONTAL_SPEED, p);
 				
 				ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.HORIZONTAL_SPEED, p);
-				
-				Bukkit.getServer().getPluginManager().callEvent(vte);
-				
-				if(!vte.isCancelled()){
 					
+				Bukkit.getServer().getPluginManager().callEvent(vte);
+					
+				if(!vte.isCancelled()){
+						
 					if(Setting.debug){
-						
+							
 						p.sendMessage("Speed: " + xs + "; Max: " + mxs + ";G: " + p.isOnGround() + ";WG: " + movedata.wasonground + ";GT: " + (System.currentTimeMillis() - movedata.groundtime));
-						
+							
 					}
-				
+					
 					if(id != 0){
-						
+							
 						String message = Setting.horizontalspeedmes;
-						
+							
 						message = message.replaceAll(".name.", ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN);
 						message = message.replaceAll(".vl.", id + "");
-
+	
 						Utils.messageAdmins(message);
-						
+							
 					}
 					return 1;
-				
+					
 				}
-				
+					
 			}
-			
-		}
 		
-		if(zs != 0){
-			
-			
-			
 		}
 		
 		if(!p.isOnGround() && !p.getAllowFlight()){

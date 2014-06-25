@@ -10,7 +10,6 @@ import java.util.UUID;
 import me.johnnywoof.NoHack;
 import me.johnnywoof.Setting;
 
-import org.bukkit.BanList;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -92,7 +91,19 @@ public class HackChecker {
 						
 					}
 					
-					pendingAttacks.put(p.getEntityId(), spawnNpc(false, p, l));
+					boolean invis = true;
+					
+					if(Setting.invismode == 2){
+						
+						invis = r.nextBoolean();
+						
+					}else if(Setting.invismode == 1){
+						
+						invis = false;
+						
+					}
+					
+					pendingAttacks.put(p.getEntityId(), spawnNpc(invis, p, l));
 					
 				}
 				
@@ -120,21 +131,23 @@ public class HackChecker {
 	                        		
 	                        		if(en.getValue() == packet.getTargetID() && en.getKey() == event.getPlayer().getEntityId()){
 	                        			
-	                        			if(Setting.killban){
+	                        			for(String s : Setting.killcmds){
 	                        				
-	                        				 Bukkit.getBanList(BanList.Type.NAME).addBan(event.getPlayer().getName(), "AutoBanned - Using KillAura", null, "Server");
-	                        				
-	                        				 event.getPlayer().kickPlayer("AutoBanned - Using KillAura");
-	                        				 
-	                        			}else{
-	                        				
-	                        				for(Player o : Bukkit.getOnlinePlayers()){
+	                        				if(s.equals("notify")){
 	                        					
-	                        					if(o.isOp() || o.hasPermission("nohack.notification.killaura")){
-	                        						
-	                        						o.sendMessage(ChatColor.RED + "[NoHack] " + ChatColor.LIGHT_PURPLE + "" + event.getPlayer().getName() + " could be using kill aura!");
-	                        						
-	                        					}
+	                        					for(Player o : Bukkit.getOnlinePlayers()){
+		                        					
+		                        					if(o.isOp() || o.hasPermission("nohack.notification.killaura")){
+		                        						
+		                        						o.sendMessage(ChatColor.RED + "[NoHack] " + ChatColor.LIGHT_PURPLE + "" + event.getPlayer().getName() + " could be using kill aura!");
+		                        						
+		                        					}
+		                        					
+		                        				}
+	                        					
+	                        				}else{
+	                        					
+	                        					doCommand(s.replaceAll("%name", event.getPlayer().getName()));
 	                        					
 	                        				}
 	                        				
@@ -158,6 +171,21 @@ public class HackChecker {
                     }
 
                 });
+		
+	}
+	
+	public void doCommand(final String s){//Make sure it's sync with main thread
+		
+		nh.getServer().getScheduler().runTask(nh, new Runnable(){
+
+			@Override
+			public void run() {
+				
+				Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), s);
+				
+			}
+			
+		});
 		
 	}
 	
@@ -219,6 +247,7 @@ public class HackChecker {
 		 WrapperPlayServerNamedEntitySpawn wrapper = new WrapperPlayServerNamedEntitySpawn();
 	     wrapper.setEntityID(r.nextInt(20000));
 	     wrapper.setPosition(loc.toVector());
+	     wrapper.setCurrentItem((short) 0);
 	     wrapper.setPlayerUUID(UUID.randomUUID().toString());
 	     OfflinePlayer[] ps = Bukkit.getOfflinePlayers();
          wrapper.setPlayerName(ps[new Random().nextInt(ps.length - 1)].getName());
