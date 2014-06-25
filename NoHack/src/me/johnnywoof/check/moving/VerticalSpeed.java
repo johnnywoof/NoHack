@@ -24,7 +24,7 @@ public class VerticalSpeed extends Check{
 	}
 	
 	@Override
-	public int runMoveCheck(Player p, Location to, Location from, double yd, double md, MoveData movedata, boolean up, boolean inwater, boolean onladder, XYZ lg){
+	public int runMoveCheck(Player p, Location to, Location from, double yd, double xs, double zs, MoveData movedata, boolean up, boolean inwater, boolean onladder, XYZ lg){
 		
 		if(yd != 0){//Actually move on the y axis
 			

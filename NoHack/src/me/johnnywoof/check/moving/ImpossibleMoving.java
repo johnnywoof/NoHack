@@ -22,7 +22,7 @@ public class ImpossibleMoving extends Check{
 	}
 
 	@Override
-	public int runMoveCheck(Player p, Location to, Location from, double yd, double md, MoveData movedata, boolean up, boolean inwater, boolean onladder, XYZ lg){
+	public int runMoveCheck(Player p, Location to, Location from, double yd, double xs, double zs, MoveData movedata, boolean up, boolean inwater, boolean onladder, XYZ lg){
 		
 		//Prevents bypass of packet sneak and enforcement of blocking
 		if((p.isSneaking() || p.isBlocking()) && p.isSprinting()){

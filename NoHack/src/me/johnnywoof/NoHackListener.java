@@ -50,6 +50,7 @@ import org.bukkit.event.player.PlayerLoginEvent.Result;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
+import org.bukkit.event.player.PlayerToggleFlightEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.event.player.PlayerToggleSprintEvent;
 import org.bukkit.event.player.PlayerVelocityEvent;
@@ -268,6 +269,19 @@ public class NoHackListener implements Listener {
 		md.sprinttime = System.currentTimeMillis();
 		
 		md.wassprinting = !event.isSprinting();
+		
+		nh.vars.setMoveData(event.getPlayer().getName(), md);
+		
+	}
+	
+	@EventHandler(ignoreCancelled = true)
+	public void onSprint(PlayerToggleFlightEvent event){
+		
+		MoveData md = nh.vars.getMoveData(event.getPlayer().getName());
+		
+		md.flytime = System.currentTimeMillis();
+		
+		md.wasflying = !event.isFlying();
 		
 		nh.vars.setMoveData(event.getPlayer().getName(), md);
 		
@@ -718,6 +732,7 @@ public class NoHackListener implements Listener {
 		
 	}
 	
+	@SuppressWarnings("deprecation")
 	@EventHandler(priority=EventPriority.NORMAL, ignoreCancelled = true)
 	public void onMove(PlayerMoveEvent event){
 		
@@ -828,7 +843,9 @@ public class NoHackListener implements Listener {
 			
 		}
 		
-		double md = Utils.getXZDistance(event.getFrom().getX(), event.getTo().getX(), event.getFrom().getZ(), event.getTo().getZ());//Horizontal speed
+		double xs = Math.abs(event.getTo().getX() - event.getFrom().getX());//Horizontal xspeed
+		double zs = Math.abs(event.getTo().getZ() - event.getFrom().getZ());//Horizontal zspeed
+		
 		boolean inwater = ((CraftPlayer) event.getPlayer()).getHandle().inWater;
 		boolean onladder = ((CraftPlayer) event.getPlayer()).getHandle().h_();//Near ladder? NMS ftw!
 		
@@ -838,7 +855,7 @@ public class NoHackListener implements Listener {
 			
 			if(c.getDetectType() == DetectionType.MOVING){
 				
-				id = c.runMoveCheck(event.getPlayer(), event.getTo(), event.getFrom(), yd, md, mdd, up, inwater, onladder, lg);
+				id = c.runMoveCheck(event.getPlayer(), event.getTo(), event.getFrom(), yd, xs, zs, mdd, up, inwater, onladder, lg);
 				
 				if(id > 0){
 					
@@ -902,6 +919,16 @@ public class NoHackListener implements Listener {
 					}
 				
 				}
+				
+			}
+			
+		}else{
+			
+			if(mdd.wasonground != event.getPlayer().isOnGround()){
+				
+				mdd.wasonground = event.getPlayer().isOnGround();
+				mdd.groundtime = System.currentTimeMillis();
+				this.nh.vars.setMoveData(event.getPlayer().getName(), mdd);
 				
 			}
 			

@@ -24,22 +24,123 @@ public class HorizontalSpeed extends Check{
 	
 	@SuppressWarnings("deprecation")
 	@Override
-	public int runMoveCheck(Player p, Location to, Location from, double yd, double md, MoveData movedata, boolean up, boolean inwater, boolean onladder, XYZ lg){
+	public int runMoveCheck(Player p, Location to, Location from, double yd, double xs, double zs, MoveData movedata, boolean up, boolean inwater, boolean onladder, XYZ lg){
+		
+		if((System.currentTimeMillis() - movedata.lastmounting) <= 200){
+			
+			return 0;
+			
+		}
 		
 		double ydis = Math.abs(lg.y - to.getY());
 		
-		if(md != 0){
+		boolean wg = movedata.wasonground;
+		
+		if(xs != 0){
 			
-			MoveData moved = this.vars.getMoveData(p.getName());
+			double mxs = Double.MAX_VALUE;
 			
-			if((System.currentTimeMillis() - moved.lastmounting) <= 200){
+			boolean csneak = p.isSneaking();
+			
+			if(!csneak){
 				
-				moved = null;
-				return 0;
+				if((System.currentTimeMillis() - movedata.sneaktime) <= 1000){
+					
+					csneak = true;
+					
+				}
 				
 			}
 			
-			if(md > this.getMaxHorizontal(p.isOnGround(), inwater, p, moved, ydis)){
+			boolean csprint = p.isSprinting();
+			
+			if(!csprint){
+				
+				if((System.currentTimeMillis() - movedata.sprinttime) <= 1000){
+					
+					csprint = true;
+					
+				}
+				
+			}
+			
+			if(p.isFlying()){
+				
+				mxs = 0.544202;
+				
+			}else if(csneak){
+				
+				//Onground: 0.065, not: 0.0805
+				
+				if(!wg && p.isOnGround()){
+					
+					mxs = 0.065;
+					
+				}else{
+					
+					mxs = 0.0805;
+					
+				}
+				
+			}else if(csprint){
+				
+				if(!wg && p.isOnGround()){
+					
+					mxs = 0.613;
+					
+				}else if(wg && !p.isOnGround()){
+					
+					mxs = 0.4;
+					
+				}else if(!wg && !p.isOnGround()){
+					
+					mxs = 0.4;
+					
+				}else{
+					
+					if((System.currentTimeMillis() - movedata.groundtime) <= 600){
+						
+						mxs = 0.55;
+						
+					}else{
+					
+						mxs = 0.353;
+					
+					}
+					
+				}
+				
+			}else if(inwater && !p.isFlying()){
+				
+				mxs = 0.0774;
+				
+			}else{
+				
+				if(!wg && p.isOnGround()){
+					
+					mxs = 0.283;
+					
+				}else{
+				
+					mxs = 0.24;
+				
+				}
+				
+			}
+			
+			if(p.hasPotionEffect(PotionEffectType.SPEED)){
+				
+				int level = Utils.getPotionEffectLevel(p, PotionEffectType.SPEED);
+				
+				if(level > 0){
+				
+					mxs = (0.0812) * ((0.5 * level) + 1);
+				
+				}
+				
+			}
+			
+			if(xs > mxs){
 				
 				int id = this.vars.raiseViolationLevel(CheckType.HORIZONTAL_SPEED, p);
 				
@@ -51,7 +152,7 @@ public class HorizontalSpeed extends Check{
 					
 					if(Setting.debug){
 						
-						Bukkit.broadcastMessage("Speed: " + md);
+						p.sendMessage("Speed: " + xs + "; Max: " + mxs + ";G: " + p.isOnGround() + ";WG: " + movedata.wasonground + ";GT: " + (System.currentTimeMillis() - movedata.groundtime));
 						
 					}
 				
@@ -69,43 +170,47 @@ public class HorizontalSpeed extends Check{
 				
 				}
 				
-			}else{
+			}
+			
+		}
+		
+		if(zs != 0){
+			
+			
+			
+		}
+		
+		if(!p.isOnGround() && !p.getAllowFlight()){
+			
+			double mdis = this.getXZDistance(to.getX(), lg.x, to.getZ(), lg.z);
+			
+			if(mdis > this.getMaxMD(inwater, p.isOnGround(), p, ydis, movedata)){
 				
-				if(!p.isOnGround() && !p.getAllowFlight()){
-					
-					double mdis = this.getXZDistance(to.getX(), lg.x, to.getZ(), lg.z);
-					
-					if(mdis > this.getMaxMD(inwater, p.isOnGround(), p, ydis, moved)){
+				int id = this.vars.raiseViolationLevel(CheckType.GLIDE, p);
+				
+				ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.GLIDE, p);
+				
+				Bukkit.getServer().getPluginManager().callEvent(vte);
+				
+				if(!vte.isCancelled()){
+				
+					if(id != 0){
 						
-						int id = this.vars.raiseViolationLevel(CheckType.GLIDE, p);
+						String message = Setting.glidemes;
 						
-						ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.GLIDE, p);
-						
-						Bukkit.getServer().getPluginManager().callEvent(vte);
-						
-						if(!vte.isCancelled()){
-						
-							if(id != 0){
-								
-								String message = Setting.glidemes;
-								
-								message = message.replaceAll(".name.", ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN);
-								message = message.replaceAll(".vl.", id + "");
+						message = message.replaceAll(".name.", ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN);
+						message = message.replaceAll(".vl.", id + "");
 
-								Utils.messageAdmins(message);
-								
-							}
-							
-							return 1;
-						
-						}
+						Utils.messageAdmins(message);
 						
 					}
+					
+					return 1;
 				
 				}
 				
 			}
-			
+		
 		}
 		
 		return 0;
@@ -211,111 +316,6 @@ public class HorizontalSpeed extends Check{
 		double a1 = (x2 - x1), a2 = (z2 - z1);
 		
 		return ((a1 * (a1)) + (a2 * a2));
-		
-	}
-	
-	//TODO Make this more accurate
-	private double getMaxHorizontal(boolean onground, boolean inwater, Player p, MoveData md, double ydis){
-		
-		double d = 0;
-		
-		boolean csneak = p.isSneaking();
-		
-		if(!csneak){
-			
-			if((System.currentTimeMillis() - md.sneaktime) <= 1000){
-				
-				csneak = true;
-				
-			}
-			
-		}
-		
-		boolean csprint = p.isSprinting();
-		
-		if(!csprint){
-			
-			if((System.currentTimeMillis() - md.sprinttime) <= 1000){
-				
-				csprint = true;
-				
-			}
-			
-		}
-		
-		if(p.isFlying()){
-		
-			d = 0.310;
-			
-		}else{
-			
-			if(csprint){
-				
-				d = 0.79;
-				
-			}else if(csneak){
-				
-				if(p.getAllowFlight()){
-					
-					d = 0.310;
-					
-				}else{
-					
-					if(onground && p.isSneaking()){
-				
-						d = 0.025;
-					
-					}else if(onground){
-						
-						d = 0.049;
-						
-					}else if(!onground && p.isSneaking()){
-						
-						d = 0.049;
-						
-					}
-				
-				}
-				
-			}else if(p.isBlocking()){
-				
-				d = 0.0205;
-				
-			}else{
-				
-				if(onground){
-				
-					d = 0.05;
-				
-				}else{
-					
-					d = 0.81;
-					
-				}
-			
-			}
-		
-		}
-		
-		if(inwater && !p.getAllowFlight()){
-			
-			d = 0.0774;
-			
-		}
-		
-		if(p.hasPotionEffect(PotionEffectType.SPEED)){
-			
-			int level = Utils.getPotionEffectLevel(p, PotionEffectType.SPEED);
-			
-			if(level > 0){
-			
-				d = (0.0812) * ((0.5 * level) + 1);
-			
-			}
-			
-		}
-		
-		return d;
 		
 	}
 	

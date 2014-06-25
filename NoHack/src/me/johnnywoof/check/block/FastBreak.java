@@ -37,6 +37,16 @@ public class FastBreak extends Check{
 		
 		this.lastBreak.put(p.getName(), System.currentTimeMillis());
 		
+		//Start FastBreak
+		
+		if(!Setting.useplib){
+			
+			//TODO Add fastbreak check for non-protocollib
+			
+		}
+		
+		//End FastBreak
+		
 		//Start better block visible check
 		
 		//TODO Account for blocks that can be broken instantly

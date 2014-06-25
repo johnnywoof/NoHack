@@ -24,17 +24,17 @@ public class NoFall extends Check{
 	
 	@SuppressWarnings("deprecation")
 	@Override
-	public int runMoveCheck(Player p, Location to, Location from, double yd, double md, MoveData movedata, boolean up, boolean inwater, boolean onladder, XYZ lg){
+	public int runMoveCheck(Player p, Location to, Location from, double yd, double xs, double zs, MoveData movedata, boolean up, boolean inwater, boolean onladder, XYZ lg){
 
 		//If flying, ignore this check
-		if(p.isFlying() && p.getAllowFlight()){
+		if(p.isFlying()){
 			
 			return 0;
 			
 		}
 		
 		//Prevent bypassing fly checks when moving in an horiztonal motion
-		if(p.isOnGround() && !inwater){
+		if(!inwater){
 			
 			if(to.getBlockX() != from.getBlockX() || to.getBlockZ() != from.getBlockZ()){
 				
@@ -60,7 +60,9 @@ public class NoFall extends Check{
 					
 				}
 				
-				if((oy - by) > 2){
+				int dis = (oy - by);
+				
+				if(dis > 2 && p.isOnGround()){//Prevent bypassing fly checks when moving in an horiztonal motion
 					
 					int id = this.vars.raiseViolationLevel(CheckType.FLY, p);
 					
@@ -82,6 +84,30 @@ public class NoFall extends Check{
 						}
 						return 1;
 						
+					}
+					
+				}else if(dis < 1 && !p.isOnGround()){//Forces players to correct onground boolean
+					
+					int id = this.vars.raiseViolationLevel(CheckType.IMPOSSIBLE, p);
+					
+					ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.IMPOSSIBLE, p);
+					
+					Bukkit.getServer().getPluginManager().callEvent(vte);
+					
+					if(!vte.isCancelled()){
+					
+						if(id != 0){
+							
+							String message = Setting.impossiblemovemes;
+							
+							message = message.replaceAll(".name.", ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN);
+							message = message.replaceAll(".vl.", id + "");
+
+							Utils.messageAdmins(message);
+							
+						}
+						return 1;
+					
 					}
 					
 				}

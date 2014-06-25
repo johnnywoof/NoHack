@@ -24,7 +24,7 @@ public class SurvivalFly extends Check{
 	
 	@SuppressWarnings("deprecation")
 	@Override
-	public int runMoveCheck(Player p, Location to, Location from, double yd, double md, MoveData movedata, boolean up, boolean inwater, boolean onladder, XYZ lg){
+	public int runMoveCheck(Player p, Location to, Location from, double yd, double xs, double zs, MoveData movedata, boolean up, boolean inwater, boolean onladder, XYZ lg){
 		
 			//Start survival fly checks
 			if(p.isOnGround() || p.isInsideVehicle() || inwater || (p.isFlying()) || onladder){
