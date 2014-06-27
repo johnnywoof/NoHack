@@ -1,5 +1,13 @@
 package me.johnnywoof.checks;
 
+import me.johnnywoof.Setting;
+import me.johnnywoof.Variables;
+import me.johnnywoof.check.CheckType;
+import me.johnnywoof.event.ViolationTriggeredEvent;
+import me.johnnywoof.util.MoveData;
+import me.johnnywoof.util.Utils;
+import me.johnnywoof.util.XYZ;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -8,14 +16,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-
-import me.johnnywoof.Setting;
-import me.johnnywoof.Variables;
-import me.johnnywoof.check.CheckType;
-import me.johnnywoof.event.ViolationTriggeredEvent;
-import me.johnnywoof.util.MoveData;
-import me.johnnywoof.util.Utils;
-import me.johnnywoof.util.XYZ;
 
 public class MovingCheck {
 
@@ -37,40 +37,32 @@ public class MovingCheck {
 			
 			if(p.isBlocking() && p.isSprinting()){
 				
-				if((System.currentTimeMillis() - movedata.blocktime) <= 150){
+				if((System.currentTimeMillis() - movedata.blocktime) > 150){
 					
-					return 0;
+					int id = this.vars.raiseViolationLevel(CheckType.IMPOSSIBLE, p);
 					
-				}
-				
-			}
-			
-			if((System.currentTimeMillis() - movedata.tptime) < 1000){
-				
-				return 0;
-				
-			}
-			
-			int id = this.vars.raiseViolationLevel(CheckType.IMPOSSIBLE, p);
-			
-			ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.IMPOSSIBLE, p);
-			
-			Bukkit.getServer().getPluginManager().callEvent(vte);
-			
-			if(!vte.isCancelled()){
-			
-				if(id != 0){
+					ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.IMPOSSIBLE, p);
 					
-					String message = Setting.impossiblemovemes;
+					Bukkit.getServer().getPluginManager().callEvent(vte);
 					
-					message = message.replaceAll(".name.", ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN);
-					message = message.replaceAll(".vl.", id + "");
+					if(!vte.isCancelled()){
+					
+						if(id != 0){
+							
+							String message = Setting.impossiblemovemes;
+							
+							message = message.replaceAll(".name.", ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN);
+							message = message.replaceAll(".vl.", id + "");
 
-					Utils.messageAdmins(message);
+							Utils.messageAdmins(message);
+							
+						}
+						return 1;
+					
+					}
 					
 				}
-				return 1;
-			
+				
 			}
 			
 		}
@@ -177,7 +169,13 @@ public class MovingCheck {
 								Utils.messageAdmins(message);
 								
 							}
-							return 1;
+							
+							//I've discovered this trick on mineplex
+							
+							p.setFlying(false);
+							p.setAllowFlight(false);
+							
+							return 3;
 						
 						}
 						
@@ -192,214 +190,177 @@ public class MovingCheck {
 		//****************End Survival Fly******************
 		
 		//****************Start Horizontal Speed******************
-		if((System.currentTimeMillis() - movedata.lastmounting) <= 200){
-			
-			return 0;
-			
-		}
+		if((System.currentTimeMillis() - movedata.lastmounting) > 200){
 		
-		double ydis = Math.abs(lg.y - to.getY());
-		
-		if(xs > 0 || zs > 0){
-		
-			boolean wg = movedata.wasonground;
+			double ydis = Math.abs(lg.y - to.getY());
 			
-			double mxs = Double.MAX_VALUE;
+			if(xs > 0 || zs > 0){
 			
-			boolean csneak = p.isSneaking();
-			
-			if(csneak){
+				boolean wg = movedata.wasonground;
 				
-				if(!movedata.wassneaking){
+				double mxs = ((p.isOnGround()) ? p.getWalkSpeed() : ((p.getAllowFlight() ? p.getFlySpeed() : p.getWalkSpeed())));
+				
+				boolean csneak = p.isSneaking();
+				
+				if(csneak){
 					
-					long diff = (System.currentTimeMillis() - movedata.sneaktime);
+					if(!movedata.wassneaking){
 						
-					if(diff < 501){//There is a known bypass....gonna fix it sometime
+						long diff = (System.currentTimeMillis() - movedata.sneaktime);
+							
+						if(diff < 501){//There is a known bypass....gonna fix it sometime
+						
+							csneak = false;
+						
+						}
+						
+					}
 					
-						csneak = false;
+				}
+				
+				boolean csprint = p.isSprinting();
+				
+				if(!csprint){
+					
+					if((System.currentTimeMillis() - movedata.sprinttime) < 1001){
+						
+						csprint = true;
+						
+					}
+					
+				}
+				
+				boolean cfly = p.isFlying();
+				
+				if(!cfly){
+					
+					if((System.currentTimeMillis() - movedata.flytime) < 2001){
+						
+						cfly = true;
+						
+					}
+					
+				}
+				
+				if(xs > zs){
+				
+					p.sendMessage(xs + "");
+					
+				}else{
+					
+					p.sendMessage("" + zs);
+					
+				}
+				
+				if(cfly){
+					
+					
+					
+				}else if(csprint){
+					
+					
+					
+				}else if(csneak){
+					
+					mxs = (mxs - (p.getWalkSpeed() - (p.getWalkSpeed() / 3))) + 0.1;
+					
+					//1 - 0.33 = 0.67
+					//0.9 - 0.292 = 0.608
+					//0.8 - 0.26 = 0.54
+					//0.7 - 0.23 = 0.47
+					
+					//0.067
+					
+				}else{
+					
+					mxs = mxs + 0.1;
+					
+				}
+				
+				if(p.hasPotionEffect(PotionEffectType.SPEED)){
+					
+					int level = Utils.getPotionEffectLevel(p, PotionEffectType.SPEED);
+					
+					if(level > 0){
+					
+						mxs = (0.0812) * ((0.5 * level) + 1);
 					
 					}
 					
 				}
 				
-			}
-			
-			boolean csprint = p.isSprinting();
-			
-			if(!csprint){
-				
-				if((System.currentTimeMillis() - movedata.sprinttime) < 1001){
-					
-					csprint = true;
-					
-				}
-				
-			}
-			
-			boolean cfly = p.isFlying();
-			
-			if(!cfly){
-				
-				if((System.currentTimeMillis() - movedata.flytime) < 2001){
-					
-					cfly = true;
-					
-				}
-				
-			}
-			
-			if(cfly){
-				
-				mxs = 0.5443;
-				
-			}else if(csneak){
-				
-				if(p.isOnGround()){
-					
-					mxs = 0.12;
-					
-				}else{
-					
-					mxs = 0.15;
-					
-				}
-				
-			}else if(csprint){
-				
-				if(!wg && p.isOnGround()){
-					
-					mxs = 0.613;
-					
-				}else if(wg && !p.isOnGround()){
-					
-					mxs = 0.4;
-					
-				}else if(!wg && !p.isOnGround()){
-					
-					mxs = 0.4;
-					
-				}else{
-					
-					if((System.currentTimeMillis() - movedata.groundtime) <= 600){
+				if(xs > mxs || zs > mxs){
 						
-						mxs = 0.55;
+					int id = this.vars.raiseViolationLevel(CheckType.HORIZONTAL_SPEED, p);
+					
+					ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.HORIZONTAL_SPEED, p);
 						
-					}else{
-					
-						mxs = 0.353;
-					
+					Bukkit.getServer().getPluginManager().callEvent(vte);
+						
+					if(!vte.isCancelled()){
+							
+						if(Setting.debug){
+								
+							p.sendMessage("XS: " + xs + ";XZ:" + zs + "; Max: " + mxs + ";G: " + p.isOnGround() + ";WG: " + movedata.wasonground + ";GT: " + (System.currentTimeMillis() - movedata.groundtime));
+								
+						}
+						
+						if(id != 0){
+								
+							String message = Setting.horizontalspeedmes;
+								
+							message = message.replaceAll(".name.", ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN);
+							message = message.replaceAll(".vl.", id + "");
+		
+							Utils.messageAdmins(message);
+								
+						}
+						return 1;
+						
 					}
-					
-				}
-				
-			}else if(inwater){
-				
-				if((System.currentTimeMillis() - movedata.groundtime) <= 1200){
-					
-					mxs = 0.3;
-					
-				}else{
-				
-					mxs = 0.13;
-				
-				}
-				
-			}else{
-				
-				if(!wg && p.isOnGround()){
-					
-					mxs = 0.283;
-					
-				}else{
-				
-					mxs = 0.243;
-				
-				}
-				
-			}
-			
-			if(p.hasPotionEffect(PotionEffectType.SPEED)){
-				
-				int level = Utils.getPotionEffectLevel(p, PotionEffectType.SPEED);
-				
-				if(level > 0){
-				
-					mxs = (0.0812) * ((0.5 * level) + 1);
-				
-				}
-				
-			}
-			
-			if(xs > mxs || zs > mxs){
-					
-				int id = this.vars.raiseViolationLevel(CheckType.HORIZONTAL_SPEED, p);
-				
-				ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.HORIZONTAL_SPEED, p);
-					
-				Bukkit.getServer().getPluginManager().callEvent(vte);
-					
-				if(!vte.isCancelled()){
 						
-					if(Setting.debug){
-							
-						p.sendMessage("XS: " + xs + ";XZ:" + zs + "; Max: " + mxs + ";G: " + p.isOnGround() + ";WG: " + movedata.wasonground + ";GT: " + (System.currentTimeMillis() - movedata.groundtime));
-							
-					}
+				}
+			
+			}
+			
+			if(!p.isOnGround() && !p.getAllowFlight()){
+				
+				double mdis = this.getXZDistance(to.getX(), lg.x, to.getZ(), lg.z);
+				
+				if(mdis > this.getMaxMD(inwater, p.isOnGround(), p, ydis, movedata)){
 					
-					if(id != 0){
+					int id = this.vars.raiseViolationLevel(CheckType.GLIDE, p);
+					
+					ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.GLIDE, p);
+					
+					Bukkit.getServer().getPluginManager().callEvent(vte);
+					
+					if(!vte.isCancelled()){
+					
+						if(id != 0){
 							
-						String message = Setting.horizontalspeedmes;
+							String message = Setting.glidemes;
 							
-						message = message.replaceAll(".name.", ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN);
-						message = message.replaceAll(".vl.", id + "");
+							message = message.replaceAll(".name.", ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN);
+							message = message.replaceAll(".vl.", id + "");
 	
-						Utils.messageAdmins(message);
+							Utils.messageAdmins(message);
 							
-					}
-					return 1;
+						}
+						
+						return 1;
 					
-				}
-					
-			}
-		
-		}
-		
-		if(!p.isOnGround() && !p.getAllowFlight()){
-			
-			double mdis = this.getXZDistance(to.getX(), lg.x, to.getZ(), lg.z);
-			
-			if(mdis > this.getMaxMD(inwater, p.isOnGround(), p, ydis, movedata)){
-				
-				int id = this.vars.raiseViolationLevel(CheckType.GLIDE, p);
-				
-				ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.GLIDE, p);
-				
-				Bukkit.getServer().getPluginManager().callEvent(vte);
-				
-				if(!vte.isCancelled()){
-				
-					if(id != 0){
-						
-						String message = Setting.glidemes;
-						
-						message = message.replaceAll(".name.", ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN);
-						message = message.replaceAll(".vl.", id + "");
-
-						Utils.messageAdmins(message);
-						
 					}
 					
-					return 1;
-				
 				}
-				
+			
 			}
 		
 		}
 		//****************End Horizontal Speed******************
 		
 		//****************Start NoFall*****************
-				//If flying, ignore this check
+			//If flying, ignore this check
 			if(!p.isFlying()){
 				
 				//Prevent bypassing fly checks when moving in an horiztonal motion
@@ -583,7 +544,7 @@ public class MovingCheck {
 							}else{
 						
 								p.teleport(movedata.lastloc.toLocation(to.getPitch(), to.getYaw()), TeleportCause.UNKNOWN);
-							
+								
 							}
 							
 							if(id != 0){

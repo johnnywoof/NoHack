@@ -27,9 +27,9 @@ public class BlockCheck {
 		
 	}
 	
-	public int runBlockChecks(Player p, Block b, long ls, int aid){
+	public int runBlockChecks(Player p, Block b, long ls){
 		
-		if(p == null || b == null || aid != 0){
+		if(p == null || b == null){
 			return 0;
 		}
 		

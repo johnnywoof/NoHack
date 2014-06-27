@@ -23,6 +23,7 @@ import me.johnnywoof.util.XYZ;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -74,7 +75,7 @@ public class NoHackListener implements Listener {
 	private BlockCheck bc;
 	
 	private final HashMap<String, Long> lastHealhed = new HashMap<String, Long>();
-	private final HashMap<String, String> lastViolation = new HashMap<String, String>();
+	private final HashMap<String, Long> lastViolation = new HashMap<String, Long>();
 	
 	public NoHackListener(NoHack nh){
 		
@@ -175,41 +176,27 @@ public class NoHackListener implements Listener {
 		
 		long diff = 0;
 		
-		CheckType lf = null;
-		
 		if(this.lastViolation.containsKey(event.getPlayer().getName())){
 			
-			String[] s = this.lastViolation.get(event.getPlayer().getName()).split(":");
-			
-			diff = System.currentTimeMillis() - Long.parseLong(s[1]);
-			
-			lf = CheckType.valueOf(s[0]);
+			diff = System.currentTimeMillis() - this.lastViolation.get(event.getPlayer().getName());
 			
 		}
 		
 		if(event.getCheckType() != CheckType.TIMER && event.getCheckType() != CheckType.FAST_EAT && event.getCheckType() != CheckType.VERTICAL_SPEED && event.getCheckType() != CheckType.AUTOSOUP){
-			
-			if(lf == null){
 				
+			if(diff > 1000){
+					
+				//"Forgive" the player
 				event.setCancelled(true);
-				
-			}else{
-			
-				if(diff > 1000){
 					
-					//"Forgive" the player
-					event.setCancelled(true);
-					
-				}
-			
 			}
 			
 		}
 		
 		//Prevents abuse of checks to slow down server
-		if(event.getCheckType() == CheckType.FAST_INTERACT || event.getCheckType() == CheckType.SPEED_BREAK){
+		if(event.getCheckType() == CheckType.FAST_INTERACT || event.getCheckType() == CheckType.SPEED_BREAK || (event.getPlayer().getGameMode() == GameMode.CREATIVE && event.getCheckType() == CheckType.VISIBLE)){
 		
-			if(diff <= 2000 && event.getNewLevel() > 35){
+			if(diff <= 2000 && event.getNewLevel() > 34){
 				
 				event.getPlayer().kickPlayer(ChatColor.RED + "Detected illegal activity! Are you hacking?");
 				
@@ -233,7 +220,7 @@ public class NoHackListener implements Listener {
 			
 		}
 		
-		this.lastViolation.put(event.getPlayer().getName(), event.getCheckType().toString() + ":" + System.currentTimeMillis());
+		this.lastViolation.put(event.getPlayer().getName(), System.currentTimeMillis());
 		
 	}
 	
@@ -435,7 +422,11 @@ public class NoHackListener implements Listener {
 		
 		if(event.getAction() != Action.PHYSICAL){
 		
-			this.ic.runInteractChecks(event.getPlayer(), event);
+			if(this.ic.runInteractChecks(event.getPlayer(), event) != 0){
+				
+				event.setCancelled(true);
+				
+			}
 		
 		}
 		
@@ -532,7 +523,7 @@ public class NoHackListener implements Listener {
 	@EventHandler(ignoreCancelled = true)
 	public void onBreak(BlockBreakEvent event){
 		
-		if(this.bc.runBlockChecks(event.getPlayer(), null, nh.vars.getLastSwong(event.getPlayer().getName()), 0) != 0){
+		if(this.bc.runBlockChecks(event.getPlayer(), event.getBlock(), nh.vars.getLastSwong(event.getPlayer().getName())) != 0){
 			
 			event.setCancelled(true);
 			
@@ -656,7 +647,7 @@ public class NoHackListener implements Listener {
 		
 	}
 
-	@EventHandler(priority=EventPriority.HIGH, ignoreCancelled = true)
+	@EventHandler(priority=EventPriority.MONITOR, ignoreCancelled = true)//Make sure a plugin didn't cancel it
 	public void onTeleport(PlayerTeleportEvent event){
 		
 		if(event.getCause() != TeleportCause.UNKNOWN){
@@ -664,6 +655,8 @@ public class NoHackListener implements Listener {
 			MoveData md = this.nh.vars.getMoveData(event.getPlayer().getName());
 			
 			md.tptime = System.currentTimeMillis();
+			
+			md.lastloc = new XYZ(event.getTo());
 			
 			this.nh.vars.setMoveData(event.getPlayer().getName(), md);
 			
@@ -712,65 +705,7 @@ public class NoHackListener implements Listener {
 			
 		}
 		
-		if((System.currentTimeMillis() - mdd.tptime) > 1000){
-			
-			/*mdd.setAmount(mdd.getAmount() + 1);
-			
-			if((System.currentTimeMillis() - mdd.getTimeStart()) >= 1000){
-				
-				int expected = (20 - NoHack.tps) + Setting.maxpacket + (Math.round(Math.abs(Utils.getPing(event.getPlayer()) / 100)));
-				
-				if(mdd.getAmount() > expected){
-						
-					int id = this.nh.vars.raiseViolationLevel(CheckType.TIMER, event.getPlayer());
-						
-					ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.TIMER, event.getPlayer());
-					
-					Bukkit.getServer().getPluginManager().callEvent(vte);
-					
-					if(!vte.isCancelled()){
-					
-						if(id != 0){
-								
-							String message = Setting.timermes;
-							
-							message = message.replaceAll(".name.", ChatColor.YELLOW + "" + event.getPlayer().getName() + "" + ChatColor.GREEN);
-							message = message.replaceAll(".vl.", id + "");
-							message = message.replaceAll(".packets-sent.", mdd.getAmount() + "");
-							message = message.replaceAll(".expected-packets.", expected + "");
-
-							Utils.messageAdmins(message);
-								
-						}
-						
-						if(event.getPlayer().isInsideVehicle()){
-							
-							event.getPlayer().getVehicle().teleport(mdd.lastloc.toLocation(event.getPlayer().getLocation().getPitch(), event.getPlayer().getLocation().getYaw()), TeleportCause.UNKNOWN);
-							
-						}else{
-						
-							event.setTo(mdd.lastloc.toLocation(event.getPlayer().getLocation().getPitch(), event.getPlayer().getLocation().getYaw()));
-						
-						}
-						mdd.reset(new XYZ(event.getPlayer().getLocation()));
-						this.nh.vars.setMoveData(event.getPlayer().getName(), mdd);
-						return;
-					
-					}
-					
-				}else{
-					
-					mdd.reset(new XYZ(event.getPlayer().getLocation()));
-					
-				}
-				
-			}
-			
-			this.nh.vars.setMoveData(event.getPlayer().getName(), mdd);*/
-			
-		}
-		
-		if((System.currentTimeMillis() - mdd.tptime) <= 1000){//Player teleported, don't check it
+		if((System.currentTimeMillis() - mdd.tptime) < 1001){//Player teleported, don't check it
 			
 			return;
 			

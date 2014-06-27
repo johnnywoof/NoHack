@@ -41,6 +41,8 @@ public class NoHack extends JavaPlugin{
 			
 		}
 		
+		this.reload();
+		
 		this.getServer().getPluginManager().registerEvents(new NoHackListener(this), this);
 		getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable()
 		{
@@ -71,7 +73,6 @@ public class NoHack extends JavaPlugin{
 				}
 			}
 		}, 20, 1);
-		this.reload();
 		
 		if(this.getServer().getAllowFlight() && this.getServer().getDefaultGameMode() != GameMode.CREATIVE){
 		
