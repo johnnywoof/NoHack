@@ -8,12 +8,10 @@ public class MoveData {
 			wasonground = true;
 	private long timestart;
 	private int amount;
-	public int lastamount = 0;
 	public XYZ lastloc = null;
 	
-	public MoveData(long lsneak, long lsprint){
-		this.sneaktime = lsneak;
-		this.sprinttime = lsprint;
+	public MoveData(XYZ lastloc){
+		this.reset(lastloc);
 	}
 	
 	public long getTimeStart(){
@@ -35,7 +33,6 @@ public class MoveData {
 	public void reset(XYZ now){
 		this.setTimeStart(System.currentTimeMillis());
 		this.setAmount(0);
-		this.lastamount = -1;
 		this.lastloc = now;
 	}
 	

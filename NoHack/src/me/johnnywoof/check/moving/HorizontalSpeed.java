@@ -42,11 +42,17 @@ public class HorizontalSpeed extends Check{
 			
 			boolean csneak = p.isSneaking();
 			
-			if(!csneak){
+			if(csneak){
 				
-				if((System.currentTimeMillis() - movedata.sneaktime) <= 1000){
+				if(!movedata.wassneaking){
 					
-					csneak = true;
+					long diff = (System.currentTimeMillis() - movedata.sneaktime);
+						
+					if(diff < 501){//There is a known bypass....gonna fix it sometime
+					
+						csneak = false;
+					
+					}
 					
 				}
 				
@@ -56,7 +62,7 @@ public class HorizontalSpeed extends Check{
 			
 			if(!csprint){
 				
-				if((System.currentTimeMillis() - movedata.sprinttime) <= 1000){
+				if((System.currentTimeMillis() - movedata.sprinttime) < 1001){
 					
 					csprint = true;
 					
@@ -68,7 +74,7 @@ public class HorizontalSpeed extends Check{
 			
 			if(!cfly){
 				
-				if((System.currentTimeMillis() - movedata.flytime) <= 2000){
+				if((System.currentTimeMillis() - movedata.flytime) < 2001){
 					
 					cfly = true;
 					
@@ -82,15 +88,13 @@ public class HorizontalSpeed extends Check{
 				
 			}else if(csneak){
 				
-				//Onground: 0.065, not: 0.0805
-				
-				if(!wg && p.isOnGround()){
+				if(p.isOnGround()){
 					
-					mxs = 0.065;
+					mxs = 0.12;
 					
 				}else{
 					
-					mxs = 0.0805;
+					mxs = 0.15;
 					
 				}
 				
@@ -142,7 +146,7 @@ public class HorizontalSpeed extends Check{
 					
 				}else{
 				
-					mxs = 0.24;
+					mxs = 0.243;
 				
 				}
 				
@@ -172,7 +176,7 @@ public class HorizontalSpeed extends Check{
 						
 					if(Setting.debug){
 							
-						p.sendMessage("Speed: " + xs + "; Max: " + mxs + ";G: " + p.isOnGround() + ";WG: " + movedata.wasonground + ";GT: " + (System.currentTimeMillis() - movedata.groundtime));
+						p.sendMessage("XS: " + xs + ";XZ:" + zs + "; Max: " + mxs + ";G: " + p.isOnGround() + ";WG: " + movedata.wasonground + ";GT: " + (System.currentTimeMillis() - movedata.groundtime));
 							
 					}
 					

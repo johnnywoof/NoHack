@@ -171,7 +171,7 @@ public class NoHackListener implements Listener {
 			
 		}
 		
-		if(event.getCheckType() != CheckType.FAST_EAT && event.getCheckType() != CheckType.VERTICAL_SPEED && event.getCheckType() != CheckType.AUTOSOUP){
+		if(event.getCheckType() != CheckType.TIMER && event.getCheckType() != CheckType.FAST_EAT && event.getCheckType() != CheckType.VERTICAL_SPEED && event.getCheckType() != CheckType.AUTOSOUP){
 			
 			if(lf == null){
 				
@@ -251,13 +251,17 @@ public class NoHackListener implements Listener {
 	@EventHandler(ignoreCancelled = true)
 	public void onSneak(PlayerToggleSneakEvent event){
 		
-		MoveData md = nh.vars.getMoveData(event.getPlayer().getName());
+		if(event.isSneaking() != event.getPlayer().isSneaking()){
 		
-		md.sneaktime = System.currentTimeMillis();
+			MoveData md = nh.vars.getMoveData(event.getPlayer().getName());
+			
+			md.sneaktime = System.currentTimeMillis();
+			
+			md.wassneaking = !event.isSneaking();
+			
+			nh.vars.setMoveData(event.getPlayer().getName(), md);
 		
-		md.wassneaking = !event.isSneaking();
-		
-		nh.vars.setMoveData(event.getPlayer().getName(), md);
+		}
 		
 	}
 	
@@ -275,15 +279,19 @@ public class NoHackListener implements Listener {
 	}
 	
 	@EventHandler(ignoreCancelled = true)
-	public void onSprint(PlayerToggleFlightEvent event){
+	public void onFlight(PlayerToggleFlightEvent event){
 		
-		MoveData md = nh.vars.getMoveData(event.getPlayer().getName());
+		if(event.isFlying() != event.getPlayer().isFlying()){
 		
-		md.flytime = System.currentTimeMillis();
+			MoveData md = nh.vars.getMoveData(event.getPlayer().getName());
+			
+			md.flytime = System.currentTimeMillis();
+			
+			md.wasflying = !event.isFlying();
+			
+			nh.vars.setMoveData(event.getPlayer().getName(), md);
 		
-		md.wasflying = !event.isFlying();
-		
-		nh.vars.setMoveData(event.getPlayer().getName(), md);
+		}
 		
 	}
 	
@@ -886,7 +894,7 @@ public class NoHackListener implements Listener {
 			
 		}else if(id == 4){
 			
-			Location loc = nh.vars.lastGround(event.getPlayer()).toLocation(event.getTo().getPitch(), event.getTo().getYaw());
+			Location loc = event.getFrom();//nh.vars.lastGround(event.getPlayer()).toLocation(event.getTo().getPitch(), event.getTo().getYaw());
 			
 			double mmd = Double.MAX_VALUE;
 			

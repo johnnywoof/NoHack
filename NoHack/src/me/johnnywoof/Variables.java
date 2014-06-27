@@ -157,6 +157,7 @@ public class Variables {
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	public MoveData getMoveData(String n){
 		if(this.movedata.containsKey(n)){
 			
@@ -164,7 +165,7 @@ public class Variables {
 			
 		}else{
 			
-			return new MoveData(0, 0);
+			return new MoveData(new XYZ(Bukkit.getPlayer(n).getLocation()));//Hope this is always a player
 			
 		}
 	}

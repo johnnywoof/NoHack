@@ -21,6 +21,7 @@ import me.johnnywoof.check.moving.HorizontalSpeed;
 import me.johnnywoof.check.moving.ImpossibleMoving;
 import me.johnnywoof.check.moving.NoFall;
 import me.johnnywoof.check.moving.SurvivalFly;
+import me.johnnywoof.check.moving.Timer;
 import me.johnnywoof.check.moving.VerticalSpeed;
 import me.johnnywoof.protocollib.HackChecker;
 
@@ -140,6 +141,7 @@ public class NoHack extends JavaPlugin{
 		this.checks.add(new NoFall(this.vars, CheckType.NOFALL));
 		this.checks.add(new SurvivalFly(this.vars, CheckType.FLY));
 		this.checks.add(new HorizontalSpeed(this.vars, CheckType.HORIZONTAL_SPEED));
+		this.checks.add(new Timer(this.vars, CheckType.TIMER));
 		this.checks.add(new FastBreak(this.vars, null));//TODO Change this?
 		this.checks.add(new NoSwingBlock(this.vars, CheckType.NOSWING));
 		this.checks.add(new GodMode(this.vars, CheckType.GOD_MODE));
