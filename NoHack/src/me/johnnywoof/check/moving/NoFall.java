@@ -34,27 +34,35 @@ public class NoFall extends Check{
 		}
 		
 		//Prevent bypassing fly checks when moving in an horiztonal motion
-		if(!inwater){
+		if(!inwater && !p.getAllowFlight() && p.isOnGround()){//User is allowed to fly, why check it!
+			
+			Material m = null; 
 			
 			if(to.getBlockX() != from.getBlockX() || to.getBlockZ() != from.getBlockZ()){
 				
-				int by = to.getBlockY();
+				int by = from.getBlockY() + 1;
 				
 				int oy = by;
 				
-				while(true){
+				boolean con = true;
+				
+				while(con){
 					
 					by--;
 					
-					if(to.getBlock().getRelative(0, ((oy - by) * -1), 0).getType().isSolid()){
+					m = from.getBlock().getRelative(0, ((oy - by) * -1) + 1, 0).getType();
+					
+					if(m.isSolid()){
 						
+						con = false;
 						break;
 						
 					}
 					
 					if(by < 0){
 						
-						break;//Safe check for flying over bedrock...which should be impossible
+						con = false;//Safe check for flying over bedrock...which should be impossible
+						break;
 						
 					}
 					
@@ -62,7 +70,7 @@ public class NoFall extends Check{
 				
 				int dis = (oy - by);
 				
-				if(dis > 2 && p.isOnGround()){//Prevent bypassing fly checks when moving in an horiztonal motion
+				if(dis > 2){//Prevent bypassing fly checks when moving in an horiztonal motion
 					
 					int id = this.vars.raiseViolationLevel(CheckType.FLY, p);
 					
@@ -84,30 +92,6 @@ public class NoFall extends Check{
 						}
 						return 1;
 						
-					}
-					
-				}else if(dis < 1 && !p.isOnGround()){//Forces players to correct onground boolean
-					
-					int id = this.vars.raiseViolationLevel(CheckType.IMPOSSIBLE, p);
-					
-					ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.IMPOSSIBLE, p);
-					
-					Bukkit.getServer().getPluginManager().callEvent(vte);
-					
-					if(!vte.isCancelled()){
-					
-						if(id != 0){
-							
-							String message = Setting.impossiblemovemes;
-							
-							message = message.replaceAll(".name.", ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN);
-							message = message.replaceAll(".vl.", id + "");
-
-							Utils.messageAdmins(message);
-							
-						}
-						return 1;
-					
 					}
 					
 				}

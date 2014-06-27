@@ -38,7 +38,7 @@ public class NoHack extends JavaPlugin{
 	
 	/**
 	 * =====Todo List=====
-	 * Add more checks
+	 * Add critical check
 	 * 
 	 * */
 	
