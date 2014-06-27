@@ -1,14 +1,6 @@
-package me.johnnywoof.check.interact;
+package me.johnnywoof.checks;
 
 import java.util.HashMap;
-
-import me.johnnywoof.Setting;
-import me.johnnywoof.Variables;
-import me.johnnywoof.check.Check;
-import me.johnnywoof.check.CheckType;
-import me.johnnywoof.check.DetectionType;
-import me.johnnywoof.event.ViolationTriggeredEvent;
-import me.johnnywoof.util.Utils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -20,17 +12,24 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.inventory.InventoryType.SlotType;
 import org.bukkit.inventory.Inventory;
 
-public class InventoryClick extends Check{
+import me.johnnywoof.Setting;
+import me.johnnywoof.Variables;
+import me.johnnywoof.check.CheckType;
+import me.johnnywoof.event.ViolationTriggeredEvent;
+import me.johnnywoof.util.Utils;
 
+public class InventoryCheck {
+
+	private Variables vars;
+	
 	private final HashMap<String, Long> lastclick = new HashMap<String, Long>();
 	private final HashMap<String, Long> lastviolation = new HashMap<String, Long>();
 	
-	public InventoryClick(Variables vars, CheckType ct) {
-		super(vars, ct, DetectionType.INVENTORY);
+	public InventoryCheck(Variables vars) {
+		this.vars = vars;
 	}
 	
-	@Override
-	public int runInventoryCheck(Player p, Inventory inv, InventoryAction ia, InventoryClickEvent event){
+	public int runInventoryChecks(Player p, Inventory inv, InventoryAction ia, InventoryClickEvent event){
 		
 		if(p.isBlocking() || p.isSneaking() || p.isSprinting() || p.isSleeping()){
 			
@@ -155,5 +154,5 @@ public class InventoryClick extends Check{
 		}
 		
 	}
-
+	
 }

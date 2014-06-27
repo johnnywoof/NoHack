@@ -7,10 +7,14 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
 
-import me.johnnywoof.check.Check;
 import me.johnnywoof.check.CheckType;
-import me.johnnywoof.check.CustomCheck;
-import me.johnnywoof.check.DetectionType;
+import me.johnnywoof.checks.BlockCheck;
+import me.johnnywoof.checks.ChatCheck;
+import me.johnnywoof.checks.CustomCheck;
+import me.johnnywoof.checks.FightCheck;
+import me.johnnywoof.checks.InteractCheck;
+import me.johnnywoof.checks.InventoryCheck;
+import me.johnnywoof.checks.MovingCheck;
 import me.johnnywoof.event.ViolationChangedEvent;
 import me.johnnywoof.event.ViolationTriggeredEvent;
 import me.johnnywoof.util.MoveData;
@@ -62,6 +66,12 @@ public class NoHackListener implements Listener {
 	private NoHack nh;
 	
 	private CustomCheck cc;
+	private MovingCheck mc;
+	private ChatCheck chatc;
+	private FightCheck fc;
+	private InteractCheck ic;
+	private InventoryCheck invc;
+	private BlockCheck bc;
 	
 	private final HashMap<String, Long> lastHealhed = new HashMap<String, Long>();
 	private final HashMap<String, String> lastViolation = new HashMap<String, String>();
@@ -69,7 +79,13 @@ public class NoHackListener implements Listener {
 	public NoHackListener(NoHack nh){
 		
 		this.nh = nh;
+		this.mc = new MovingCheck(nh.vars);
 		this.cc = new CustomCheck();
+		this.chatc = new ChatCheck(nh.vars);
+		this.fc = new FightCheck(nh.vars);
+		this.ic = new InteractCheck(nh.vars);
+		this.invc = new InventoryCheck(nh.vars);
+		this.bc = new BlockCheck(nh.vars);
 		
 	}
 	
@@ -300,24 +316,11 @@ public class NoHackListener implements Listener {
 		
 		if(event.getWhoClicked().getType() == EntityType.PLAYER){
 			
-			Player p = (Player) event.getWhoClicked();
-			
-			for(Check c : nh.getChecks()){
+			if(this.invc.runInventoryChecks((Player) event.getWhoClicked(), event.getInventory(), event.getAction(), event) != 0){
 				
-				if(c.getDetectType() == DetectionType.INVENTORY){
-					
-					if(c.runInventoryCheck(p, event.getInventory(), event.getAction(), event) != 0){
-						
-						event.setCancelled(true);
-						break;
-						
-					}
-					
-				}
+				event.setCancelled(true);
 				
 			}
-			
-			p = null;
 			
 		}
 		
@@ -432,22 +435,7 @@ public class NoHackListener implements Listener {
 		
 		if(event.getAction() != Action.PHYSICAL){
 		
-			for(Check c : nh.getChecks()){
-				
-				if(c.getDetectType() == DetectionType.INTERACT){
-					
-					int id = c.runInteractCheck(event.getPlayer(), event);
-					
-					if(id != 0){
-						
-						event.setCancelled(true);
-						break;
-						
-					}
-					
-				}
-				
-			}
+			this.ic.runInteractChecks(event.getPlayer(), event);
 		
 		}
 		
@@ -510,21 +498,7 @@ public class NoHackListener implements Listener {
 					
 					long ls = nh.vars.getLastSwong(p.getName());
 					
-					for(Check c : nh.getChecks()){
-						
-						if(c.getDetectType() == DetectionType.FIGHT){
-							
-							if(c.runAttackCheck(p, e, ls) != 0){
-								
-								e.setNoDamageTicks(20);
-								event.setCancelled(true);
-								break;
-								
-							}
-							
-						}
-						
-					}
+					this.fc.runFightChecks(p, e, ls);
 					
 					//A fix for stupid bukkit not taking account of ctrl sprint
 					//TODO Test this with craftbukkit and not spigot
@@ -558,20 +532,9 @@ public class NoHackListener implements Listener {
 	@EventHandler(ignoreCancelled = true)
 	public void onBreak(BlockBreakEvent event){
 		
-		long ls = nh.vars.getLastSwong(event.getPlayer().getName());
-		
-		for(Check c : nh.getChecks()){
+		if(this.bc.runBlockChecks(event.getPlayer(), null, nh.vars.getLastSwong(event.getPlayer().getName()), 0) != 0){
 			
-			if(c.getDetectType() == DetectionType.BLOCK){
-				
-				if(c.runBlockCheck(event.getPlayer(), event.getBlock(), null, ls, 0) != 0){
-					
-					event.setCancelled(true);
-					break;
-					
-				}
-				
-			}
+			event.setCancelled(true);
 			
 		}
 		
@@ -674,18 +637,9 @@ public class NoHackListener implements Listener {
 	@EventHandler(ignoreCancelled = true)
 	public void onChat(AsyncPlayerChatEvent event){
 		
-		for(Check c : nh.getChecks()){
+		if(this.chatc.runChatChecks(event.getPlayer(), event.getMessage()) != 0){
 			
-			if(c.getDetectType() == DetectionType.CHAT){
-				
-				if(c.runChatCheck(event.getPlayer(), event.getMessage()) != 0){
-					
-					event.setCancelled(true);
-					break;
-					
-				}
-				
-			}
+			event.setCancelled(true);
 			
 		}
 		
@@ -822,8 +776,6 @@ public class NoHackListener implements Listener {
 			
 		}
 		
-		int id = 0;
-		
 		double vd = (event.getTo().getY() - event.getFrom().getY());
 		
 		double yd = Math.abs((event.getFrom().getY() - event.getTo().getY()));//Vertical speed
@@ -851,29 +803,7 @@ public class NoHackListener implements Listener {
 			
 		}
 		
-		double xs = Math.abs(event.getTo().getX() - event.getFrom().getX());//Horizontal xspeed
-		double zs = Math.abs(event.getTo().getZ() - event.getFrom().getZ());//Horizontal zspeed
-		
-		boolean inwater = ((CraftPlayer) event.getPlayer()).getHandle().inWater;
-		boolean onladder = ((CraftPlayer) event.getPlayer()).getHandle().h_();//Near ladder? NMS ftw!
-		
-		XYZ lg = nh.vars.lastGround(event.getPlayer());
-		
-		for(Check c : nh.getChecks()){
-			
-			if(c.getDetectType() == DetectionType.MOVING){
-				
-				id = c.runMoveCheck(event.getPlayer(), event.getTo(), event.getFrom(), yd, xs, zs, mdd, up, inwater, onladder, lg);
-				
-				if(id > 0){
-					
-					break;
-					
-				}
-				
-			}
-			
-		}
+		int id = mc.runMovingChecks(event.getPlayer(), event.getTo(), event.getFrom(), yd, Math.abs(event.getTo().getX() - event.getFrom().getX()), Math.abs(event.getTo().getZ() - event.getFrom().getZ()), mdd, up, ((CraftPlayer) event.getPlayer()).getHandle().inWater, ((CraftPlayer) event.getPlayer()).getHandle().h_(), nh.vars.lastGround(event.getPlayer()));
 		
 		if(id == 1 || id == 2){
 			

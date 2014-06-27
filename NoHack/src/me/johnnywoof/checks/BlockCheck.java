@@ -1,12 +1,10 @@
-package me.johnnywoof.check.block;
+package me.johnnywoof.checks;
 
 import java.util.HashMap;
 
 import me.johnnywoof.Setting;
 import me.johnnywoof.Variables;
-import me.johnnywoof.check.Check;
 import me.johnnywoof.check.CheckType;
-import me.johnnywoof.check.DetectionType;
 import me.johnnywoof.event.ViolationTriggeredEvent;
 import me.johnnywoof.util.Utils;
 
@@ -14,32 +12,62 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.util.BlockIterator;
 
-public class FastBreak extends Check{
+public class BlockCheck {
 
+	private Variables vars;
+	
 	private final HashMap<String, Long> lastBreak = new HashMap<String, Long>();
 	
-	long s = Long.MAX_VALUE;
-	
-	public FastBreak(Variables vars, CheckType ct) {
-		super(vars, ct, DetectionType.BLOCK);
+	public BlockCheck(Variables vars){
+		
+		this.vars = vars;
+		
 	}
-
-	@Override
-	public int runBlockCheck(Player p, Block b, BlockFace bf, long ls, int aid){
+	
+	public int runBlockChecks(Player p, Block b, long ls, int aid){
 		
 		if(p == null || b == null || aid != 0){
 			return 0;
 		}
 		
+		//****************Start NoSwing******************
+		
+		if((System.currentTimeMillis() - ls) >= Setting.noswingblock){
+			
+			int id = this.vars.raiseViolationLevel(CheckType.NOSWING, p);
+			
+			ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.NOSWING, p);
+			
+			Bukkit.getServer().getPluginManager().callEvent(vte);
+			
+			if(!vte.isCancelled()){
+			
+				if(id != 0){
+					
+					String message = Setting.noswingmes;
+					
+					message = message.replaceAll(".name.", ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN);
+					message = message.replaceAll(".vl.", id + "");
+
+					Utils.messageAdmins(message);
+					
+				}
+				return 1;
+			
+			}
+			
+		}
+		
+		//****************End NoSwing******************
+		
+		//****************Start FastBreak******************
+		
 		long diff = (System.nanoTime() - this.getLastBreak(p.getName()));
 		
 		this.lastBreak.put(p.getName(), System.nanoTime());
-		
-		//Start FastBreak
 		
 		if(!Setting.useplib){
 			
@@ -47,9 +75,9 @@ public class FastBreak extends Check{
 			
 		}
 		
-		//End FastBreak
+		//****************End FastBreak******************
 		
-		//Start better block visible check
+		//****************Start Block Visible & SpeedBreak******************
 		
 		//TODO Account for blocks that can be broken instantly
 		
@@ -168,7 +196,7 @@ public class FastBreak extends Check{
 		
 		}
 		
-		//End
+		//****************End Block Visible******************
 		
 		return 0;
 		

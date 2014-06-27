@@ -1,4 +1,4 @@
-package me.johnnywoof.check;
+package me.johnnywoof.checks;
 
 import java.util.HashMap;
 import java.util.UUID;

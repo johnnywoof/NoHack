@@ -1,28 +1,7 @@
 package me.johnnywoof;
 
-import java.util.ArrayList;
-
-import me.johnnywoof.check.Check;
 import me.johnnywoof.check.CheckType;
 import me.johnnywoof.check.Violation;
-import me.johnnywoof.check.block.FastBreak;
-import me.johnnywoof.check.block.NoSwingBlock;
-import me.johnnywoof.check.chat.ChatImpossible;
-import me.johnnywoof.check.chat.ChatSpam;
-import me.johnnywoof.check.fight.FightImpossible;
-import me.johnnywoof.check.fight.FightKnockBack;
-import me.johnnywoof.check.fight.FightReach;
-import me.johnnywoof.check.fight.FightSpeed;
-import me.johnnywoof.check.fight.GodMode;
-import me.johnnywoof.check.fight.NoSwingFight;
-import me.johnnywoof.check.interact.FastInteract;
-import me.johnnywoof.check.interact.InventoryClick;
-import me.johnnywoof.check.moving.HorizontalSpeed;
-import me.johnnywoof.check.moving.ImpossibleMoving;
-import me.johnnywoof.check.moving.NoFall;
-import me.johnnywoof.check.moving.SurvivalFly;
-import me.johnnywoof.check.moving.Timer;
-import me.johnnywoof.check.moving.VerticalSpeed;
 import me.johnnywoof.protocollib.HackChecker;
 
 import org.bukkit.ChatColor;
@@ -46,8 +25,6 @@ public class NoHack extends JavaPlugin{
 	private long second = 0;
 	
 	public Variables vars;
-	
-	private ArrayList<Check> checks = new ArrayList<Check>();
 
 	public void onEnable(){
 		
@@ -133,32 +110,6 @@ public class NoHack extends JavaPlugin{
 		
 		this.vars.reloadConfig(this.getConfig());
 		
-		this.checks.clear();
-		
-		//Remember! Higher = more priority
-		this.checks.add(new ImpossibleMoving(this.vars, CheckType.IMPOSSIBLE));
-		this.checks.add(new VerticalSpeed(this.vars, CheckType.VERTICAL_SPEED));
-		this.checks.add(new NoFall(this.vars, CheckType.NOFALL));
-		this.checks.add(new SurvivalFly(this.vars, CheckType.FLY));
-		this.checks.add(new HorizontalSpeed(this.vars, CheckType.HORIZONTAL_SPEED));
-		this.checks.add(new Timer(this.vars, CheckType.TIMER));
-		this.checks.add(new FastBreak(this.vars, null));//TODO Change this?
-		this.checks.add(new NoSwingBlock(this.vars, CheckType.NOSWING));
-		this.checks.add(new GodMode(this.vars, CheckType.GOD_MODE));
-		this.checks.add(new NoSwingFight(this.vars, CheckType.NOSWING));
-		this.checks.add(new FightReach(this.vars, CheckType.ATTACK_REACH));
-		this.checks.add(new FightSpeed(this.vars, CheckType.ATTACK_SPEED));
-		this.checks.add(new FightImpossible(this.vars, CheckType.IMPOSSIBLE));
-		this.checks.add(new FightKnockBack(this.vars, CheckType.FIGHT_KNOCKBACK));
-		this.checks.add(new ChatImpossible(this.vars, CheckType.IMPOSSIBLE));
-		this.checks.add(new ChatSpam(this.vars, CheckType.SPAM));
-		this.checks.add(new InventoryClick(this.vars, CheckType.FASTCLICK));
-		this.checks.add(new FastInteract(this.vars, CheckType.FAST_INTERACT));
-			
-	}
-	
-	public ArrayList<Check> getChecks(){
-		return this.checks;
 	}
 	
 	private void displayHelp(CommandSender sender){

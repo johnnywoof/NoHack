@@ -1,11 +1,9 @@
-package me.johnnywoof.check.interact;
+package me.johnnywoof.checks;
 
 import java.util.HashMap;
 
 import me.johnnywoof.Variables;
-import me.johnnywoof.check.Check;
 import me.johnnywoof.check.CheckType;
-import me.johnnywoof.check.DetectionType;
 import me.johnnywoof.event.ViolationTriggeredEvent;
 import me.johnnywoof.util.Utils;
 import me.johnnywoof.util.XYZ;
@@ -18,17 +16,22 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
-public class FastInteract extends Check{
-
+public class InteractCheck {
+	
 	private final HashMap<String, Long> lastinteractright = new HashMap<String, Long>();
 	private final HashMap<String, Long> lastinteractleft = new HashMap<String, Long>();
 	
-	public FastInteract(Variables vars, CheckType ct) {
-		super(vars, ct, DetectionType.INTERACT);
+	private Variables vars;
+	
+	public InteractCheck(Variables vars){
+		
+		this.vars = vars;
+		
 	}
 	
-	@Override
-	public int runInteractCheck(Player p, PlayerInteractEvent event){
+	public int runInteractChecks(Player p, PlayerInteractEvent event){
+		
+		//****************Start FastInteract******************
 		
 		if(event.hasBlock() && event.getAction() == Action.RIGHT_CLICK_BLOCK){
 			
@@ -166,8 +169,10 @@ public class FastInteract extends Check{
 			
 		}
 		
+		//****************End FastInteract******************
+		
 		return 0;
 		
 	}
-
+	
 }
