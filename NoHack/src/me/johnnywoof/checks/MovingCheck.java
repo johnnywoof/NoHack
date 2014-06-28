@@ -30,6 +30,18 @@ public class MovingCheck {
 	@SuppressWarnings("deprecation")
 	public int runMovingChecks(Player p, Location to, Location from, double yd, double xs, double zs, MoveData movedata, boolean up, boolean inwater, boolean onladder, XYZ lg){
 		
+		boolean jumped = (movedata.wasonground != p.isOnGround());
+		
+		if(!jumped){
+			
+			if((System.currentTimeMillis() - movedata.groundtime) < 600){
+				
+				jumped = true;
+				
+			}
+			
+		}
+		
 		//****************Start Impossible Moving******************
 		
 		//Prevents bypass of packet sneak and enforcement of blocking
@@ -195,10 +207,8 @@ public class MovingCheck {
 			double ydis = Math.abs(lg.y - to.getY());
 			
 			if(xs > 0 || zs > 0){
-			
-				boolean wg = movedata.wasonground;
 				
-				double mxs = ((p.isOnGround()) ? p.getWalkSpeed() : ((p.getAllowFlight() ? p.getFlySpeed() : p.getWalkSpeed())));
+				double mxs = 0;
 				
 				boolean csneak = p.isSneaking();
 				
@@ -242,38 +252,45 @@ public class MovingCheck {
 					
 				}
 				
-				if(xs > zs){
-				
-					p.sendMessage(xs + "");
-					
-				}else{
-					
-					p.sendMessage("" + zs);
-					
-				}
-				
 				if(cfly){
 					
-					
+					mxs = (p.getFlySpeed() * 5.457);
 					
 				}else if(csprint){
 					
+					if(jumped){//Player is jumping/landing
 					
+						mxs = (p.getWalkSpeed() / 0.3);
+					
+					}else{
+						
+						mxs = (p.getWalkSpeed() / 0.71);
+						
+					}
 					
 				}else if(csneak){
 					
-					mxs = (mxs - (p.getWalkSpeed() - (p.getWalkSpeed() / 3))) + 0.1;
+					if(jumped){
+						
+						mxs = (p.getWalkSpeed() / 2.1);
+						
+					}else{
 					
-					//1 - 0.33 = 0.67
-					//0.9 - 0.292 = 0.608
-					//0.8 - 0.26 = 0.54
-					//0.7 - 0.23 = 0.47
+						mxs = (p.getWalkSpeed() / 2.9);
 					
-					//0.067
+					}
 					
 				}else{
 					
-					mxs = mxs + 0.1;
+					if(jumped){
+						
+						mxs = (p.getWalkSpeed() / 0.65);
+						
+					}else{
+					
+						mxs = (p.getWalkSpeed() / 0.9);
+					
+					}
 					
 				}
 				
@@ -283,9 +300,19 @@ public class MovingCheck {
 					
 					if(level > 0){
 					
-						mxs = (0.0812) * ((0.5 * level) + 1);
+						mxs = (mxs * (((level * 20) * 0.011) + 1));
 					
 					}
+					
+				}
+				
+				if(xs > zs){
+					
+					p.sendMessage(xs + ":" + mxs);
+					
+				}else{
+					
+					p.sendMessage(zs + ":" + mxs);
 					
 				}
 				
