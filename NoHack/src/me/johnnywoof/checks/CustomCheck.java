@@ -90,7 +90,7 @@ public class CustomCheck {
         float f = (float) ticks / 20.0F;
         f = (f * f + f * 2.0F) / 3.0F;
         f = f > 1.0F ? 1.0F : f;
-        if (Math.abs(force - f) > 0.25) {
+        if (Math.abs(force - f) > 0.20) {
            return true;
         } else {
             return false;
