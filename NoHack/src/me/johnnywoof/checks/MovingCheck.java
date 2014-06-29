@@ -306,16 +306,6 @@ public class MovingCheck {
 					
 				}
 				
-				if(xs > zs){
-					
-					p.sendMessage(xs + ":" + mxs);
-					
-				}else{
-					
-					p.sendMessage(zs + ":" + mxs);
-					
-				}
-				
 				if(xs > mxs || zs > mxs){
 						
 					int id = this.vars.raiseViolationLevel(CheckType.HORIZONTAL_SPEED, p);
