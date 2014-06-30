@@ -60,6 +60,7 @@ public class Variables {
 		Setting.useplib = fc.getBoolean("use-protocollib");
 		Setting.killmode = fc.getInt("killaura-mode");
 		Setting.killcmds = fc.getStringList("killaura-detect");
+		Setting.fightknock = fc.getString("fight-knockback-message");
 		
 		if(Setting.useplib){
 			

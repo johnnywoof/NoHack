@@ -37,6 +37,8 @@ speed-break-message: .name. failed SpeedBreak! Broke blocks faster than usal. VL
 #Fight violation messages
 godmode-message: .name. failed GodMode! Tried to avoid taking damage. VL .vl.
 
+fight-knockback-message: .name. Failed Fight Knockback! Tried to knockback an entity in an impossible state. VL .vl.
+
 fight-impossible-message: .name. failed Impossible! Tried to do illegal attacks. VL .vl.
 
 fight-visible-message: .name. failed Visible! Tried to do attack a target without looking at it. VL .vl.

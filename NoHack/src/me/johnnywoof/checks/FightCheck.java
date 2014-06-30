@@ -2,6 +2,13 @@ package me.johnnywoof.checks;
 
 import java.util.HashMap;
 
+import me.johnnywoof.Setting;
+import me.johnnywoof.Variables;
+import me.johnnywoof.check.CheckType;
+import me.johnnywoof.event.ViolationTriggeredEvent;
+import me.johnnywoof.util.MoveData;
+import me.johnnywoof.util.Utils;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -10,12 +17,6 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-
-import me.johnnywoof.Setting;
-import me.johnnywoof.Variables;
-import me.johnnywoof.check.CheckType;
-import me.johnnywoof.event.ViolationTriggeredEvent;
-import me.johnnywoof.util.Utils;
 
 public class FightCheck {
 
@@ -211,7 +212,33 @@ public class FightCheck {
 			
 			if(!p.getItemInHand().containsEnchantment(Enchantment.KNOCKBACK)){
 				
-				
+				MoveData md = this.vars.getMoveData(p.getName());
+
+				if((System.currentTimeMillis() - md.sprinttime) < 101){
+						
+					int id = this.vars.raiseViolationLevel(CheckType.FIGHT_KNOCKBACK, p);
+						
+					ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.FIGHT_KNOCKBACK, p);
+						
+					Bukkit.getServer().getPluginManager().callEvent(vte);
+					
+					if(!vte.isCancelled()){
+						
+						if(id != 0){
+								
+							String message = Setting.fightknock;
+								
+							message = message.replaceAll(".name.", ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN);
+							message = message.replaceAll(".vl.", id + "");
+
+							Utils.messageAdmins(message);
+								
+						}
+						return 1;
+						
+					}
+					
+				}
 				
 			}
 			

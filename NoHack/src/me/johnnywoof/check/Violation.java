@@ -16,7 +16,7 @@ public class Violation {
 		
 		this.setLevel(0, p, ct);
 		
-		if(old != this.getLevel(ct)){
+		if(old == this.getLevel(ct)){
 			
 			return true;
 			
@@ -195,7 +195,7 @@ public class Violation {
 		
 		this.setLevel(old + 1, p, ct);
 		
-		if(old != this.getLevel(ct)){
+		if(old == this.getLevel(ct)){
 			
 			return true;
 			

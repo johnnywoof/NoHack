@@ -32,6 +32,8 @@ public class MovingCheck {
 		
 		boolean jumped = (movedata.wasonground != p.isOnGround());
 		
+		boolean falling = (p.getFallDistance() > 6F);
+		
 		if(!jumped){
 			
 			if((System.currentTimeMillis() - movedata.groundtime) < 600){
@@ -86,7 +88,7 @@ public class MovingCheck {
 			
 			if(up && onladder){
 				
-				if(yd > ((p.getAllowFlight() || (to.getY() % 1) <= 0.4) ? 0.424 : 0.118)){
+				if(yd > ((p.getAllowFlight() || (jumped) ? 0.424 : 0.118))){
 					
 					int id = this.vars.raiseViolationLevel(CheckType.VERTICAL_SPEED, p);
 					

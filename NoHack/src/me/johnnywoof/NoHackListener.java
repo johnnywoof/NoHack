@@ -530,10 +530,17 @@ public class NoHackListener implements Listener {
 					
 					long ls = nh.vars.getLastSwong(p.getName());
 					
-					this.fc.runFightChecks(p, e, ls);
+					if(this.fc.runFightChecks(p, e, ls) != 0){
+						
+						e.setNoDamageTicks(20);
+						event.setCancelled(true);
+						
+					}
 					
-					//A fix for stupid bukkit not taking account of ctrl sprint
-					//TODO Test this with craftbukkit and not spigot
+					//This fix makes the player a bit..."drunk"
+					
+					/*//A fix for stupid bukkit not taking account of ctrl sprint
+					//TODO Test this with craftbukkit and not spigot (and NMS?)
 					if(p.isSprinting()){
 						
 						nh.getServer().getPluginManager().callEvent(new PlayerToggleSprintEvent(p, false));
@@ -549,7 +556,7 @@ public class NoHackListener implements Listener {
 							
 						}, 1);
 					
-					}
+					}*/
 				
 				}
 				

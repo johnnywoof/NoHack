@@ -41,6 +41,18 @@ public class NoHack extends JavaPlugin{
 			
 		}
 		
+		if(this.getServer().getPluginManager().getPlugin("NoCheatPlus") != null){
+			
+			this.getLogger().warning("Another anti-cheating plugin detected! (NoCheatPlus). Two anti hacking plugins does not make checks more accurate or a safer server, it's recommended to run only one anti hacking plugin.");
+			
+		}
+		
+		if(this.getServer().getPluginManager().getPlugin("AntiCheat") != null){
+			
+			this.getLogger().warning("Another anti-cheating plugin detected! (AntiCheat). Two anti hacking plugins does not make checks more accurate or a safer server, it's recommended to run only one anti hacking plugin.");
+			
+		}
+		
 		this.reload();
 		
 		this.getServer().getPluginManager().registerEvents(new NoHackListener(this), this);

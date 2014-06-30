@@ -23,6 +23,7 @@ public class Setting {
 	public static String chatimpossiblemes = "";
 	public static String speedbreakmes = "";
 	public static String fightvisiblemes = "";
+	public static String fightknock = "";
 	public static String fasteatmes = "";
 	public static boolean ignorenpc = true;
 	public static long noswingblock = 2500;
