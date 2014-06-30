@@ -7,17 +7,35 @@ import org.bukkit.entity.Player;
 
 public class Violation {
 
-	private int fly, vs, hs, impossible, sb, fkb, fe, ns, fbow, gm, crit, fr, fspeed, abl, fp, timer, spam, fc, as, v, nf, is, gl, fb, nkb;
+	private int fly, vs, hs, impossible, sb, autos, fkb, fe, ns, fbow, gm, crit, fr, fspeed, abl, fp, timer, spam, fc, as, v, nf, is, gl, fb, nkb;
 	private long lastnotification = 0;
 	
 	public boolean resetLevel(CheckType ct, Player p){
 		
-		ViolationChangedEvent vce = new ViolationChangedEvent(0, this.getLevel(ct), ct, p);
+		int old = this.getLevel(ct);
+		
+		this.setLevel(0, p, ct);
+		
+		if(old != this.getLevel(ct)){
+			
+			return true;
+			
+		}else{
+		
+			return false;
+		
+		}
+		
+	}
+	
+	public int setLevel(int level, Player p, CheckType ct){
+		
+		ViolationChangedEvent vce = new ViolationChangedEvent(level, this.getLevel(ct), ct, p);
 		
 		Bukkit.getPluginManager().callEvent(vce);
 		
 		if(vce.isCancelled()){
-			return true;
+			return vce.getOldLevel();
 		}
 		
 		switch(ct){
@@ -99,11 +117,12 @@ public class Violation {
 		case FAST_EAT:
 			this.fe = vce.getNewLevel();
 			break;
-		default:
+		case AUTOSIGN:
+			this.autos = vce.getNewLevel();
 			break;
-	}
+		}
 		
-		return false;
+		return vce.getOldLevel();
 		
 	}
 	
@@ -162,8 +181,8 @@ public class Violation {
 				return this.fkb;
 			case FAST_EAT:
 				return this.fe;
-			default:
-				break;
+			case AUTOSIGN:
+				return this.autos;
 		}
 		
 		return 0;
@@ -172,95 +191,19 @@ public class Violation {
 	
 	public boolean raiseLevel(CheckType ct, Player p){
 		
-		ViolationChangedEvent vce = new ViolationChangedEvent(this.getLevel(ct) + 1, this.getLevel(ct), ct, p);
+		int old = this.getLevel(ct);
 		
-		Bukkit.getPluginManager().callEvent(vce);
+		this.setLevel(old + 1, p, ct);
 		
-		if(vce.isCancelled()){
+		if(old != this.getLevel(ct)){
+			
 			return true;
-		}
+			
+		}else{
 		
-		switch(ct){
-			case AIMBOT:
-				this.abl = vce.getNewLevel();
-				break;
-			case ATTACK_REACH:
-				this.fr = vce.getNewLevel();
-				break;
-			case ATTACK_SPEED:
-				this.fspeed = vce.getNewLevel();
-				break;
-			case CRITICAL:
-				this.crit = vce.getNewLevel();
-				break;
-			case FASTPLACE:
-				this.fp = vce.getNewLevel();
-				break;
-			case FAST_THROW:
-				this.fp = vce.getNewLevel();
-				break;
-			case FLY:
-				this.fly = vce.getNewLevel();
-				break;
-			case GOD_MODE:
-				this.gm = vce.getNewLevel();
-				break;
-			case HORIZONTAL_SPEED:
-				this.hs = vce.getNewLevel();
-				break;
-			case IMPOSSIBLE:
-				this.impossible = vce.getNewLevel();
-				break;
-			case NOSWING:
-				this.ns = vce.getNewLevel();
-				break;
-			case SPEED_BREAK:
-				this.sb = vce.getNewLevel();
-				break;
-			case VERTICAL_SPEED:
-				this.vs = vce.getNewLevel();
-				break;
-			case TIMER:
-				this.timer = vce.getNewLevel();
-				break;
-			case SPAM:
-				this.spam = vce.getNewLevel();
-				break;
-			case FASTCLICK:
-				this.fc = vce.getNewLevel();
-				break;
-			case AUTOSOUP:
-				this.as = vce.getNewLevel();
-				break;
-			case VISIBLE:
-				this.v = vce.getNewLevel();
-				break;
-			case NOFALL:
-				this.nf = vce.getNewLevel();
-				break;
-			case FAST_INTERACT:
-				this.is = vce.getNewLevel();
-				break;
-			case GLIDE:
-				this.gl = vce.getNewLevel();
-				break;
-			case FULLBRIGHT:
-				this.fb = vce.getNewLevel();
-				break;
-			case NOKNOCKBACK:
-				this.nkb = vce.getNewLevel();
-				break;
-			case FAST_BOW:
-				this.fbow = vce.getNewLevel();
-			case FIGHT_KNOCKBACK:
-				this.fkb = vce.getNewLevel();
-			case FAST_EAT:
-				this.fe = vce.getNewLevel();
-			default:
-				break;
-		}
+			return false;
 		
-		return false;
+		}
 		
 	}
 	

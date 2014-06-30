@@ -11,7 +11,9 @@ import me.johnnywoof.util.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.util.BlockIterator;
 
@@ -20,10 +22,47 @@ public class BlockCheck {
 	private Variables vars;
 	
 	private final HashMap<String, Long> lastBreak = new HashMap<String, Long>();
+	private final HashMap<String, Long> lastSign = new HashMap<String, Long>();
 	
 	public BlockCheck(Variables vars){
 		
 		this.vars = vars;
+		
+	}
+	
+	public int runSignChecks(Player p, Sign s){
+		
+		long diff = (System.currentTimeMillis() - this.getLastSign(p.getName()));
+		
+		String mes = "";
+		
+		for(String e : s.getLines()){
+			
+			mes = mes + e + ".";
+			
+		}
+		
+		if(diff < (mes.length() * 50)){//TODO Test it...?
+			
+			return 1;
+			
+		}
+		
+		return 0;
+		
+	}
+	
+	public int runPlaceChecks(Player p, Block b){
+		
+		Material m = b.getType();
+		
+		if(m == Material.SIGN_POST || m == Material.SIGN || m == Material.WALL_SIGN){
+			
+			this.updateLastSign(p.getName());
+			
+		}
+		
+		return 0;
 		
 	}
 	
@@ -199,6 +238,26 @@ public class BlockCheck {
 		//****************End Block Visible******************
 		
 		return 0;
+		
+	}
+	
+	public void updateLastSign(String v){
+		
+		this.lastSign.put(v, System.currentTimeMillis());
+		
+	}
+	
+	private long getLastSign(String v){
+		
+		if(this.lastSign.containsKey(v)){
+			
+			return this.lastSign.get(v);
+			
+		}else{
+			
+			return 0;
+			
+		}
 		
 	}
 	

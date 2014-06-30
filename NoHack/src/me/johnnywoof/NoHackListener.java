@@ -28,6 +28,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.Sign;
 import org.bukkit.craftbukkit.v1_7_R3.entity.CraftPlayer;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
@@ -37,6 +38,8 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
@@ -103,6 +106,44 @@ public class NoHackListener implements Listener {
 			
 			nh.vars.setMoveData(p.getName(), md);
 		
+		}
+		
+	}
+	
+	@EventHandler(ignoreCancelled = true)
+	public void onSign(SignChangeEvent event){
+		
+		if(event.getBlock().getState() instanceof Sign){
+		
+			if(bc.runSignChecks(event.getPlayer(), (Sign) event.getBlock().getState()) != 0){
+				
+				event.setCancelled(true);
+				
+				BlockBreakEvent cevent = new BlockBreakEvent(event.getBlock(), event.getPlayer());
+				
+				nh.getServer().getPluginManager().callEvent(cevent);
+				
+				if(!cevent.isCancelled()){
+					
+					event.getBlock().breakNaturally();
+					
+				}
+				
+				cevent = null;
+				
+			}
+			
+		}
+		
+	}
+	
+	@EventHandler(ignoreCancelled = true)
+	public void onPlace(BlockPlaceEvent event){
+		
+		if(bc.runPlaceChecks(event.getPlayer(), event.getBlock()) != 0){
+			
+			event.setCancelled(true);
+			
 		}
 		
 	}
