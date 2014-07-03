@@ -3,15 +3,12 @@ package me.johnnywoof.checks;
 import java.util.HashMap;
 import java.util.UUID;
 
+import me.johnnywoof.Variables;
+import me.johnnywoof.check.CheckType;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-
-import me.johnnywoof.Setting;
-import me.johnnywoof.Variables;
-import me.johnnywoof.check.CheckType;
-import me.johnnywoof.event.ViolationTriggeredEvent;
-import me.johnnywoof.util.Utils;
 
 public class ChatCheck {
 
@@ -31,26 +28,10 @@ public class ChatCheck {
 		
 		if(p.isSneaking() || p.isBlocking() || p.isSprinting() || p.isDead() || message.toString().contains(ChatColor.COLOR_CHAR + "")){
 			
-			int id = this.vars.raiseViolationLevel(CheckType.IMPOSSIBLE, p);
-			
-			ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.IMPOSSIBLE, p);
-			
-			Bukkit.getServer().getPluginManager().callEvent(vte);
-			
-			if(!vte.isCancelled()){
+			if(this.vars.issueViolation(p, CheckType.IMPOSSIBLE_CHAT)){
 				
-				if(id != 0){
-					
-					String mes = Setting.chatimpossiblemes;
-					
-					mes = mes.replaceAll(".name.", ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN);
-					mes = mes.replaceAll(".vl.", id + "");
-
-					Utils.messageAdmins(mes);
-					
-				}
 				return 1;
-			
+				
 			}
 			
 		}

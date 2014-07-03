@@ -4,12 +4,9 @@ import java.util.HashMap;
 
 import me.johnnywoof.Variables;
 import me.johnnywoof.check.CheckType;
-import me.johnnywoof.event.ViolationTriggeredEvent;
 import me.johnnywoof.util.Utils;
 import me.johnnywoof.util.XYZ;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
@@ -76,21 +73,10 @@ public class InteractCheck {
 				
 				if(diff <= am){
 					
-					int id = this.vars.raiseViolationLevel(CheckType.FAST_INTERACT, p);
-					
-					ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.FAST_INTERACT, p);
-					
-					Bukkit.getServer().getPluginManager().callEvent(vte);
-					
-					if(!vte.isCancelled()){
-					
-						if(id != 0){
-							
-							Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed Fast Interact! Diff " + diff + ". VL " + id);
-							
-						}
+					if(this.vars.issueViolation(p, CheckType.FAST_INTERACT)){
+						
 						return 1;
-					
+						
 					}
 					
 				}
@@ -109,20 +95,10 @@ public class InteractCheck {
 				
 				if(!Utils.canSee(p, event.getClickedBlock().getRelative(event.getBlockFace()).getLocation()) && !new XYZ(event.getClickedBlock().getLocation()).equalsLoc(new XYZ(p.getEyeLocation().getBlock().getLocation()))){
 					
-					int id = this.vars.raiseViolationLevel(CheckType.VISIBLE, p);
-					
-					ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.VISIBLE, p);
-					
-					Bukkit.getServer().getPluginManager().callEvent(vte);
-					
-					if(!vte.isCancelled()){
-					
-						if(id != 0){
-							
-							Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed Visible! Tried to interact with a block out of sight. VL " + id);					
-						}
+					if(this.vars.issueViolation(p, CheckType.BLOCK_VISIBLE)){
+						
 						return 1;
-					
+						
 					}
 					
 				}
@@ -141,23 +117,10 @@ public class InteractCheck {
 				
 				if(diff <= 180000){		
 					
-					int id = this.vars.raiseViolationLevel(CheckType.FAST_INTERACT, p);
-					
-					ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.FAST_INTERACT, p);
-					
-					Bukkit.getServer().getPluginManager().callEvent(vte);
-					
-					if(!vte.isCancelled()){
-					
-						if(id != 0){
-							
-							//TODO Add block breaking out of sync kick
-							
-							Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed Fast Interact! Diff " + diff + ". VL " + id);
-							
-						}
+					if(this.vars.issueViolation(p, CheckType.FAST_INTERACT)){
+						
 						return 1;
-					
+						
 					}
 					
 				}

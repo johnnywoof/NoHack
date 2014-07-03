@@ -2,8 +2,11 @@ package me.johnnywoof.checks;
 
 import java.util.HashMap;
 
+import me.johnnywoof.Settings;
+import me.johnnywoof.Variables;
+import me.johnnywoof.check.CheckType;
+
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryAction;
@@ -11,12 +14,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.inventory.InventoryType.SlotType;
 import org.bukkit.inventory.Inventory;
-
-import me.johnnywoof.Setting;
-import me.johnnywoof.Variables;
-import me.johnnywoof.check.CheckType;
-import me.johnnywoof.event.ViolationTriggeredEvent;
-import me.johnnywoof.util.Utils;
 
 public class InventoryCheck {
 
@@ -33,26 +30,10 @@ public class InventoryCheck {
 		
 		if(p.isBlocking() || p.isSneaking() || p.isSprinting() || p.isSleeping()){
 			
-			int id = this.vars.raiseViolationLevel(CheckType.IMPOSSIBLE, p);
-			
-			ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.IMPOSSIBLE, p);
-			
-			Bukkit.getServer().getPluginManager().callEvent(vte);
-			
-			if(!vte.isCancelled()){
-			
-				if(id != 0){
-					
-					String message = Setting.impossibleclick;
-					
-					message = message.replaceAll(".name.", ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN);
-					message = message.replaceAll(".vl.", id + "");
-
-					Utils.messageAdmins(message);
-					
-				}
+			if(this.vars.issueViolation(p, CheckType.IMPOSSIBLE_CLICK)){
+				
 				return 1;
-			
+				
 			}
 			
 		}
@@ -87,7 +68,7 @@ public class InventoryCheck {
 			
 		}
 		
-		if(Setting.debug){
+		if(Settings.debug){
 			
 			Bukkit.broadcastMessage("Type: " + inv.getType() + "; Action: " + ia.toString().toLowerCase());
 			
@@ -95,28 +76,12 @@ public class InventoryCheck {
 		
 		long diff = (System.currentTimeMillis() - this.getLastClicked(p.getName()));
 		
-		if(diff <= Setting.fcs){
+		if(diff <= Settings.fcs){
 			
-			int id = this.vars.raiseViolationLevel(CheckType.FASTCLICK, p);
-			
-			ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.FASTCLICK, p);
-			
-			Bukkit.getServer().getPluginManager().callEvent(vte);
-			
-			this.lastclick.put(p.getName(), System.currentTimeMillis());
-			
-			if(!vte.isCancelled()){
-				
-				this.lastviolation.put(p.getName(), System.currentTimeMillis());
-			
-				if(id != 0){
-					
-					Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed FastClick! Interacted with a container too fast. VL " + id);
-					
-				}
+			if(this.vars.issueViolation(p, CheckType.SPEED_CLICK)){
 				
 				return 1;
-			
+				
 			}
 			
 		}

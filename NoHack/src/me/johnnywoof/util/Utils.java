@@ -2,11 +2,9 @@ package me.johnnywoof.util;
 
 import java.util.ArrayList;
 
-import me.johnnywoof.NoHack;
 import net.minecraft.server.v1_7_R3.Vec3D;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -308,13 +306,13 @@ public class Utils {
 		
 	}
 	
-	public static void messageAdmins(String message){
+	public static void messageStaff(String message){
 		
 		for(Player p : Bukkit.getOnlinePlayers()){
 			
 			if(p.hasPermission("nohack.notification") || p.isOp()){
 				
-				p.sendMessage(ChatColor.RED + "[NoHack] " + ChatColor.GREEN + "" + message + ChatColor.GREEN + ". TPS " + NoHack.tps);
+				p.sendMessage(message);
 				
 			}
 			

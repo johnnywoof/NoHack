@@ -2,7 +2,6 @@ package me.johnnywoof;
 
 import me.johnnywoof.check.CheckType;
 import me.johnnywoof.check.Violation;
-import me.johnnywoof.protocollib.HackChecker;
 
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -99,7 +98,7 @@ public class NoHack extends JavaPlugin{
 			
 			this.getLogger().info("Found ProtocolLib! Using it for more features and accurate checks!");
 			
-			new HackChecker(this);
+			//new HackChecker(this);
 			
 		}
 		
@@ -121,7 +120,7 @@ public class NoHack extends JavaPlugin{
 		
 		this.vars = new Variables();
 		
-		this.vars.reloadConfig(this.getConfig());
+		Settings.reload(this.getConfig());
 		
 	}
 	

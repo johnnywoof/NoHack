@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.UUID;
 
 import me.johnnywoof.NoHack;
-import me.johnnywoof.Setting;
+import me.johnnywoof.Settings;
 import me.johnnywoof.util.XYZ;
 
 import org.bukkit.Bukkit;
@@ -40,7 +40,7 @@ public class CustomCheck {
 				
 				if(p != null){
 				
-					if(Setting.debug){
+					if(Settings.debug){
 	
 						p.sendMessage("Old Location: " + old.toString());
 						p.sendMessage("New Location: " + new XYZ(p.getLocation()).toString());

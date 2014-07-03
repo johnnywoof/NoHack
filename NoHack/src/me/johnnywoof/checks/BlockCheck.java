@@ -2,14 +2,12 @@ package me.johnnywoof.checks;
 
 import java.util.HashMap;
 
-import me.johnnywoof.Setting;
+import me.johnnywoof.Settings;
 import me.johnnywoof.Variables;
 import me.johnnywoof.check.CheckType;
-import me.johnnywoof.event.ViolationTriggeredEvent;
 import me.johnnywoof.util.Utils;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -74,28 +72,12 @@ public class BlockCheck {
 		
 		//****************Start NoSwing******************
 		
-		if((System.currentTimeMillis() - ls) >= Setting.noswingblock){
+		if((System.currentTimeMillis() - ls) >= Settings.noswingblock){
 			
-			int id = this.vars.raiseViolationLevel(CheckType.NOSWING, p);
-			
-			ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.NOSWING, p);
-			
-			Bukkit.getServer().getPluginManager().callEvent(vte);
-			
-			if(!vte.isCancelled()){
-			
-				if(id != 0){
-					
-					String message = Setting.noswingmes;
-					
-					message = message.replaceAll(".name.", ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN);
-					message = message.replaceAll(".vl.", id + "");
-
-					Utils.messageAdmins(message);
-					
-				}
+			if(this.vars.issueViolation(p, CheckType.NOSWING)){
+				
 				return 1;
-			
+				
 			}
 			
 		}
@@ -107,12 +89,8 @@ public class BlockCheck {
 		long diff = (System.nanoTime() - this.getLastBreak(p.getName()));
 		
 		this.lastBreak.put(p.getName(), System.nanoTime());
-		
-		if(!Setting.useplib){
 			
-			//TODO Add fastbreak check for non-protocollib
-			
-		}
+		//TODO Add fastbreak check
 		
 		//****************End FastBreak******************
 		
@@ -126,32 +104,16 @@ public class BlockCheck {
 				
 				if(diff < 360000){
 					
-					if(Setting.debug){
+					if(Settings.debug){
 						
 						Bukkit.broadcastMessage("Diff: " + diff);
 						
 					}
 					
-					int id = this.vars.raiseViolationLevel(CheckType.SPEED_BREAK, p);
-					
-					ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.SPEED_BREAK, p);
-					
-					Bukkit.getServer().getPluginManager().callEvent(vte);
-					
-					if(!vte.isCancelled()){
-					
-						if(id != 0){
-							
-							String message = Setting.speedbreakmes;
-							
-							message = message.replaceAll(".name.", ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN);
-							message = message.replaceAll(".vl.", id + "");
-
-							Utils.messageAdmins(message);
-							
-						}
+					if(this.vars.issueViolation(p, CheckType.SPEED_BREAK)){
+						
 						return 1;
-					
+						
 					}
 					
 				}
@@ -181,26 +143,10 @@ public class BlockCheck {
 	    	
 	    	if(!goodie){
 	    		
-	    		int id = this.vars.raiseViolationLevel(CheckType.VISIBLE, p);
-				
-				ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.VISIBLE, p);
-				
-				Bukkit.getServer().getPluginManager().callEvent(vte);
-				
-				if(!vte.isCancelled()){
-				
-					if(id != 0){
-						
-						String message = Setting.blockvisiblebreak;
-						
-						message = message.replaceAll(".name.", ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN);
-						message = message.replaceAll(".vl.", id + "");
-
-						Utils.messageAdmins(message);
-						
-					}
-					return 4;
-				
+	    		if(this.vars.issueViolation(p, CheckType.BLOCK_VISIBLE)){
+					
+					return 1;
+					
 				}
 	    		
 	    	}
@@ -209,26 +155,10 @@ public class BlockCheck {
 		
 			if(!Utils.canSeeBlock(p, b)){
 				
-				int id = this.vars.raiseViolationLevel(CheckType.VISIBLE, p);
-				
-				ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.VISIBLE, p);
-				
-				Bukkit.getServer().getPluginManager().callEvent(vte);
-				
-				if(!vte.isCancelled()){
-				
-					if(id != 0){
-						
-						String message = Setting.blockvisiblebreak;
-						
-						message = message.replaceAll(".name.", ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN);
-						message = message.replaceAll(".vl.", id + "");
-
-						Utils.messageAdmins(message);
-						
-					}
+				if(this.vars.issueViolation(p, CheckType.BLOCK_VISIBLE)){
+					
 					return 4;
-				
+					
 				}
 				
 			}

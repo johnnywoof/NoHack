@@ -1,95 +1,84 @@
 #------------------------------------------------------------------
 # Main config file for NoHack
+# There should be three files, one is this config
+# The second (message.yml) is the language file,
+# and finally the third (rules.yml) is the advance configuration
 #------------------------------------------------------------------
 
-#Autoban players if hacks are detected?
-autoban-players: true
+#What type of system do you want NoHack to use?
+#A live system will block hacks as they are used,
+#while a ban system will autoban almost confirmed cheaters.
+system-type: live
 
-#How long should the autoban last? In seconds
-autoban-time: 60
+#####-----Bungeecord Section-----#####
 
-#Should we not check citizens 2 npcs for hacks?
-ignore-citizens-npc: true
+#Set this to true to enable bungeecord support
+bungeecord-support: false
 
-#Chat violation messages
-chat-impossible-message: .name. failed Impossible! Tried to chat in an illegal state. VL .vl.
-
-#Move violation messages
-nofall-message: .name. failed NoFall! Tried to fall while saying on the ground. VL .vl.
-
-timer-message: .name. failed Timer! Sent .packets-sent. packets but expected no more than .expected-packets.. VL .vl.
-
-impossible-move-message: .name. failed Impossible! Tried to move in a way which is impossible. VL .vl.
-
-vertical-speed-message: .name. failed Vertical Speed! Tried to move too fast on the y axis. VL .vl.
-
-horizontal-speed-message: .name. failed Horizontal Speed! Tried to move too fast on the xz axis. VL .vl.
-
-fly-message: .name. failed Fly! Tried to fly in survival mode without permission. VL .vl.
-
-glide-message: .name. failed Glide! Tried to float to an unexpected location. VL .vl.
-
-#Block violation messages
-block-visible-break-message: .name. failed Visible! Tried to break another block than expected. VL .vl.
-
-speed-break-message: .name. failed SpeedBreak! Broke blocks faster than usal. VL .vl.
-
-#Fight violation messages
-godmode-message: .name. failed GodMode! Tried to avoid taking damage. VL .vl.
-
-fight-knockback-message: .name. Failed Fight Knockback! Tried to knockback an entity in an impossible state. VL .vl.
-
-fight-impossible-message: .name. failed Impossible! Tried to do illegal attacks. VL .vl.
-
-fight-visible-message: .name. failed Visible! Tried to do attack a target without looking at it. VL .vl.
-
-fight-speed-message: .name. failed Attack Speed! Tried to attack too fast. VL .vl.
-
-fight-reach-message: .name. failed Attack Reach! Tried to attack too far. VL .vl.
-
-autosoup-message: .name. failed AutoSoup! Tried to soup while attacking! VL .vl.
-
-#Inventory violation messages
-inventory-impossible-message: .name. failed Impossible! Tried to do illegal inventory clicks. VL .vl.
-
-inventory-click-speed: .name. failed FastClick! Clicked a container too fast. VL .vl.
-
-#Everything else with messages
-noswing-message: .name. failed NoSwing! Did not swing arm. VL .vl.
-
-fast-eat-message: .name. failed Fast Eat! Ate a food item too fast. VL .vl.
-
-#####ProtocolLib Config#####
+#####-----ProtocolLib Section-----#####
 
 #If true, NoHack will use ProtocolLib, if installed, for more accurate results
 use-protocollib: true
 
-check-killaura: true
+#################################################################################
+#
+#                NoHack Messages Section
+#
+#################################################################################
+format: &c[NoHack]&e.name.&a failed &2.type.&a! .message. &8VL .vl.
 
-#//TODO FIX SPELLING!
-#1 means pure randomness, however players might get annoyed
-#2 means the npc will spawn in a location where only hacked clients can detect
-#however once they "evovled" the mode may become obsolete
-killaura-mode: 2
+#Chat violation messages
+chat-impossible-message: Tried to chat in an illegal state.
 
-#Should NPCs be invisible? Keep in mind some hacked clients do not attack invisible players
-#Options: false, true, and random meaning true & false at random times
-killaura-invisible: random
+#Move violation messages
+nofall-message: Tried to fall while saying on the ground.
 
-#What commands should be done when it detects a possible player using forcefield/kill aura?
-#Note: when you type the text "notify" as a command it will alert anyone with the
-#nohack.notification.killaura permission!
-killaura-detect:
-- notify
-- ban %name Hacking, using kill aura
-- say %name has been banned for hacking!
+timer-message: Sent .packets-sent. packets but expected no more than .expected-packets..
 
-#####Everything else#####
+impossible-move-message: Tried to move in a way which is impossible.
 
-#If true, the player defined in "Debug-player" will get spammed with messages.
-debug: true
+vertical-speed-message: Tried to move too fast on the y axis.
 
-debug-player: johnnywoof
+horizontal-speed-message: Tried to move too fast on the xz axis.
+
+fly-message: Tried to fly in survival mode without permission.
+
+glide-message: Tried to float to an unexpected location.
+
+#Block violation messages
+block-visible-break-message: Tried to break another block than expected.
+
+speed-break-message: Broke blocks faster than usal.
+
+#Fight violation messages
+godmode-message: Tried to avoid taking damage.
+
+fight-knockback-message: Tried to knockback an entity in an impossible state.
+
+fight-impossible-message: Tried to do illegal attacks.
+
+fight-visible-message: Tried to do attack a target without looking at it.
+
+fight-speed-message: Tried to attack too fast.
+
+fight-reach-message: Tried to attack too far.
+
+autosoup-message: Tried to soup while attacking!
+
+#Inventory violation messages
+inventory-impossible-message: Tried to do illegal inventory clicks.
+
+inventory-click-speed: Clicked a container too fast.
+
+#Everything else with messages
+noswing-message: Did not swing arm.
+
+fast-eat-message: Ate a food item too fast.
+#################################################################################
+#
+#                NoHack Advance Section
+#
+#################################################################################
 
 ###############################################################
 #    Notice: Below, this changes how the plugin works
@@ -99,10 +88,6 @@ debug-player: johnnywoof
 noswing-block-difference: 2500
 
 noswing-fight-difference: 100
-
-creative-attack-reach: 31.5
-
-survival-attack-reach: 18
 
 fight-attack-speed: 60
 

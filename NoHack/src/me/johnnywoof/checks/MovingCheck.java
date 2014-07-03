@@ -1,15 +1,12 @@
 package me.johnnywoof.checks;
 
-import me.johnnywoof.Setting;
+import me.johnnywoof.Settings;
 import me.johnnywoof.Variables;
 import me.johnnywoof.check.CheckType;
-import me.johnnywoof.event.ViolationTriggeredEvent;
 import me.johnnywoof.util.MoveData;
 import me.johnnywoof.util.Utils;
 import me.johnnywoof.util.XYZ;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -32,8 +29,6 @@ public class MovingCheck {
 		
 		boolean jumped = (movedata.wasonground != p.isOnGround());
 		
-		boolean falling = (p.getFallDistance() > 6F);
-		
 		if(!jumped){
 			
 			if((System.currentTimeMillis() - movedata.groundtime) < 600){
@@ -53,26 +48,10 @@ public class MovingCheck {
 				
 				if((System.currentTimeMillis() - movedata.blocktime) > 150){
 					
-					int id = this.vars.raiseViolationLevel(CheckType.IMPOSSIBLE, p);
-					
-					ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.IMPOSSIBLE, p);
-					
-					Bukkit.getServer().getPluginManager().callEvent(vte);
-					
-					if(!vte.isCancelled()){
-					
-						if(id != 0){
-							
-							String message = Setting.impossiblemovemes;
-							
-							message = message.replaceAll(".name.", ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN);
-							message = message.replaceAll(".vl.", id + "");
-
-							Utils.messageAdmins(message);
-							
-						}
+					if(this.vars.issueViolation(p, CheckType.IMPOSSIBLE_MOVE)){
+						
 						return 1;
-					
+						
 					}
 					
 				}
@@ -90,26 +69,10 @@ public class MovingCheck {
 				
 				if(yd > ((p.getAllowFlight() || (jumped) ? 0.424 : 0.118))){
 					
-					int id = this.vars.raiseViolationLevel(CheckType.VERTICAL_SPEED, p);
-					
-					ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.VERTICAL_SPEED, p);
-					
-					Bukkit.getServer().getPluginManager().callEvent(vte);
-					
-					if(!vte.isCancelled()){
+					if(this.vars.issueViolation(p, CheckType.VERTICAL_SPEED)){
 						
-						if(id != 0){
-							
-							String message = Setting.verticalspeedmes;
-							
-							message = message.replaceAll(".name.", ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN);
-							message = message.replaceAll(".vl.", id + "");
-
-							Utils.messageAdmins(message);
-							
-						}
 						return 1;
-					
+						
 					}
 					
 				}
@@ -120,26 +83,10 @@ public class MovingCheck {
 				
 				if(yd > this.getMaxVertical(p, inwater, up)){//Moving up only
 					
-					int id = this.vars.raiseViolationLevel(CheckType.VERTICAL_SPEED, p);
-					
-					ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.VERTICAL_SPEED, p);
-					
-					Bukkit.getServer().getPluginManager().callEvent(vte);
-					
-					if(!vte.isCancelled()){
-					
-						if(id != 0){
-							
-							String message = Setting.verticalspeedmes;
-							
-							message = message.replaceAll(".name.", ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN);
-							message = message.replaceAll(".vl.", id + "");
-
-							Utils.messageAdmins(message);
-							
-						}
+					if(this.vars.issueViolation(p, CheckType.VERTICAL_SPEED)){
+						
 						return 1;
-					
+						
 					}
 					
 				}
@@ -165,32 +112,14 @@ public class MovingCheck {
 					
 					if(ydis > this.getMaxHight(p, movedata)){
 						
-						int id = this.vars.raiseViolationLevel(CheckType.FLY, p);
-						
-						ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.FLY, p);
-						
-						Bukkit.getServer().getPluginManager().callEvent(vte);
-						
-						if(!vte.isCancelled()){
-						
-							if(id != 0){
-								
-								String message = Setting.flymes;
-								
-								message = message.replaceAll(".name.", ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN);
-								message = message.replaceAll(".vl.", id + "");
-
-								Utils.messageAdmins(message);
-								
-							}
+						if(this.vars.issueViolation(p, CheckType.FLY)){
 							
 							//I've discovered this trick on mineplex
-							
 							p.setFlying(false);
 							p.setAllowFlight(false);
 							
 							return 3;
-						
+							
 						}
 						
 					}
@@ -309,31 +238,15 @@ public class MovingCheck {
 				}
 				
 				if(xs > mxs || zs > mxs){
-						
-					int id = this.vars.raiseViolationLevel(CheckType.HORIZONTAL_SPEED, p);
 					
-					ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.HORIZONTAL_SPEED, p);
+					if(this.vars.issueViolation(p, CheckType.HORIZONTAL_SPEED)){
 						
-					Bukkit.getServer().getPluginManager().callEvent(vte);
-						
-					if(!vte.isCancelled()){
+						if(Settings.debug){
 							
-						if(Setting.debug){
-								
 							p.sendMessage("XS: " + xs + ";XZ:" + zs + "; Max: " + mxs + ";G: " + p.isOnGround() + ";WG: " + movedata.wasonground + ";GT: " + (System.currentTimeMillis() - movedata.groundtime));
 								
 						}
 						
-						if(id != 0){
-								
-							String message = Setting.horizontalspeedmes;
-								
-							message = message.replaceAll(".name.", ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN);
-							message = message.replaceAll(".vl.", id + "");
-		
-							Utils.messageAdmins(message);
-								
-						}
 						return 1;
 						
 					}
@@ -348,27 +261,10 @@ public class MovingCheck {
 				
 				if(mdis > this.getMaxMD(inwater, p.isOnGround(), p, ydis, movedata)){
 					
-					int id = this.vars.raiseViolationLevel(CheckType.GLIDE, p);
-					
-					ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.GLIDE, p);
-					
-					Bukkit.getServer().getPluginManager().callEvent(vte);
-					
-					if(!vte.isCancelled()){
-					
-						if(id != 0){
-							
-							String message = Setting.glidemes;
-							
-							message = message.replaceAll(".name.", ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN);
-							message = message.replaceAll(".vl.", id + "");
-	
-							Utils.messageAdmins(message);
-							
-						}
+					if(this.vars.issueViolation(p, CheckType.GLIDE)){
 						
 						return 1;
-					
+						
 					}
 					
 				}
@@ -421,24 +317,8 @@ public class MovingCheck {
 						
 						if(dis > 2){//Prevent bypassing fly checks when moving in an horiztonal motion
 							
-							int id = this.vars.raiseViolationLevel(CheckType.FLY, p);
-							
-							ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.FLY, p);
+							if(this.vars.issueViolation(p, CheckType.FLY)){
 								
-							Bukkit.getServer().getPluginManager().callEvent(vte);
-								
-							if(!vte.isCancelled()){
-								
-								if(id != 0){
-										
-									String message = Setting.flymes;
-										
-									message = message.replaceAll(".name.", ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN);
-									message = message.replaceAll(".vl.", id + "");
-
-									Utils.messageAdmins(message);
-										
-								}
 								return 1;
 								
 							}
@@ -462,25 +342,9 @@ public class MovingCheck {
 								
 								if(m != Material.CHEST && m != Material.TRAPPED_CHEST){
 								
-									int id = this.vars.raiseViolationLevel(CheckType.NOFALL, p);
+									if(this.vars.issueViolation(p, CheckType.NOFALL)){
 										
-									ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.NOFALL, p);
-										
-									Bukkit.getServer().getPluginManager().callEvent(vte);
-										
-									if(!vte.isCancelled()){
-										
-										if(id != 0){
-												
-											String message = Setting.nofallmessage;
-												
-											message = message.replaceAll(".name.", ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN);
-											message = message.replaceAll(".vl.", id + "");
-	
-											Utils.messageAdmins(message);
-												
-										}
-										return 4;
+										return 1;
 										
 									}
 									
@@ -497,27 +361,10 @@ public class MovingCheck {
 				
 				if(!up && yd > 0.25 && p.isOnGround()){ //Falling while onground? I DON'T THINK SO
 					
-					int id = this.vars.raiseViolationLevel(CheckType.NOFALL, p);
+					if(this.vars.issueViolation(p, CheckType.NOFALL)){
 						
-					ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.NOFALL, p);
-					
-					Bukkit.getServer().getPluginManager().callEvent(vte);
-					
-					if(!vte.isCancelled()){
-					
-						if(id != 0){
-							
-							String message = Setting.nofallmessage;
-							
-							message = message.replaceAll(".name.", ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN);
-							message = message.replaceAll(".vl.", id + "");
-
-							Utils.messageAdmins(message);
-								
-						}
+						return 4;
 						
-						return 4;//More expensive to put the player back than to check it
-					
 					}
 					
 				}
@@ -541,20 +388,14 @@ public class MovingCheck {
 						
 					}
 					
-					max = max + Setting.maxpacket;
+					max = max + Settings.maxpacket;
 					
 					if(movedata.getAmount() > max){
 						
 						//Maybe block the checkpoint exploit?
 						//double xzdis = Utils.getXZDistance(movedata.lastloc.x, to.getX(), movedata.lastloc.z, to.getZ());
 						
-						int id = this.vars.raiseViolationLevel(CheckType.TIMER, p);
-						
-						ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.TIMER, p);
-						
-						Bukkit.getServer().getPluginManager().callEvent(vte);
-						
-						if(!vte.isCancelled()){
+						if(this.vars.issueViolation(p, CheckType.TIMER)){
 							
 							if(movedata.getAmount() > 50){
 								
@@ -566,21 +407,8 @@ public class MovingCheck {
 								
 							}
 							
-							if(id != 0){
-								
-								String message = Setting.timermes;
-								
-								message = message.replaceAll(".name.", ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN);
-								message = message.replaceAll(".vl.", id + "");
-								message = message.replaceAll(".packets-sent.", movedata.getAmount() + "");
-								message = message.replaceAll(".expected-packets.", max + "");
-
-								Utils.messageAdmins(message);
-								
-							}
-							
 							movedata.reset(movedata.lastloc);
-						
+							
 						}
 						
 					}else{

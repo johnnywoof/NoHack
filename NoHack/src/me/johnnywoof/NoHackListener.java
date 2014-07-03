@@ -16,14 +16,11 @@ import me.johnnywoof.checks.InteractCheck;
 import me.johnnywoof.checks.InventoryCheck;
 import me.johnnywoof.checks.MovingCheck;
 import me.johnnywoof.event.ViolationChangedEvent;
-import me.johnnywoof.event.ViolationTriggeredEvent;
 import me.johnnywoof.util.MoveData;
 import me.johnnywoof.util.Utils;
 import me.johnnywoof.util.XYZ;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -78,7 +75,6 @@ public class NoHackListener implements Listener {
 	private BlockCheck bc;
 	
 	private final HashMap<String, Long> lastHealhed = new HashMap<String, Long>();
-	private final HashMap<String, Long> lastViolation = new HashMap<String, Long>();
 	
 	public NoHackListener(NoHack nh){
 		
@@ -192,79 +188,6 @@ public class NoHackListener implements Listener {
 		
 	}
 	
-	@EventHandler(ignoreCancelled = true)//Permission system bypass
-	public void onViolationTriggeredEvent(ViolationTriggeredEvent event){
-		
-		if(Setting.ignorenpc){
-			
-			if(event.getPlayer().hasMetadata("NPC")){
-				
-				event.setCancelled(true);
-				return;
-				
-			}
-			
-		}
-		
-		if(event.getPlayer().hasPermission("nohack.bypass." + event.getCheckType().toString().toLowerCase())){
-			
-			//event.setCancelled(true);
-			//return;
-			
-		}
-		
-		//TODO Re-add this back to the }else{ thingy
-		
-		long diff = 0;
-		
-		if(this.lastViolation.containsKey(event.getPlayer().getName())){
-			
-			diff = System.currentTimeMillis() - this.lastViolation.get(event.getPlayer().getName());
-			
-		}
-		
-		if(event.getCheckType() != CheckType.TIMER && event.getCheckType() != CheckType.FAST_EAT && event.getCheckType() != CheckType.VERTICAL_SPEED && event.getCheckType() != CheckType.AUTOSOUP){
-				
-			if(diff > 1000){
-					
-				//"Forgive" the player
-				event.setCancelled(true);
-					
-			}
-			
-		}
-		
-		//Prevents abuse of checks to slow down server
-		if(event.getCheckType() == CheckType.FAST_INTERACT || event.getCheckType() == CheckType.SPEED_BREAK || (event.getPlayer().getGameMode() == GameMode.CREATIVE && event.getCheckType() == CheckType.VISIBLE)){
-		
-			if(diff <= 2000 && event.getNewLevel() > 34){
-				
-				event.getPlayer().kickPlayer(ChatColor.RED + "Detected illegal activity! Are you hacking?");
-				
-				this.nh.vars.setDeniedLogin(event.getPlayer(), (System.currentTimeMillis() + 10000), "Kicked for illegal activities - Interacting too fast.");
-				
-				event.setNewLevel(0);
-				
-			}
-			
-		}else if(event.getCheckType() == CheckType.AUTOSOUP){
-			
-			if(Setting.autoban){
-				
-				this.nh.vars.setDeniedLogin(event.getPlayer(), (System.currentTimeMillis() + (Setting.autobantime * 1000)), "AutoBanned - Using AutoSoup");
-				
-				event.getPlayer().kickPlayer(ChatColor.RED + "You've been autobanned for " + Setting.autobantime + " seconds!\n\nReason: Using AutoSoup");
-				
-				Utils.messageAdmins(event.getPlayer().getName() + " has been autobanned for using AutoSoup for " + Setting.autobantime + " seconds!");
-				
-			}
-			
-		}
-		
-		this.lastViolation.put(event.getPlayer().getName(), System.currentTimeMillis());
-		
-	}
-	
 	@EventHandler(ignoreCancelled = true)
 	public void onLog(ViolationChangedEvent event){
 		
@@ -372,21 +295,10 @@ public class NoHackListener implements Listener {
 				
 				if(diff <= 3800){
 					
-					int id = nh.vars.raiseViolationLevel(CheckType.GOD_MODE, p);
-					
-					ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.GOD_MODE, p);
-					
-					nh.getServer().getPluginManager().callEvent(vte);
-					
-					if(!vte.isCancelled()){
-					
-						if(id != 0){
-							
-							Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed GodMode! Tried to regain health too fast. Diff " + diff + " VL " + id);
-							
-						}
+					if(nh.vars.issueViolation(p, CheckType.GOD_MODE)){
+						
 						event.setCancelled(true);
-					
+						
 					}
 					
 				}
@@ -404,26 +316,10 @@ public class NoHackListener implements Listener {
 		
 		if(cc.checkFastEat(event.getPlayer())){
 			
-			int id = this.nh.vars.raiseViolationLevel(CheckType.FAST_EAT, event.getPlayer());
-			
-			ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.FAST_EAT, event.getPlayer());
-			
-			Bukkit.getServer().getPluginManager().callEvent(vte);
-			
-			if(!vte.isCancelled()){
+			if(nh.vars.issueViolation(event.getPlayer(), CheckType.FAST_EAT)){
 				
-				if(id != 0){
-					
-					String message = Setting.fasteatmes;
-					
-					message = message.replaceAll(".name.", ChatColor.YELLOW + "" + event.getPlayer().getName() + "" + ChatColor.GREEN);
-					message = message.replaceAll(".vl.", id + "");
-
-					Utils.messageAdmins(message);
-					
-				}
 				event.setCancelled(true);
-			
+				
 			}
 			
 		}
@@ -599,21 +495,10 @@ public class NoHackListener implements Listener {
 			
 			if(cc.onShoot(p, event.getForce())){
 
-				int id = nh.vars.raiseViolationLevel(CheckType.FAST_BOW, p);
-				
-				ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.FAST_BOW, p);
-				
-				Bukkit.getServer().getPluginManager().callEvent(vte);
-				
-				if(!vte.isCancelled()){
-				
-					if(id != 0){
-						
-						Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed Fast Bow! Tried to fire a bow too fast. VL " + id);
-						
-					}
+				if(nh.vars.issueViolation(p, CheckType.FAST_BOW)){
+					
 					event.setCancelled(true);
-				
+					
 				}
 				
 			}
@@ -635,21 +520,10 @@ public class NoHackListener implements Listener {
 					
 				if(cc.checkFastShoot(p)){
 					
-					int id = nh.vars.raiseViolationLevel(CheckType.FAST_THROW, p);
-					
-					ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.FAST_THROW, p);
-					
-					Bukkit.getServer().getPluginManager().callEvent(vte);
-					
-					if(!vte.isCancelled()){
-					
-						if(id != 0){
-							
-							Utils.messageAdmins(ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN + " failed Fast Throw! Tried to throw a projectile too fast. VL " + id);
-							
-						}
+					if(nh.vars.issueViolation(p, CheckType.FAST_THROW)){
+						
 						event.setCancelled(true);
-					
+						
 					}
 					
 				}
@@ -708,7 +582,7 @@ public class NoHackListener implements Listener {
 			
 			this.nh.vars.setMoveData(event.getPlayer().getName(), md);
 			
-			if(Setting.debug){
+			if(Settings.debug){
 			
 				Bukkit.broadcastMessage("Logged teleport for " + event.getPlayer().getName() + ". Cause=" + event.getCause().toString());
 			
@@ -727,7 +601,7 @@ public class NoHackListener implements Listener {
 		
 		this.nh.vars.setMoveData(event.getPlayer().getName(), md);
 		
-		if(Setting.debug){
+		if(Settings.debug){
 		
 			Bukkit.broadcastMessage("Logged teleport for " + event.getPlayer().getName() + ". Cause=WORLD_CHANGE");
 		
@@ -774,7 +648,7 @@ public class NoHackListener implements Listener {
 					
 					up = true;
 					
-					if(Setting.debug){
+					if(Settings.debug){
 					
 						Bukkit.broadcastMessage("Override up=true: length: " + String.valueOf(vd).length() + "; value=" + vd);
 					

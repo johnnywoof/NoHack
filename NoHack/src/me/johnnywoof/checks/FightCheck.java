@@ -2,16 +2,12 @@ package me.johnnywoof.checks;
 
 import java.util.HashMap;
 
-import me.johnnywoof.Setting;
+import me.johnnywoof.Settings;
 import me.johnnywoof.Variables;
 import me.johnnywoof.check.CheckType;
-import me.johnnywoof.event.ViolationTriggeredEvent;
 import me.johnnywoof.util.MoveData;
 import me.johnnywoof.util.Utils;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
 import org.bukkit.craftbukkit.v1_7_R3.entity.CraftLivingEntity;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
@@ -36,26 +32,10 @@ public class FightCheck {
 		
 		if(p.isBlocking() || p.isSleeping() || p.isDead() || p.getEntityId() == e.getEntityId()){
 			
-			int id = this.vars.raiseViolationLevel(CheckType.IMPOSSIBLE, p);
-			
-			ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.IMPOSSIBLE, p);
-			
-			Bukkit.getServer().getPluginManager().callEvent(vte);
-			
-			if(!vte.isCancelled()){
+			if(this.vars.issueViolation(p, CheckType.IMPOSSIBLE_FIGHT)){
 				
-				if(id != 0){
-					
-					String message = Setting.impossibleattack;
-					
-					message = message.replaceAll(".name.", ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN);
-					message = message.replaceAll(".vl.", id + "");
-
-					Utils.messageAdmins(message);
-					
-				}
 				return 1;
-			
+				
 			}
 			
 		}
@@ -69,26 +49,10 @@ public class FightCheck {
 			
 			if(!Utils.canReallySeeEntity(p, e)){
 				
-				int id = this.vars.raiseViolationLevel(CheckType.VISIBLE, p);
-				
-				ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.VISIBLE, p);
-				
-				Bukkit.getServer().getPluginManager().callEvent(vte);
-				
-				if(!vte.isCancelled()){
+				if(this.vars.issueViolation(p, CheckType.FIGHT_VISIBLE)){
 					
-					if(id != 0){
-						
-						String message = Setting.fightvisiblemes;
-						
-						message = message.replaceAll(".name.", ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN);
-						message = message.replaceAll(".vl.", id + "");
-
-						Utils.messageAdmins(message);
-						
-					}
 					return 1;
-				
+					
 				}
 				
 			}
@@ -99,28 +63,12 @@ public class FightCheck {
 		
 		//****************Start Fight NoSwing******************
 		
-		if((System.currentTimeMillis() - ls) >= Setting.noswingfight){
+		if((System.currentTimeMillis() - ls) >= Settings.noswingfight){
 			
-			int id = this.vars.raiseViolationLevel(CheckType.NOSWING, p);
-			
-			ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.NOSWING, p);
-			
-			Bukkit.getServer().getPluginManager().callEvent(vte);
-			
-			if(!vte.isCancelled()){
-			
-				if(id != 0){
-					
-					String message = Setting.noswingmes;
-					
-					message = message.replaceAll(".name.", ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN);
-					message = message.replaceAll(".vl.", id + "");
-
-					Utils.messageAdmins(message);
-					
-				}
+			if(this.vars.issueViolation(p, CheckType.NOSWING)){
+				
 				return 1;
-			
+				
 			}
 			
 		}
@@ -132,35 +80,19 @@ public class FightCheck {
 		//TODO Make this a better reach check
 		if(e.getType() != EntityType.WITHER){
 		
-			double d = p.getEyeLocation().distanceSquared(e.getEyeLocation());
+			//double d = p.getEyeLocation().distanceSquared(e.getEyeLocation());
 			
 			//reach check
 			
-			if(d > ((p.getGameMode() == GameMode.CREATIVE) ? Setting.creativeattack : Setting.survivalattack)){
+			//if(d > ((p.getGameMode() == GameMode.CREATIVE) ? Settings.creativeattack : Settings.survivalattack)){
 				
-				int id = this.vars.raiseViolationLevel(CheckType.ATTACK_REACH, p);
-				
-				ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.ATTACK_REACH, p);
-				
-				Bukkit.getServer().getPluginManager().callEvent(vte);
-				
-				if(!vte.isCancelled()){
+				//if(this.vars.issueViolation(p, CheckType.ATTACK_REACH)){
 					
-					if(id != 0){
-						
-						String message = Setting.fightreach;
-						
-						message = message.replaceAll(".name.", ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN);
-						message = message.replaceAll(".vl.", id + "");
-	
-						Utils.messageAdmins(message);
-						
-					}
-					return 1;
+				//	return 1;
+					
+				//}
 				
-				}
-				
-			}
+			//}
 		
 		}
 		
@@ -172,31 +104,14 @@ public class FightCheck {
 			
 			long diff = (System.currentTimeMillis() - this.lastAttack.get(p.getName()));
 			
-			if(diff <= Setting.fightattackspeed){
-				
-				this.registerLastAttack(p.getName());
-				int id = this.vars.raiseViolationLevel(CheckType.ATTACK_SPEED, p);
-				
-				ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.ATTACK_SPEED, p);
-				
-				Bukkit.getServer().getPluginManager().callEvent(vte);
-				
-				if(!vte.isCancelled()){
-				
-					if(id != 0){
-						
-						String message = Setting.fightspeed;
-						
-						message = message.replaceAll(".name.", ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN);
-						message = message.replaceAll(".vl.", id + "");
-
-						Utils.messageAdmins(message);
-						
-					}
+			if(diff <= Settings.attackspeed){
+			
+				if(this.vars.issueViolation(p, CheckType.ATTACK_SPEED)){
+					
 					return 1;
-				
+					
 				}
-				
+			
 			}
 			
 		}
@@ -216,24 +131,8 @@ public class FightCheck {
 
 				if((System.currentTimeMillis() - md.sprinttime) < 101){
 						
-					int id = this.vars.raiseViolationLevel(CheckType.FIGHT_KNOCKBACK, p);
+					if(this.vars.issueViolation(p, CheckType.FIGHT_KNOCKBACK)){
 						
-					ViolationTriggeredEvent vte = new ViolationTriggeredEvent(id, CheckType.FIGHT_KNOCKBACK, p);
-						
-					Bukkit.getServer().getPluginManager().callEvent(vte);
-					
-					if(!vte.isCancelled()){
-						
-						if(id != 0){
-								
-							String message = Setting.fightknock;
-								
-							message = message.replaceAll(".name.", ChatColor.YELLOW + "" + p.getName() + "" + ChatColor.GREEN);
-							message = message.replaceAll(".vl.", id + "");
-
-							Utils.messageAdmins(message);
-								
-						}
 						return 1;
 						
 					}

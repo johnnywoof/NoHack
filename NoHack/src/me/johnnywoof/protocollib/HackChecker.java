@@ -2,27 +2,19 @@ package me.johnnywoof.protocollib;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.Random;
 import java.util.UUID;
 
 import me.johnnywoof.NoHack;
-import me.johnnywoof.Setting;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import org.bukkit.util.BlockIterator;
 
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
-import com.comphenix.protocol.events.PacketAdapter;
-import com.comphenix.protocol.events.PacketEvent;
-import com.comphenix.protocol.wrappers.EnumWrappers.EntityUseAction;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
 
 public class HackChecker {
@@ -39,7 +31,7 @@ public class HackChecker {
 		
 		this.promanager = ProtocolLibrary.getProtocolManager();
 		
-		nh.getServer().getScheduler().runTaskTimer(nh, new Runnable(){
+		/*nh.getServer().getScheduler().runTaskTimer(nh, new Runnable(){
 
 			@Override
 			public void run() {
@@ -52,7 +44,7 @@ public class HackChecker {
 					
 					Location l = p.getLocation();
         			
-					if(Setting.killmode == 1){
+					if(Settings.killmode == 1){
 					
 	        			l.setYaw((p.getEyeLocation().getYaw() * -1));
 	        			l.setPitch((p.getEyeLocation().getPitch() * -1));
@@ -93,11 +85,11 @@ public class HackChecker {
 					
 					boolean invis = true;
 					
-					if(Setting.invismode == 2){
+					if(Settings.invismode == 2){
 						
 						invis = r.nextBoolean();
 						
-					}else if(Setting.invismode == 1){
+					}else if(Settings.invismode == 1){
 						
 						invis = false;
 						
@@ -131,7 +123,7 @@ public class HackChecker {
 	                        		
 	                        		if(en.getValue() == packet.getTargetID() && en.getKey() == event.getPlayer().getEntityId()){
 	                        			
-	                        			for(String s : Setting.killcmds){
+	                        			for(String s : Settings.killcmds){
 	                        				
 	                        				if(s.equals("notify")){
 	                        					
@@ -170,7 +162,7 @@ public class HackChecker {
                         }
                     }
 
-                });
+                });*/
 		
 	}
 	

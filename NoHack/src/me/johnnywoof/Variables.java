@@ -6,10 +6,10 @@ import java.util.UUID;
 import me.johnnywoof.check.CheckType;
 import me.johnnywoof.check.Violation;
 import me.johnnywoof.util.MoveData;
+import me.johnnywoof.util.Utils;
 import me.johnnywoof.util.XYZ;
 
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 public class Variables {
@@ -25,53 +25,28 @@ public class Variables {
 	
 	public boolean usingprolib = false;
 	
-	public void reloadConfig(FileConfiguration fc){
+	public void removeDeniedLogin(UUID uuid){
+		this.deniedlogin.remove(uuid);
+	}
+	
+	/**
+	 * 
+	 * Issues a violation
+	 * @return if to cancel the event
+	 * 
+	 * */
+	public boolean issueViolation(Player p, CheckType ct){
 		
-		Setting.nofallmessage = fc.getString("nofall-message");
-		Setting.timermes = fc.getString("timer-message");
-		Setting.impossiblemovemes = fc.getString("impossible-move-message");
-		Setting.verticalspeedmes = fc.getString("vertical-speed-message");
-		Setting.horizontalspeedmes = fc.getString("horizontal-speed-message");
-		Setting.flymes = fc.getString("fly-message");
-		Setting.blockvisiblebreak = fc.getString("block-visible-break-message");
-		Setting.godmodemes = fc.getString("godmode-message");
-		Setting.impossibleattack = fc.getString("fight-impossible-message");
-		Setting.fightspeed = fc.getString("fight-speed-message");
-		Setting.fightreach = fc.getString("fight-reach-message");
-		Setting.impossibleclick = fc.getString("inventory-impossible-message");
-		Setting.speedclick = fc.getString("inventory-click-speed");
-		Setting.noswingmes = fc.getString("noswing-message");
-		Setting.chatimpossiblemes = fc.getString("chat-impossible-message");
-		Setting.fightvisiblemes = fc.getString("fight-visible-message");
-		Setting.ignorenpc = fc.getBoolean("ignore-citizens-npc");
-		Setting.noswingblock = fc.getLong("noswing-block-difference");
-		Setting.creativeattack = fc.getDouble("creative-attack-reach");
-		Setting.survivalattack = fc.getDouble("survival-attack-reach");
-		Setting.fightattackspeed = fc.getInt("fight-attack-speed");
-		Setting.noswingfight = fc.getInt("noswing-fight-difference");
-		Setting.fcs = fc.getInt("inventory-click-max-speed");
-		Setting.maxpacket = fc.getInt("max-packets");
-		Setting.glidemes = fc.getString("glide-message");
-		Setting.autoban = fc.getBoolean("autoban-players");
-		Setting.autobantime = fc.getInt("autoban-time");
-		Setting.autosoupmes = fc.getString("autosoup-message");
-		Setting.fasteatmes = fc.getString("fast-eat-message");
-		Setting.speedbreakmes = fc.getString("speed-break-message");
-		Setting.useplib = fc.getBoolean("use-protocollib");
-		Setting.killmode = fc.getInt("killaura-mode");
-		Setting.killcmds = fc.getStringList("killaura-detect");
-		Setting.fightknock = fc.getString("fight-knockback-message");
+		int id = this.raiseViolationLevel(ct, p);
 		
-		if(Setting.useplib){
+		if(id != 0){
 			
-			this.usingprolib = Bukkit.getPluginManager().getPlugin("ProtocolLib") != null;
+			Utils.messageStaff(Settings.getFormatted(p.getName(), ct, id));
 			
 		}
 		
-	}
-	
-	public void removeDeniedLogin(UUID uuid){
-		this.deniedlogin.remove(uuid);
+		return true;
+		
 	}
 	
 	public String[] getDeniedData(Player p){
@@ -88,7 +63,7 @@ public class Variables {
 		
 	}
 	
-	public int raiseViolationLevel(CheckType ct, Player p){
+	private int raiseViolationLevel(CheckType ct, Player p){
 		
 		Violation vio = null;
 		
