@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 
 public class Violation {
 
-	private int fly, vs, hs, sb, bv, fv, autos, fkb, fe, ns, fbow, gm, crit, fr, fspeed, fp, timer, spam, fc, as, nf, is, gl, nkb, fullb,
+	private int fly, vs, hs, sb, bv, fv, autos, fkb, fe, ns, gm, crit, fr, fspeed, fp, spam, fc, as, nf, is, gl, nkb, fullb,
 	imc, imclick, imf, imm;
 	private long lastnotification = 0;
 	
@@ -70,9 +70,6 @@ public class Violation {
 		case VERTICAL_SPEED:
 			this.vs = vce.getNewLevel();
 			break;
-		case TIMER:
-			this.timer = vce.getNewLevel();
-			break;
 		case SPAM:
 			this.spam = vce.getNewLevel();
 			break;
@@ -93,9 +90,6 @@ public class Violation {
 			break;
 		case NOKNOCKBACK:
 			this.nkb = vce.getNewLevel();
-			break;
-		case FAST_BOW:
-			this.fbow = vce.getNewLevel();
 			break;
 		case FIGHT_KNOCKBACK:
 			this.fkb = vce.getNewLevel();
@@ -156,8 +150,6 @@ public class Violation {
 				return this.sb;
 			case VERTICAL_SPEED:
 				return this.vs;
-			case TIMER:
-				return this.timer;
 			case SPAM:
 				return this.spam;
 			case SPEED_CLICK:
@@ -172,8 +164,6 @@ public class Violation {
 				return this.gl;
 			case NOKNOCKBACK:
 				return this.nkb;
-			case FAST_BOW:
-				return this.fbow;
 			case FIGHT_KNOCKBACK:
 				return this.fkb;
 			case FAST_EAT:

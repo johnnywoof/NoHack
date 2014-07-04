@@ -89,7 +89,7 @@ public class NoHack extends JavaPlugin{
 		
 			this.getLogger().warning("-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*");
 			this.getLogger().warning("Allowed flight in server.properties is true!");
-			this.getLogger().warning("Please set it to false for best preformance!");
+			this.getLogger().warning("Please set it to false for best results!");
 			this.getLogger().warning("-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*");
 		
 		}
