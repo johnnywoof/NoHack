@@ -25,55 +25,55 @@ use-protocollib: true
 #                NoHack Messages Section
 #
 #################################################################################
-format: &c[NoHack]&e.name.&a failed &2.type.&a! .message. &8VL .vl.
+format: '&c[NoHack] &e.name.&a failed &2.type.&a! .message. &8VL .vl.'
 
 #Chat violation messages
-chat-impossible-message: Tried to chat in an illegal state.
+chat-impossible-message: 'Tried to chat in an illegal state.'
 
 #Move violation messages
-nofall-message: Tried to fall while saying on the ground.
+nofall-message: 'Tried to fall while saying on the ground.'
 
-timer-message: Sent .packets-sent. packets but expected no more than .expected-packets..
+timer-message: 'Sent .packets-sent. packets but expected no more than .expected-packets..'
 
-impossible-move-message: Tried to move in a way which is impossible.
+impossible-move-message: 'Tried to move in a way which is impossible.'
 
-vertical-speed-message: Tried to move too fast on the y axis.
+vertical-speed-message: 'Tried to move too fast on the y axis.'
 
-horizontal-speed-message: Tried to move too fast on the xz axis.
+horizontal-speed-message: 'Tried to move too fast on the xz axis.'
 
-fly-message: Tried to fly in survival mode without permission.
+fly-message: 'Tried to fly in survival mode without permission.'
 
-glide-message: Tried to float to an unexpected location.
+glide-message: 'Tried to float to an unexpected location.'
 
 #Block violation messages
-block-visible-break-message: Tried to break another block than expected.
+block-visible-break-message: 'Tried to break another block than expected.'
 
-speed-break-message: Broke blocks faster than usal.
+speed-break-message: 'Broke blocks faster than usal.'
 
 #Fight violation messages
-godmode-message: Tried to avoid taking damage.
+godmode-message: 'Tried to avoid taking damage.'
 
-fight-knockback-message: Tried to knockback an entity in an impossible state.
+fight-knockback-message: 'Tried to knockback an entity in an impossible state.'
 
-fight-impossible-message: Tried to do illegal attacks.
+fight-impossible-message: 'Tried to do illegal attacks.'
 
-fight-visible-message: Tried to do attack a target without looking at it.
+fight-visible-message: 'Tried to do attack a target without looking at it.'
 
-fight-speed-message: Tried to attack too fast.
+fight-speed-message: 'Tried to attack too fast.'
 
-fight-reach-message: Tried to attack too far.
+fight-reach-message: 'Tried to attack too far.'
 
-autosoup-message: Tried to soup while attacking!
+autosoup-message: 'Tried to soup while attacking!'
 
 #Inventory violation messages
-inventory-impossible-message: Tried to do illegal inventory clicks.
+inventory-impossible-message: 'Tried to do illegal inventory clicks.'
 
-inventory-click-speed: Clicked a container too fast.
+inventory-click-speed: 'Clicked a container too fast.'
 
 #Everything else with messages
-noswing-message: Did not swing arm.
+noswing-message: 'Did not swing arm.'
 
-fast-eat-message: Ate a food item too fast.
+fast-eat-message: 'Ate a food item too fast.'
 #################################################################################
 #
 #                NoHack Advance Section

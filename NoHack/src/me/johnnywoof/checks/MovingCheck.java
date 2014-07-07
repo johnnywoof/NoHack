@@ -31,7 +31,7 @@ public class MovingCheck {
 		
 		if(!jumped){
 			
-			if((System.currentTimeMillis() - movedata.groundtime) < 600){
+			if((System.currentTimeMillis() - movedata.groundtime) < 600 && !inwater){
 				
 				jumped = true;
 				
@@ -215,11 +215,11 @@ public class MovingCheck {
 					
 					if(jumped){
 						
-						mxs = (p.getWalkSpeed() / 0.65);
+						mxs = (p.getWalkSpeed() / 0.60);
 						
 					}else{
 					
-						mxs = (p.getWalkSpeed() / 0.9);
+						mxs = (p.getWalkSpeed() / 0.85);
 					
 					}
 					

@@ -69,6 +69,8 @@ public class Settings {
 		Settings.fcs = fc.getLong("inventory-click-max-speed");
 		Settings.maxpacket = fc.getInt("max-packets");
 		
+		Settings.format = fc.getString("format");
+		
 	}
 	
 	public static String getFormatted(String name, CheckType ct, int vl){
