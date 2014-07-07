@@ -9,6 +9,7 @@ import me.johnnywoof.util.MoveData;
 import me.johnnywoof.util.Utils;
 import me.johnnywoof.util.XYZ;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public class Variables {
@@ -131,7 +132,8 @@ public class Variables {
 			return 0;
 		}
 	}
-
+	
+	@SuppressWarnings("deprecation")
 	public MoveData getMoveData(String n){
 		if(this.movedata.containsKey(n)){
 			
@@ -139,7 +141,7 @@ public class Variables {
 			
 		}else{
 			
-			return new MoveData();
+			return new MoveData(new XYZ(Bukkit.getPlayer(n).getLocation()));//Hope this is always a player
 			
 		}
 	}

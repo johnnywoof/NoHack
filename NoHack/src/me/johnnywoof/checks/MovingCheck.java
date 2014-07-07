@@ -10,6 +10,7 @@ import me.johnnywoof.util.XYZ;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -371,6 +372,61 @@ public class MovingCheck {
 			}
 			
 		//****************End NoFall******************
+		
+		//****************Start Timer******************
+			if(to.getX() != from.getX() || to.getY() != from.getY() || to.getZ() != from.getZ()){
+				
+				if((System.currentTimeMillis() - movedata.getTimeStart()) > 500){
+				
+					int max = 0;
+					
+					max = Math.round((Utils.getPing(p) / 100));
+					
+					if(max < 0){
+						
+						max = 0;
+						
+					}
+					
+					max = max + Settings.maxpacket;
+					
+					if(movedata.getAmount() > max){
+						
+						//Maybe block the checkpoint exploit?
+						//double xzdis = Utils.getXZDistance(movedata.lastloc.x, to.getX(), movedata.lastloc.z, to.getZ());
+						
+						if(this.vars.issueViolation(p, CheckType.TIMER)){
+							
+							if(movedata.getAmount() > 50){
+								
+								p.kickPlayer("Too many packets! Are you (or the server) lagging badly?");
+								
+							}else{
+						
+								p.teleport(movedata.lastloc.toLocation(to.getPitch(), to.getYaw()), TeleportCause.UNKNOWN);
+								
+							}
+							
+							movedata.reset(movedata.lastloc);
+							
+						}
+						
+					}else{
+					
+						movedata.reset(new XYZ(from));
+					
+					}
+					
+				}else{
+					
+					movedata.setAmount(movedata.getAmount() + 1);
+					
+				}
+				
+				this.vars.setMoveData(p.getName(), movedata);
+			
+			}
+		//****************End Timer******************
 		
 		return 0;
 		

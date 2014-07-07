@@ -8,6 +8,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 public class Settings {
 
 	private static String nofallmessage = "";
+	private static String timermes = "";
 	private static String impossiblemovemes = "";
 	private static String verticalspeedmes = "";
 	private static String horizontalspeedmes = "";
@@ -40,6 +41,7 @@ public class Settings {
 		
 		Settings.impossiblechat = fc.getString("chat-impossible-message");
 		Settings.nofallmessage = fc.getString("nofall-message");
+		Settings.timermes = fc.getString("timer-message");
 		Settings.impossiblemovemes = fc.getString("impossible-move-message");
 		Settings.verticalspeedmes = fc.getString("vertical-speed-message");
 		Settings.horizontalspeedmes = fc.getString("horizontal-speed-message");
@@ -98,6 +100,8 @@ public class Settings {
 			return Settings.autosoupmes;
 		case CRITICAL:
 			return "";
+		case FAST_BOW:
+			return "";
 		case FAST_EAT:
 			return Settings.fasteatmes;
 		case FAST_INTERACT:
@@ -130,6 +134,8 @@ public class Settings {
 			return Settings.speedbreakmes;
 		case SPEED_CLICK:
 			return Settings.speedclick;
+		case TIMER:
+			return Settings.timermes;
 		case VERTICAL_SPEED:
 			return Settings.verticalspeedmes;
 		case IMPOSSIBLE_CLICK:

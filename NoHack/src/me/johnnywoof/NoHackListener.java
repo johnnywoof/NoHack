@@ -40,6 +40,7 @@ import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
+import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -333,8 +334,12 @@ public class NoHackListener implements Listener {
 			if(event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK){
 				
 				Material m = event.getItem().getType();
+				
+				if(m == Material.BOW){
 					
-				if(m == Material.WOOD_SWORD || m == Material.STONE_SWORD || m == Material.GOLD_SWORD || m == Material.IRON_SWORD || m == Material.DIAMOND_SWORD){
+					cc.onStartingShoot(event.getPlayer());
+					
+				}else if(m == Material.WOOD_SWORD || m == Material.STONE_SWORD || m == Material.GOLD_SWORD || m == Material.IRON_SWORD || m == Material.DIAMOND_SWORD){
 					
 					MoveData md = nh.vars.getMoveData(event.getPlayer().getName());
 					
@@ -476,6 +481,29 @@ public class NoHackListener implements Listener {
 		if(event.getBed().getType() != Material.BED_BLOCK){
 			
 			event.getPlayer().kickPlayer("Go find a real bed!");
+			
+		}
+		
+	}
+	
+	@EventHandler(ignoreCancelled = true)
+	public void onBow(EntityShootBowEvent event){
+		
+		if(event.getEntity() instanceof Player){
+			
+			Player p = (Player) event.getEntity();
+			
+			if(cc.onShoot(p, event.getForce())){
+
+				if(nh.vars.issueViolation(p, CheckType.FAST_BOW)){
+					
+					event.setCancelled(true);
+					
+				}
+				
+			}
+			
+			p = null;
 			
 		}
 		
