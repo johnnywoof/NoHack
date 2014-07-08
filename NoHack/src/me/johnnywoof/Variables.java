@@ -23,6 +23,9 @@ public class Variables {
 	//Last location of being on the ground
 	public final HashMap<String, XYZ> lastGround = new HashMap<String, XYZ>();
 	
+	//Used for the forgiveness system
+	private final HashMap<String, Long> lastvio = new HashMap<String, Long>();
+	
 	public boolean usingprolib = false;
 	
 	public void removeDeniedLogin(UUID uuid){
@@ -36,6 +39,31 @@ public class Variables {
 	 * 
 	 * */
 	public boolean issueViolation(Player p, CheckType ct){
+		
+		//Add checks to be confirmed as hacks
+		if(ct != CheckType.FAST_BOW && ct != CheckType.VERTICAL_SPEED && ct != CheckType.NOSWING && ct != CheckType.SPEED_CLICK){
+		
+			long diff;
+			
+			if(this.lastvio.containsKey(p.getName())){
+			
+				diff = (System.currentTimeMillis() - this.lastvio.get(p.getName()));
+			
+			}else{
+				
+				diff = 1001;
+				
+			}
+			
+			this.lastvio.put(p.getName(), System.currentTimeMillis());
+			
+			if(diff > 1000){
+				
+				return false;//Forgive player
+				
+			}
+			
+		}
 		
 		int id = this.raiseViolationLevel(ct, p);
 		

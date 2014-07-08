@@ -203,11 +203,11 @@ public class MovingCheck {
 					
 					if(jumped){
 						
-						mxs = (p.getWalkSpeed() / 2.1);
+						mxs = (p.getWalkSpeed() / 1.7);//Lucky 7!
 						
 					}else{
 					
-						mxs = (p.getWalkSpeed() / 2.9);
+						mxs = (p.getWalkSpeed() / 2);
 					
 					}
 					
@@ -255,7 +255,7 @@ public class MovingCheck {
 			
 			}
 			
-			if(!p.isOnGround() && !p.getAllowFlight()){
+			if(!p.isOnGround() && !p.getAllowFlight() && !inwater && !onladder){
 				
 				double mdis = this.getXZDistance(to.getX(), lg.x, to.getZ(), lg.z);
 				
