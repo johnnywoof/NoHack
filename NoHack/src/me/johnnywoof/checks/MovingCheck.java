@@ -279,23 +279,29 @@ public class MovingCheck {
 			if(!p.isFlying()){
 				
 				//Prevent bypassing fly checks when moving in an horiztonal motion
-				if(!inwater && !p.getAllowFlight() && p.isOnGround()){//User is allowed to fly, why check it!
+				if(!inwater && !p.getAllowFlight() && p.isOnGround() && !jumped){//User is allowed to fly, why check it!
+					
+					//There needs to be a waaaaaaaay more efficient way to calculate this
 					
 					Material m = null; 
 					
-					if(to.getBlockX() != from.getBlockX() || to.getBlockZ() != from.getBlockZ()){
+					int bx = to.getBlockX();
+					int by = to.getBlockY();
+					int bz = to.getBlockZ();
+					
+					if(bx != from.getBlockX() || bz != from.getBlockZ()){
 						
-						int by = from.getBlockY() + 1;
+						int boy = by + 1;
 						
-						int oy = by;
+						int oy = boy;
 						
 						boolean con = true;
 						
 						while(con){
 							
-							by--;
+							boy--;
 							
-							m = from.getBlock().getRelative(0, ((oy - by) * -1) + 1, 0).getType();
+							m = from.getBlock().getRelative(0, ((oy - boy) * -1) + 1, 0).getType();
 							
 							if(m.isSolid()){
 								
@@ -304,7 +310,7 @@ public class MovingCheck {
 								
 							}
 							
-							if(by < 0){
+							if(boy < 0){
 								
 								con = false;//Safe check for flying over bedrock...which should be impossible
 								break;
@@ -313,14 +319,36 @@ public class MovingCheck {
 							
 						}
 						
-						int dis = (oy - by);
+						int dis = (oy - boy);
 						
 						if(dis > 2){//Prevent bypassing fly checks when moving in an horiztonal motion
 							
-							if(this.vars.issueViolation(p, CheckType.FLY)){
+							boolean nearblock = false;
+							
+							//Make sure they are not standing at the end of a block
+							for(int x = bx - 1; x < bx + 1; x++){
+									
+								for(int z = bz - 1; z < bz + 1; z++){
+										
+									if(p.getWorld().getBlockAt(x, (to.getBlockY() - 1), z).getType().isSolid()){
+										
+										nearblock = true;
+										break;
+										
+									}
+										
+								}
 								
-								return 1;
-								
+							}
+							
+							if(!nearblock){
+							
+								if(this.vars.issueViolation(p, CheckType.FLY)){
+									
+									return 1;
+									
+								}
+							
 							}
 							
 						}
