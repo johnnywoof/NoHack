@@ -29,6 +29,7 @@ public class InteractCheck {
 	public int runInteractChecks(Player p, PlayerInteractEvent event){
 		
 		//****************Start FastInteract******************
+		//Might remove fast interact right click, since spigot now checks it
 		
 		if(event.hasBlock() && event.getAction() == Action.RIGHT_CLICK_BLOCK){
 			

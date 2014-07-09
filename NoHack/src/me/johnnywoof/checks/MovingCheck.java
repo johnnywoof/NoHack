@@ -279,7 +279,7 @@ public class MovingCheck {
 			if(!p.isFlying()){
 				
 				//Prevent bypassing fly checks when moving in an horiztonal motion
-				if(!inwater && !p.getAllowFlight() && p.isOnGround() && !jumped){//User is allowed to fly, why check it!
+				if(!inwater && !p.getAllowFlight() && p.isOnGround() && !jumped && !onladder){//User is allowed to fly, why check it!
 					
 					//There needs to be a waaaaaaaay more efficient way to calculate this
 					
