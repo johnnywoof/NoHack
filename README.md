@@ -3,3 +3,5 @@ NoHack
 
 Anti-Hack for bukkit
 The efficient lightweight anti-hacking solution.
+
+CURRENTLY PAUSED IN DEVELOPMENT, AS A EVEN LIGHTER VERSION IS COMING! DEVELOPMENT WILL STILL CONTINUE SOME TIME IN THE FUTURE!
