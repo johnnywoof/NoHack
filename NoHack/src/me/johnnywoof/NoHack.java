@@ -29,11 +29,11 @@ public class NoHack extends JavaPlugin{
 		
 		String ver = this.getServer().getVersion();
 		
-		if(!ver.contains("1.7.10") && !ver.contains("1.7.9") && !ver.contains("1.7.8") && !ver.contains("1.7.7") && !ver.contains("1.7.6")){
+		if(!ver.contains("1.7.10")){
 			
 			this.getLogger().severe("-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*");
 			this.getLogger().severe("THIS PLUGIN IS DESIGNED FOR");
-			this.getLogger().severe("1.7.6, 1.7.7, 1.7.8, 1.7.9, and 1.7.10");
+			this.getLogger().severe("1.7.10");
 			this.getLogger().severe("DETECTED VERSION: " + ver);
 			this.getLogger().severe("NOHACK WILL TRY TO RUN, BUT MAY NOT WORK PROPERLY");
 			this.getLogger().severe("-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*");
@@ -92,14 +92,6 @@ public class NoHack extends JavaPlugin{
 			this.getLogger().warning("Please set it to false for best preformance!");
 			this.getLogger().warning("-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*");
 		
-		}
-		
-		if(this.getServer().getPluginManager().getPlugin("ProtocolLib") != null){
-			
-			this.getLogger().info("Found ProtocolLib! Using it for more features and accurate checks!");
-			
-			//new HackChecker(this);
-			
 		}
 		
 		this.getLogger().info("[NoHack] NoHack has been enabled!");
