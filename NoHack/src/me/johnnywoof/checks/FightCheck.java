@@ -8,7 +8,7 @@ import me.johnnywoof.check.CheckType;
 import me.johnnywoof.util.MoveData;
 import me.johnnywoof.util.Utils;
 
-import org.bukkit.craftbukkit.v1_7_R3.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_7_R4.entity.CraftLivingEntity;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;

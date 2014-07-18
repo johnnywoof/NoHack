@@ -21,16 +21,16 @@ package me.johnnywoof.util;
 *
 */
  
-import net.minecraft.server.v1_7_R3.MovingObjectPosition;
-import net.minecraft.server.v1_7_R3.Vec3D;
-import net.minecraft.server.v1_7_R3.WorldServer;
+import net.minecraft.server.v1_7_R4.MovingObjectPosition;
+import net.minecraft.server.v1_7_R4.Vec3D;
+import net.minecraft.server.v1_7_R4.WorldServer;
 
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.craftbukkit.v1_7_R3.CraftWorld;
-import org.bukkit.craftbukkit.v1_7_R3.block.CraftBlock;
+import org.bukkit.craftbukkit.v1_7_R4.CraftWorld;
+import org.bukkit.craftbukkit.v1_7_R4.block.CraftBlock;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.util.BlockVector;
 import org.bukkit.util.Vector;
