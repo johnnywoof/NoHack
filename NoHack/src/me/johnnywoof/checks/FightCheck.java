@@ -8,6 +8,7 @@ import me.johnnywoof.check.CheckType;
 import me.johnnywoof.util.MoveData;
 import me.johnnywoof.util.Utils;
 
+import org.bukkit.block.BlockFace;
 import org.bukkit.craftbukkit.v1_7_R4.entity.CraftLivingEntity;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
@@ -26,6 +27,7 @@ public class FightCheck {
 		
 	}
 	
+	@SuppressWarnings("deprecation")
 	public int runFightChecks(Player p, LivingEntity e, long ls){
 		
 		//****************Start Fight Impossible******************
@@ -122,14 +124,13 @@ public class FightCheck {
 		
 		//****************Start Fight Knockback******************
 		
-		//TODO Make this better...
 		if(p.getItemInHand() != null){
 			
 			if(!p.getItemInHand().containsEnchantment(Enchantment.KNOCKBACK)){
 				
 				MoveData md = this.vars.getMoveData(p.getName());
 
-				if((System.currentTimeMillis() - md.sprinttime) < 101){
+				if((System.currentTimeMillis() - md.sprinttime) < 15){
 						
 					if(this.vars.issueViolation(p, CheckType.FIGHT_KNOCKBACK)){
 						
@@ -144,6 +145,28 @@ public class FightCheck {
 		}
 		
 		//****************End Fight Knockback******************
+		
+		//****************Start Fight Criticals******************
+		
+		if(!p.isOnGround() && !p.getAllowFlight()){
+			
+			if(p.getLocation().getY() % 1 == 0){
+				
+				if(p.getLocation().getBlock().getRelative(BlockFace.DOWN).getType().isSolid()){
+					
+					if(this.vars.issueViolation(p, CheckType.CRITICAL)){
+						
+						return 1;
+						
+					}
+					
+				}
+				
+			}
+			
+		}
+		
+		//****************End Fight Criticals******************
 		
 		//****************Start Fight AutoSoup******************
 		

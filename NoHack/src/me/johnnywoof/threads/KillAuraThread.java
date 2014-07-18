@@ -44,7 +44,7 @@ public class KillAuraThread implements Runnable{
 			}
 			
 			//Gotta randomize the data!
-			NPC npc = nh.factory.spawnHumanNPC(p.getLocation().add(0, -1, 0), new NPCProfile("lenis0012"));
+			NPC npc = nh.factory.spawnHumanNPC(p.getLocation().add(0, -1.5, 0), new NPCProfile("lenis0012"));
 			npc.setYaw((float) rand.nextInt(360));
 			npc.setGravity(false);
 			
@@ -69,7 +69,7 @@ public class KillAuraThread implements Runnable{
 				
 			}
 			
-		}, 20);
+		}, 15);
 		
 	}
 	
