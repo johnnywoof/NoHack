@@ -64,7 +64,7 @@ public class NPCEntity extends EntityPlayer {
 	@Override
 	public void h() {
 		super.h();
-		//this.B();//TODO Somehow bring this back...?
+		this.C();
 		
 		npc.onTick();
 		if(world.getType(MathHelper.floor(locX), MathHelper.floor(locY), MathHelper.floor(locZ)).getMaterial() == Material.FIRE) {

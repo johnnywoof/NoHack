@@ -1,5 +1,8 @@
 package me.johnnywoof;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import me.johnnywoof.check.CheckType;
 
 import org.bukkit.ChatColor;
@@ -37,6 +40,11 @@ public class Settings {
 	public static long fcs;
 	public static int maxpacket;
 	
+	public static boolean killaura = true;
+	public static boolean npcinvis = true;
+	public static boolean killnoannoy = true;
+	public static List<String> commands = new ArrayList<String>();
+	
 	public static void reload(FileConfiguration fc){
 		
 		Settings.impossiblechat = fc.getString("chat-impossible-message");
@@ -70,6 +78,11 @@ public class Settings {
 		Settings.maxpacket = fc.getInt("max-packets");
 		
 		Settings.format = fc.getString("format");
+		
+		Settings.killaura = fc.getBoolean("check-killaura");
+		Settings.npcinvis = fc.getBoolean("npc-invisible");
+		Settings.commands = fc.getStringList("check-killaura-commands");
+		Settings.killnoannoy = fc.getBoolean("check-killaura-no-annoy");
 		
 	}
 	

@@ -1,24 +1,26 @@
 #------------------------------------------------------------------
 # Main config file for NoHack
-# There should be three files, one is this config
-# The second (message.yml) is the language file,
-# and finally the third (rules.yml) is the advance configuration
 #------------------------------------------------------------------
 
-#What type of system do you want NoHack to use?
-#A live system will block hacks as they are used,
-#while a ban system will autoban almost confirmed cheaters.
-system-type: live
+#################################################################################
+#
+#                NoHack Basic Config Section
+#
+#################################################################################
 
-#####-----Bungeecord Section-----#####
+#If set to true, random npc players will spawn around the player detecting if some kind of killaura is enabled
+check-killaura: true
 
-#Set this to true to enable bungeecord support
-bungeecord-support: false
+#If set to true, spawned npc players will be invisible.
+#Some hacked clients attack invisible players, while others do not
+npc-invisible: false
 
-#####-----ProtocolLib Section-----#####
+#If true, npcs will only spawn in spots undetectable to legit players
+check-killaura-no-annoy: true
 
-#If true, NoHack will use ProtocolLib, if installed, for more accurate results
-use-protocollib: true
+#List the commands to issue, without the /, when the plugin detects a possible killaura mod
+check-killaura-commands:
+- say .name. is hacking!
 
 #################################################################################
 #

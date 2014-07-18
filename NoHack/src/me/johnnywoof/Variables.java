@@ -26,8 +26,6 @@ public class Variables {
 	//Used for the forgiveness system
 	private final HashMap<String, Long> lastvio = new HashMap<String, Long>();
 	
-	public boolean usingprolib = false;
-	
 	public void removeDeniedLogin(UUID uuid){
 		this.deniedlogin.remove(uuid);
 	}

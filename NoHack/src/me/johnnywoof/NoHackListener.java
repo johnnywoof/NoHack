@@ -16,6 +16,7 @@ import me.johnnywoof.checks.InteractCheck;
 import me.johnnywoof.checks.InventoryCheck;
 import me.johnnywoof.checks.MovingCheck;
 import me.johnnywoof.event.ViolationChangedEvent;
+import me.johnnywoof.threads.KillAuraThread;
 import me.johnnywoof.util.MoveData;
 import me.johnnywoof.util.Utils;
 import me.johnnywoof.util.XYZ;
@@ -38,6 +39,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 import org.bukkit.event.entity.EntityShootBowEvent;
@@ -62,6 +64,8 @@ import org.bukkit.event.player.PlayerVelocityEvent;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
 import org.bukkit.event.vehicle.VehicleExitEvent;
 
+import com.lenis0012.bukkit.npc.NPCDamageEvent;
+
 public class NoHackListener implements Listener {
 
 	private NoHack nh;
@@ -76,6 +80,8 @@ public class NoHackListener implements Listener {
 	
 	private final HashMap<String, Long> lastHealhed = new HashMap<String, Long>();
 	
+	private KillAuraThread kat = null;
+	
 	public NoHackListener(NoHack nh){
 		
 		this.nh = nh;
@@ -86,6 +92,41 @@ public class NoHackListener implements Listener {
 		this.ic = new InteractCheck(nh.vars);
 		this.invc = new InventoryCheck(nh.vars);
 		this.bc = new BlockCheck(nh.vars);
+		
+		if(Settings.killaura){
+			
+			this.kat = new KillAuraThread(nh);
+			
+			nh.getServer().getScheduler().runTaskTimer(nh, this.kat, 100, 1200);//Every minute = 1200
+		
+		}
+		
+	}
+	
+	@EventHandler
+	public void onNPCDamaged(NPCDamageEvent event){
+		
+		if(this.kat != null){
+		
+			if(event.getCause() == DamageCause.ENTITY_ATTACK){
+				
+				if(event.getDamager().getType() == EntityType.PLAYER){
+					
+					if(event.getDamager() instanceof Player){//NPC's man
+						
+						if(kat.onDamaged(event.getNpc(), ((Player) event.getDamager()))){
+							
+							event.setCancelled(true);
+							
+						}
+						
+					}
+					
+				}
+				
+			}
+		
+		}
 		
 	}
 	

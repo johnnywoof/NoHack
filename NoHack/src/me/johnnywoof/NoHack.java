@@ -12,6 +12,8 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.Vector;
 
+import com.lenis0012.bukkit.npc.NPCFactory;
+
 public class NoHack extends JavaPlugin{
 	
 	/**
@@ -22,6 +24,7 @@ public class NoHack extends JavaPlugin{
 	
 	public static int tps = 0;
 	private long second = 0;
+	public NPCFactory factory;
 	
 	public Variables vars;
 
@@ -39,6 +42,8 @@ public class NoHack extends JavaPlugin{
 			this.getLogger().severe("-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*");
 			
 		}
+		
+		this.factory = new NPCFactory(this);
 		
 		if(this.getServer().getPluginManager().getPlugin("NoCheatPlus") != null){
 			
@@ -134,7 +139,8 @@ public class NoHack extends JavaPlugin{
 			
 			if(!p.isOp()){
 				
-				//sender.sendMessage(ChatColor.WHITE + "Unknown command. Type \"/help\" for a list of commands.");
+				sender.sendMessage(ChatColor.WHITE + "Unknown command. Type \"/help\" for a list of commands.");
+				return true;
 				
 			}
 			
