@@ -52,9 +52,11 @@ import org.bukkit.event.player.PlayerBedLeaveEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerLoginEvent.Result;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
@@ -127,6 +129,19 @@ public class NoHackListener implements Listener {
 			}
 		
 		}
+		
+	}
+	
+	@EventHandler(ignoreCancelled = true)
+	public void onRespawn(PlayerRespawnEvent event){
+		
+		MoveData md = nh.vars.getMoveData(event.getPlayer().getName());
+		
+		md.lastloc = new XYZ(event.getRespawnLocation());
+		
+		md.tptime = System.currentTimeMillis();
+		
+		nh.vars.setMoveData(event.getPlayer().getName(), md);
 		
 	}
 	
@@ -407,6 +422,19 @@ public class NoHackListener implements Listener {
 			}
 		
 		}
+		
+	}
+	
+	@EventHandler(ignoreCancelled = true)
+	public void onJoin(PlayerJoinEvent event){
+		
+		MoveData md = nh.vars.getMoveData(event.getPlayer().getName());
+		
+		md.lastloc = new XYZ(event.getPlayer().getLocation());
+		
+		md.tptime = System.currentTimeMillis();
+		
+		nh.vars.setMoveData(event.getPlayer().getName(), md);
 		
 	}
 	

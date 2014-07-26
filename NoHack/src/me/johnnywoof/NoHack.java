@@ -18,7 +18,8 @@ public class NoHack extends JavaPlugin{
 	
 	/**
 	 * =====Todo List=====
-	 * Add AutoSoup
+	 * Add AutoSoup check
+	 * Use velocities
 	 * 
 	 * */
 	

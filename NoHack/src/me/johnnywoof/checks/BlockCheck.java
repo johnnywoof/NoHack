@@ -1,19 +1,17 @@
 package me.johnnywoof.checks;
 
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
 import me.johnnywoof.Settings;
 import me.johnnywoof.Variables;
 import me.johnnywoof.check.CheckType;
 import me.johnnywoof.util.Utils;
 
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
-import org.bukkit.util.BlockIterator;
 
 public class BlockCheck {
 
@@ -88,84 +86,33 @@ public class BlockCheck {
 		
 		long diff = (System.nanoTime() - this.getLastBreak(p.getName()));
 		
-		this.lastBreak.put(p.getName(), System.nanoTime());
+		if(diff <= 90000){
 			
-		//TODO Add fastbreak check
-		
-		//****************End FastBreak******************
-		
-		//****************Start Block Visible & SpeedBreak******************
-		
-		//TODO Account for blocks that can be broken instantly
-		
-		if(Utils.instantBreak(b.getType()) || p.getGameMode() == GameMode.CREATIVE){
-			
-			if(true){
+			if(this.vars.issueViolation(p, CheckType.SPEED_BREAK)){
 				
-				if(diff < 360000){
-					
-					if(Settings.debug){
-						
-						Bukkit.broadcastMessage("Diff: " + diff);
-						
-					}
-					
-					if(this.vars.issueViolation(p, CheckType.SPEED_BREAK)){
-						
-						return 1;
-						
-					}
-					
-				}
+				return 1;
 				
 			}
 			
-	    	BlockIterator bl = new BlockIterator(p, 8);
-	    	
-	    	double md = 1;
-	    	
-	    	boolean goodie = false;
-	    	
-	    	while(bl.hasNext()){
-	    		
-	    		double d = bl.next().getLocation().distanceSquared(b.getLocation());
-	    		
-	    		if(d <= md){
-	    			
-	    			goodie = true;
-	    			break;
-	    			
-	    		}
-	    		
-	    	}
-	    	
-	    	bl = null;
-	    	
-	    	if(!goodie){
-	    		
-	    		if(this.vars.issueViolation(p, CheckType.BLOCK_VISIBLE)){
-					
-					return 1;
-					
-				}
-	    		
-	    	}
-			
-		}else{
-		
-			if(!Utils.canSeeBlock(p, b)){
-				
-				if(this.vars.issueViolation(p, CheckType.BLOCK_VISIBLE)){
-					
-					return 4;
-					
-				}
-				
-			}
-		
 		}
 		
-		//****************End Block Visible******************
+		long dm = TimeUnit.MILLISECONDS.convert(diff, TimeUnit.NANOSECONDS);
+		
+		long timemax = Utils.calcSurvivalFastBreak(p.getInventory().getItemInHand(), b.getType());
+		
+		this.lastBreak.put(p.getName(), System.nanoTime());
+		
+		if(dm < timemax){
+			
+			if(this.vars.issueViolation(p, CheckType.FAST_BREAK)){
+				
+				return 1;
+				
+			}
+			
+		}
+		
+		//****************End FastBreak******************
 		
 		return 0;
 		

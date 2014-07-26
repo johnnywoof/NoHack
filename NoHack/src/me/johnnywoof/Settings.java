@@ -107,6 +107,8 @@ public class Settings {
 		switch(ct){
 		case ATTACK_REACH:
 			return Settings.fightreach;
+		case FAST_BREAK:
+			return "";
 		case ATTACK_SPEED:
 			return Settings.fightspeed;
 		case AUTOSIGN:

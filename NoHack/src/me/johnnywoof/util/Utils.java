@@ -11,10 +11,12 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.v1_7_R4.CraftWorld;
 import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.BlockIterator;
@@ -35,6 +37,62 @@ public class Utils {
     			|| m == Material.ROTTEN_FLESH || m == Material.POTATO_ITEM);
     	
     }
+    
+    /**
+   	 * Calculate the time in milliseconds that it should take to break the given block with the given tool
+   	 *
+   	 * @param tool tool to check
+   	 * @param block block to check
+   	 * @return time in milliseconds to break
+   	 */
+   	     public static long calcSurvivalFastBreak(ItemStack tool, Material block) {
+   	         if (isInstantBreak(block) || (tool.getType() == Material.SHEARS && block == Material.LEAVES)) {
+   	             return 0;
+   	         }
+   	         double bhardness = BlockHardness.getBlockHardness(block);
+   	         double thardness = ToolHardness.getToolHardness(tool.getType());
+   	         long enchantlvl = (long) tool.getEnchantmentLevel(Enchantment.DIG_SPEED);
+
+   	         long result = Math.round((bhardness * thardness) * 0.10 * 10000);
+
+   	         if (enchantlvl > 0) {
+   	             result /= enchantlvl * enchantlvl + 1L;
+   	         }
+
+   	         result = result > 25000 ? 25000 : result < 0 ? 0 : result;
+
+   	         if (isQuickCombo(tool, block)) {
+   	             result = result / 2;
+   	         }
+
+   	         return result;
+   	     }
+   	     
+   	     private static boolean isQuickCombo(ItemStack tool, Material m) {
+   	    	 
+   	    	 if(tool.getType() == Material.DIAMOND_SWORD || tool.getType() == Material.IRON_SWORD || tool.getType() == Material.STONE_SWORD || tool.getType() == Material.GOLD_SWORD || tool.getType() == Material.WOOD_SWORD){
+   	    		 
+   	    		 return m == Material.WEB;
+   	    		 
+   	    	 }else if(tool.getType() == Material.SHEARS){
+   	    		 
+   	    		 return m == Material.WOOL;
+   	    		 
+   	    	 }
+   	    	 
+   	    	 return false;
+   	    	 
+   	     }
+   	
+   	     public static boolean isInstantBreak(Material m){
+   	    	 
+   	    	 return m == Material.TORCH || m == Material.FLOWER_POT || m == Material.RED_ROSE || m == Material.YELLOW_FLOWER || m == Material.LONG_GRASS
+   	     			|| m == Material.RED_MUSHROOM || m == Material.BROWN_MUSHROOM || m == Material.TRIPWIRE || m == Material.TRIPWIRE_HOOK ||
+   	     			m == Material.DEAD_BUSH || m == Material.DIODE_BLOCK_OFF || m == Material.DIODE_BLOCK_ON || m == Material.REDSTONE_COMPARATOR_OFF
+   	     			|| m == Material.REDSTONE_COMPARATOR_OFF || m == Material.REDSTONE_WIRE || m == Material.REDSTONE_TORCH_OFF ||
+   	     			m == Material.REDSTONE_TORCH_ON || m == Material.DOUBLE_PLANT || m == Material.SUGAR_CANE_BLOCK;
+   	    	 
+   	     }
     
     public static boolean canReallySeeEntity(Player p, LivingEntity e){
     	

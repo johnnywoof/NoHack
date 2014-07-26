@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 
 public class Violation {
 
-	private int fly, vs, hs, sb, bv, fv, autos, fkb, fe, ns, fbow, gm, crit, fr, fspeed, fp, timer, spam, fc, as, nf, is, gl, nkb, fullb,
+	private int fly, fab, vs, hs, sb, bv, fv, autos, fkb, fe, ns, fbow, gm, crit, fr, fspeed, fp, timer, spam, fc, as, nf, is, gl, nkb, fullb,
 	imc, imclick, imf, imm;
 	private long lastnotification = 0;
 	
@@ -42,6 +42,9 @@ public class Violation {
 		switch(ct){
 		case ATTACK_REACH:
 			this.fr = vce.getNewLevel();
+			break;
+		case FAST_BREAK:
+			this.fab = vce.getNewLevel();
 			break;
 		case ATTACK_SPEED:
 			this.fspeed = vce.getNewLevel();
@@ -194,6 +197,8 @@ public class Violation {
 				return this.imf;
 			case IMPOSSIBLE_MOVE:
 				return this.imm;
+			case FAST_BREAK:
+				return this.fab;
 		}
 		
 		return 0;

@@ -12,6 +12,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import com.lenis0012.bukkit.npc.NPC;
+import com.lenis0012.bukkit.npc.NPCAnimation;
 import com.lenis0012.bukkit.npc.NPCProfile;
 
 public class KillAuraThread implements Runnable{
@@ -45,6 +46,13 @@ public class KillAuraThread implements Runnable{
 			
 			//Gotta randomize the data!
 			NPC npc = nh.factory.spawnHumanNPC(p.getLocation().add(0, -1.5, 0), new NPCProfile("lenis0012"));
+			
+			if(!Settings.killnoannoy){
+			
+				npc.playAnimation(NPCAnimation.CROUCH);
+			
+			}
+			
 			npc.setYaw((float) rand.nextInt(360));
 			npc.setGravity(false);
 			
@@ -69,7 +77,7 @@ public class KillAuraThread implements Runnable{
 				
 			}
 			
-		}, 15);
+		}, 10);
 		
 	}
 	
