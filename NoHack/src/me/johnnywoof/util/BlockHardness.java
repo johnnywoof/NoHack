@@ -1,4 +1,5 @@
 package me.johnnywoof.util;
+
 import org.bukkit.Material;
 
 public enum BlockHardness {
