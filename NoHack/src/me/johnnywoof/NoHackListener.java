@@ -478,7 +478,7 @@ public class NoHackListener implements Listener {
                     //This fix makes the player a bit..."drunk"
 
 					/*//A fix for stupid bukkit not taking account of ctrl sprint
-					//TODO Test this with craftbukkit and not spigot (and NMS?)
+                    //TODO Test this with craftbukkit and not spigot (and NMS?)
 					if(p.isSprinting()){
 						
 						nh.getServer().getPluginManager().callEvent(new PlayerToggleSprintEvent(p, false));
@@ -702,7 +702,7 @@ public class NoHackListener implements Listener {
 
         }
 
-        int id = mc.runMovingChecks(event.getPlayer(), event.getTo(), event.getFrom(), yd, Math.abs(event.getTo().getX() - event.getFrom().getX()), Math.abs(event.getTo().getZ() - event.getFrom().getZ()), mdd, up, ((CraftPlayer) event.getPlayer()).getHandle().inWater, ((CraftPlayer) event.getPlayer()).getHandle().h_(), nh.vars.lastGround(event.getPlayer()));
+        int id = mc.runMovingChecks(event.getPlayer(), event.getTo(), event.getFrom(), yd, Math.abs(event.getTo().getX() - event.getFrom().getX()), Math.abs(event.getTo().getZ() - event.getFrom().getZ()), mdd, up, Utils.inWater(event.getPlayer()), ((CraftPlayer) event.getPlayer()).getHandle().h_(), nh.vars.lastGround(event.getPlayer()));
 
         if (id == 1 || id == 2) {
 

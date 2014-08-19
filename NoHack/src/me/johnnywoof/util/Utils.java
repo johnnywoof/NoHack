@@ -18,6 +18,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.BlockIterator;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 public class Utils {
@@ -217,7 +218,7 @@ public class Utils {
     public static boolean canSeeBlock(Player p, Block b) {
 
     	/*HashSet<Byte> igb = new HashSet<Byte>();
-    			
+
     	igb.add((byte) Material.TORCH.getId());
     	igb.add((byte) Material.AIR.getId());
     	igb.add((byte) Material.FLOWER_POT.getId());
@@ -335,7 +336,18 @@ public class Utils {
 
     public static boolean inWater(Player e) {
 
-        return ((CraftPlayer) e).getHandle().inWater;
+        boolean inWater = false;
+
+        try {
+            Field f = Class.forName("net.minecraft.server.v1_7_R4.Entity").getDeclaredField("inWater");
+            f.setAccessible(true);
+
+            inWater = f.getBoolean(((CraftPlayer) e).getHandle());
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        return inWater;
 
     }
 
