@@ -3,7 +3,7 @@ NoHack
 
 PLEASE NOTE THAT DEVELOPMENT OF THIS PLUGIN IS PAUSED AT THIS TIME
 
-Anti-Hack for spigot 1.7.10
+Anti-Hack for Spigot 1.7.10
 The efficient lightweight anti-hacking solution.
 
 Features:
